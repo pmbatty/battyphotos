@@ -417,4 +417,11 @@
 .lightbox__viewer {
   flex: 1 1 auto;
   background: #000;
+  position: relative;
+}
+
+/* OpenSeadragon's zoom / home controls sit at top-left by default. Nudge them
+   in slightly so they're not flush against the viewport edge. */
+.lightbox__viewer .openseadragon-container > div:first-of-type {
+  margin: 0.6rem;
 }

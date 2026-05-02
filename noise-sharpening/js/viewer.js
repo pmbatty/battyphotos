@@ -162,6 +162,9 @@ function attachLightboxHandlers(data) {
     viewerInstance = OpenSeadragon({
       element: viewerEl,
       tileSources: { type: "image", url: src, buildPyramid: false },
+      // Point at the CDN-hosted control icons so the zoom-in / zoom-out / home
+      // buttons render. Without this, OSD looks for /images/ relative to the page.
+      prefixUrl: "https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/images/",
       showNavigator: false,
       showRotationControl: false,
       showFullPageControl: false,
