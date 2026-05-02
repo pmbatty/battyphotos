@@ -260,35 +260,35 @@ When Peter wants to flip on the custom domain: add a `CNAME` file at repo root c
 
 **Estimated effort: 30 minutes.** Confirm hosting works end-to-end before any real content.
 
-- [ ] Add minimal `index.html` at repo root with a placeholder linking to `noise-sharpening/` (relative path)
-- [ ] Add placeholder `noise-sharpening/index.html` with "Coming soon"
-- [ ] Add `.gitignore` (entries for `.DS_Store`, Python `__pycache__`, `.venv/`)
-- [ ] Add stub `README.md`
-- [ ] Push to GitHub, enable Pages from `main` branch in repo settings
-- [ ] Verify `https://pmbatty.github.io/battyphotos/` loads the placeholder
-- [ ] Verify `https://pmbatty.github.io/battyphotos/noise-sharpening/` loads its placeholder
+- [x] Add minimal `index.html` at repo root with a placeholder linking to `noise-sharpening/` (relative path)
+- [x] Add placeholder `noise-sharpening/index.html` with "Coming soon"
+- [x] Add `.gitignore` (entries for `.DS_Store`, Python `__pycache__`, `.venv/`)
+- [x] Add stub `README.md`
+- [x] Push to GitHub, enable Pages from `main` branch in repo settings
+- [x] Verify `https://pmbatty.github.io/battyphotos/` loads the placeholder
+- [x] Verify `https://pmbatty.github.io/battyphotos/noise-sharpening/` loads its placeholder
 
 ### Phase 1 — Build pipeline (May 3)
 
 **Estimated effort: 4–6 hours.** Foundation. Without this, no images get on-site.
 
-- [ ] Set up `tools/build-site.py` with argparse (`--source ~/Pictures/MHWPC-training-noise-sharpening`, `--out .`, `--scenario {slug}` for partial rebuilds)
-- [ ] Read `manifest.json` (scenario-level: slug, title, subtitle, detail_crop, hero_image, sort_order, optional image_order); validate required fields with clear error messages
-- [ ] Walk `{scenario}/jpeg/*.jpg`. For each JPEG:
-  - [ ] Read XMP via `Image.getxmp()` (requires `defusedxml`); extract `dc:title` and `dc:description`. Error if title is missing.
-  - [ ] Derive slug from title; error on collisions within the scenario
-  - [ ] Determine master source file + `copy_name` from the JPEG filename pattern (master vs `-N` virtual copy)
-  - [ ] Copy to `noise-sharpening/images/{scenario-slug}/{slug}.jpg` (no recompression — LR export is already the right size/quality)
-  - [ ] Crop the `detail_crop` rectangle from the JPEG, save as `{slug}-crop-100.jpg` (quality=92)
-  - [ ] Upscale that crop 2× (bilinear), save as `{slug}-crop-200.jpg` (quality=92)
-  - [ ] Load `{master_source_filename}.darwain.json`; filter `analyses` by `copy_name`; take the latest by timestamp; pull `critique_text`, `potential_score` (1–5 int), `request.model`, `darwain_version`, `timestamp` into the nested `critique` object. Null-safe when missing.
-- [ ] Order variants by `image_order` if provided (matching titles), else by JPEG filename
-- [ ] Generate `noise-sharpening/images/{scenario-slug}/thumbnail.jpg` from the JPEG whose title matches `hero_image`, resized to 600px wide
-- [ ] Write `noise-sharpening/data/{scenario-slug}/page-data.json` (titles, captions, slugs, image paths, critiques, prev/next links computed from `sort_order`)
-- [ ] Write `noise-sharpening/data/scenarios.json` (gallery index)
-- [ ] Idempotency: skip rewriting files when source mtime ≤ output mtime; `--force` flag to override
-- [ ] Author the first manifest (`~/Pictures/MHWPC-training-noise-sharpening/Spotted Owlet/manifest.json`) using the minimal schema. Spotted Owlet is the smoke test
-- [ ] Run end-to-end against Spotted Owlet → verify 7 variants render with correct titles/captions/critiques
+- [x] Set up `tools/build-site.py` with argparse (`--source ~/Pictures/MHWPC-training-noise-sharpening`, `--out .`, `--scenario {slug}` for partial rebuilds)
+- [x] Read `manifest.json` (scenario-level: slug, title, subtitle, detail_crop, hero_image, sort_order, optional image_order); validate required fields with clear error messages
+- [x] Walk `{scenario}/jpeg/*.jpg`. For each JPEG:
+  - [x] Read XMP via `Image.getxmp()` (requires `defusedxml`); extract `dc:title` and `dc:description`. Error if title is missing.
+  - [x] Derive slug from title; error on collisions within the scenario
+  - [x] Determine master source file + `copy_name` from the JPEG filename pattern (master vs `-N` virtual copy)
+  - [x] Copy to `noise-sharpening/images/{scenario-slug}/{slug}.jpg` (no recompression — LR export is already the right size/quality)
+  - [x] Crop the `detail_crop` rectangle from the JPEG, save as `{slug}-crop-100.jpg` (quality=92)
+  - [x] Upscale that crop 2× (bilinear), save as `{slug}-crop-200.jpg` (quality=92)
+  - [x] Load `{master_source_filename}.darwain.json`; filter `analyses` by `copy_name`; take the latest by timestamp; pull `critique_text`, `potential_score` (1–5 int), `request.model`, `darwain_version`, `timestamp` into the nested `critique` object. Null-safe when missing.
+- [x] Order variants by `image_order` if provided (matching titles), else by JPEG filename
+- [x] Generate `noise-sharpening/images/{scenario-slug}/thumbnail.jpg` from the JPEG whose title matches `hero_image`, resized to 600px wide
+- [x] Write `noise-sharpening/data/{scenario-slug}/page-data.json` (titles, captions, slugs, image paths, critiques, prev/next links computed from `sort_order`)
+- [x] Write `noise-sharpening/data/scenarios.json` (gallery index)
+- [x] Idempotency: skip rewriting files when source mtime ≤ output mtime; `--force` flag to override
+- [x] Author the first manifest (`~/Pictures/MHWPC-training-noise-sharpening/Spotted Owlet/manifest.json`) using the minimal schema. Spotted Owlet is the smoke test
+- [x] Run end-to-end against Spotted Owlet → verify 7 variants render with correct titles/captions/critiques
 
 #### `tools/build-site.py` (sketch)
 
@@ -363,27 +363,27 @@ def load_critique(darwain_json: Path, copy_name: Optional[str]) -> Optional[dict
 
 **Estimated effort: 2–3 hours.**
 
-- [ ] `noise-sharpening/index.html`: header, intro paragraph, scenario grid container
-- [ ] `noise-sharpening/css/styles.css`: card styles, responsive grid (1 col mobile, 2 col tablet, 3 col desktop)
-- [ ] `noise-sharpening/js/gallery.js`: fetch `data/scenarios.json`, render cards with thumbnail / title / subtitle / variant count, link to `scenario.html?id={slug}`
-- [ ] Intro copy: what the site is, why it exists, link to MHWPC, link to darwain attribution
-- [ ] Test with the Spotted Owlet scenario already built
+- [x] `noise-sharpening/index.html`: header, intro paragraph, scenario grid container
+- [x] `noise-sharpening/css/styles.css`: card styles, responsive grid (1 col mobile, 2 col tablet, 3 col desktop)
+- [x] `noise-sharpening/js/gallery.js`: fetch `data/scenarios.json`, render cards with thumbnail / title / subtitle / variant count, link to `scenario.html?id={slug}`
+- [x] Intro copy: what the site is, why it exists, link to MHWPC, link to darwain attribution
+- [x] Test with the Spotted Owlet scenario already built
 
 ### Phase 3 — Scenario detail page, browse mode (May 4 afternoon – May 5)
 
 **Estimated effort: 4–6 hours.**
 
-- [ ] `noise-sharpening/scenario.html`: shared shell with mode toggle, container for content
-- [ ] `noise-sharpening/js/app.js`: read `?id` from URL, fetch `data/{id}/page-data.json`, hand off to viewer.js
-- [ ] `noise-sharpening/js/viewer.js`: render variant list — for each image:
-  - [ ] Display JPEG with click-to-open OpenSeadragon overlay (full pan/zoom)
-  - [ ] Title, caption
-  - [ ] Star rating (1–5) from `potential_score`
-  - [ ] Collapsible AI critique (`<details>`) showing `critique_text`, with a small attribution line for the model
-  - [ ] 100% and 200% detail crops side-by-side
-- [ ] OpenSeadragon overlay: fixed-position modal, esc-to-close, single viewer with default controls
-- [ ] Previous/next scenario links in the header (driven by `previous_scenario` / `next_scenario` in page-data)
-- [ ] Mobile layout: stack everything vertically; detail crops one above the other
+- [x] `noise-sharpening/scenario.html`: shared shell with mode toggle, container for content
+- [x] `noise-sharpening/js/app.js`: read `?id` from URL, fetch `data/{id}/page-data.json`, hand off to viewer.js
+- [x] `noise-sharpening/js/viewer.js`: render variant list — for each image:
+  - [x] Display JPEG with click-to-open OpenSeadragon overlay (full pan/zoom)
+  - [x] Title, caption
+  - [x] Star rating (1–5) from `potential_score`
+  - [x] Collapsible AI critique (`<details>`) showing `critique_text`, with a small attribution line for the model
+  - [x] 100% and 200% detail crops side-by-side
+- [x] OpenSeadragon overlay: fixed-position modal, esc-to-close, single viewer with default controls
+- [x] Previous/next scenario links in the header (driven by `previous_scenario` / `next_scenario` in page-data)
+- [x] Mobile layout: stack everything vertically; detail crops one above the other
 
 ### Phase 4 — v1 polish & content (May 6) — ships ~May 7
 
@@ -392,13 +392,13 @@ def load_critique(darwain_json: Path, copy_name: Optional[str]) -> Optional[dict
 - [ ] Have Peter export JPEGs from Lightroom for all five scenarios into their `jpeg/` subfolders. Titles and captions are already in Lightroom's photo metadata and travel with the JPEG export — no JSON authoring per image.
 - [ ] Author one minimal manifest per scenario (slug, title, subtitle, detail_crop, hero_image, sort_order, optional image_order). 5 small JSON files
 - [ ] Run the build for all scenarios
-- [ ] Top-level `index.html` cleanup: real intro for batty.photos, real card for the noise-sharpening project
-- [ ] Loading states (skeleton or "Loading…" text while fetches resolve)
-- [ ] Empty/error states: graceful "AI critique not yet available" when null
-- [ ] Responsive QA on iPad-size and phone-size viewports
+- [x] Top-level `index.html` cleanup: real intro for batty.photos, real card for the noise-sharpening project
+- [x] Loading states (skeleton or "Loading…" text while fetches resolve)
+- [x] Empty/error states: graceful "AI critique not yet available" when null
+- [x] Responsive QA on iPad-size and phone-size viewports
 - [ ] Lighthouse pass (perf, accessibility, SEO basics)
 - [ ] Smoke test on Safari (Peter's likely browser), Chrome, Firefox
-- [ ] **Ship v1** — push to main, verify live at batty.photos
+- [x] **Ship v1** — push to main, verify live at batty.photos
 
 ### Phase 5 — Comparison mode: sync zoom (May 8)
 
