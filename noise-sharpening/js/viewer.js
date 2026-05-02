@@ -134,6 +134,8 @@ function attachLightboxHandlers(data) {
   const lightbox = document.getElementById("lightbox");
   const viewerEl = document.getElementById("lightbox-viewer");
   const captionEl = document.getElementById("lightbox-caption");
+  const zoomEl = document.getElementById("lightbox-zoom");
+  const oneToOneBtn = document.getElementById("lightbox-1to1");
   const closeBtn = lightbox.querySelector(".lightbox__close");
 
   document.querySelectorAll(".variant__display-btn").forEach((btn) => {
@@ -143,6 +145,12 @@ function attachLightboxHandlers(data) {
   });
 
   closeBtn.addEventListener("click", closeLightbox);
+  oneToOneBtn.addEventListener("click", () => {
+    if (!viewerInstance) return;
+    const vp = viewerInstance.viewport;
+    vp.zoomTo(vp.imageToViewportZoom(1));
+    vp.applyConstraints();
+  });
   lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) closeLightbox();
   });
@@ -155,6 +163,7 @@ function attachLightboxHandlers(data) {
       <strong>${escapeHtml(title)}</strong>
       ${caption ? `<span> &middot; ${escapeHtml(caption)}</span>` : ""}
     `;
+    zoomEl.textContent = "…";
     lightbox.hidden = false;
     document.body.classList.add("body--lightbox-open");
 
@@ -171,6 +180,10 @@ function attachLightboxHandlers(data) {
       showNavigator: false,
       showRotationControl: false,
       showFullPageControl: false,
+      // Keep the zoom-in / zoom-out / home buttons permanently visible — OSD's
+      // default fades them out after a few seconds of inactivity which Peter
+      // (and likely many others) finds disorienting.
+      autoHideControls: false,
       maxZoomPixelRatio: 4,
       minZoomImageRatio: 0.5,
       defaultZoomLevel: 0,
@@ -178,6 +191,24 @@ function attachLightboxHandlers(data) {
       gestureSettingsTouch: { clickToZoom: false },
       animationTime: 0.4,
     });
+
+    // Keep the zoom percentage in sync with the viewport. Wire on `open` so
+    // the viewport is initialised; update on every viewport change.
+    viewerInstance.addHandler("open", updateZoomReadout);
+    viewerInstance.addHandler("zoom", updateZoomReadout);
+    viewerInstance.addHandler("animation", updateZoomReadout);
+  }
+
+  function updateZoomReadout() {
+    if (!viewerInstance) return;
+    const vp = viewerInstance.viewport;
+    if (!vp) return;
+    // viewportToImageZoom returns CSS-pixels-per-source-pixel; multiply by 100
+    // for the photographer-style percentage (100% = 1 source pixel : 1 CSS pixel).
+    const pct = Math.round(vp.viewportToImageZoom(vp.getZoom()) * 100);
+    if (Number.isFinite(pct)) {
+      zoomEl.textContent = `${pct}%`;
+    }
   }
 
   function closeLightbox() {
