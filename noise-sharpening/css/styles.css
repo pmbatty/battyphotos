@@ -1,1 +1,89 @@
 /* noise-sharpening project styles — extends css/site.css */
+
+/* Gallery grid */
+.gallery__loading,
+.gallery__error,
+.gallery__empty {
+  color: var(--color-muted);
+  margin-top: var(--gap-lg);
+}
+
+.gallery__error {
+  color: #b54545;
+}
+
+.gallery--grid {
+  display: grid;
+  gap: var(--gap-lg);
+  margin-top: var(--gap-xl);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 40rem) {
+  .gallery--grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 60rem) {
+  .gallery--grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.scenario-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--color-card-shadow);
+  color: inherit;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.scenario-card:hover {
+  box-shadow: var(--color-card-shadow-hover);
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+
+.scenario-card__thumb {
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: #efefea;
+}
+
+.scenario-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.scenario-card__body {
+  padding: var(--gap-md) var(--gap-md) var(--gap-lg);
+}
+
+.scenario-card__title {
+  margin: 0 0 0.4em;
+  font-size: 1.1rem;
+}
+
+.scenario-card__subtitle {
+  margin: 0 0 0.6em;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.scenario-card__meta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  font-weight: 600;
+}

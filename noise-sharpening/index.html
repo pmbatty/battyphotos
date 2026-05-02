@@ -21,7 +21,19 @@
 
     <main class="site-main">
       <h1>Noise reduction, sharpening &amp; upsizing</h1>
-      <p class="lede">Coming soon.</p>
+      <p class="lede">
+        Full-resolution comparisons of AI denoising and sharpening tools —
+        Lightroom AI Denoise, Topaz Photo, ON1, DxO PureRAW — applied to the
+        same wildlife photograph. Companion to a May 2026
+        <abbr title="Mile High Wildlife Photography Club">MHWPC</abbr> digital
+        training session. Each scenario shows every variant at native pixel
+        resolution alongside the AI-generated critique from
+        <a href="https://github.com/pmbatty/darwain">darwain</a>.
+      </p>
+
+      <section id="gallery" class="gallery" aria-busy="true">
+        <p class="gallery__loading">Loading scenarios&hellip;</p>
+      </section>
     </main>
 
     <footer class="site-footer">
@@ -31,5 +43,7 @@
         Google Gemini vision models.
       </p>
     </footer>
+
+    <script type="module" src="js/gallery.js"></script>
   </body>
 </html>
