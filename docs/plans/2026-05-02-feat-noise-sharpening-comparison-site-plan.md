@@ -232,16 +232,19 @@ The `critique` object groups every field derived from darwain — `text`, `poten
   - AI critique paragraph in a `<details>` element (collapsed by default, expanded when present). If `critique_text` is null, the block is omitted entirely.
   - Pre-cropped 100% and 200% detail views shown side-by-side beneath each variant. These are the killer feature for at-a-glance pixel comparison.
 
-**Comparison mode UI (`comparison.js`):**
+**Comparison mode UI** — implemented v1.1 (May 2):
 
-- Two dropdowns (or two thumbnail strips) to pick variants A and B from the same scenario. URL state: `?mode=compare&a={slug}&b={slug}`.
-- View toggle between two presentations:
-  - **Sync zoom** (default): two OpenSeadragon viewers side-by-side, panning/zooming locked together. Both images at the same scale always.
-  - **Slider**: `<img-comparison-slider>` web component overlaying both images at fitted scale, with a draggable divider.
-- Below the comparison: A's and B's detail crops side by side (100% and 200%), plus both critiques and titles/captions.
-- Mobile fallback: comparison mode collapses to vertical stacking; sync-zoom degrades to one viewer at a time with a swap button. This is acceptable — the talk's audience is on desktops/laptops.
+The original plan envisioned two presentations (sync-zoom side-by-side AND a slider), a picker UI, and dedicated comparison page state. Peter scoped this down to a simpler first-pass that lives inside the existing lightbox:
 
-**Why a single page with mode toggle (not separate `compare.html`):** scenarios.json is fetched once, browse and compare share the same data, navigation state lives in URL params, no duplication.
+- Click any non-baseline variant in the grid → lightbox opens in **comparison mode**: baseline (first variant in display order, e.g. RAW) underneath, the clicked variant on top with a vertical clip-path divider revealing one or the other.
+- Click the baseline itself → existing single-image lightbox (nothing to compare against).
+- Two stacked OpenSeadragon viewers, viewports synced bidirectionally via mirrored `pan` / `zoom` / `animation` event handlers with a shared `syncing` guard.
+- Draggable circular handle on the divider; arrow keys nudge, Shift+arrow for larger steps, Home/End for full extremes, double-click to reset to 50%.
+- Side-corner badges (`RAW` / `<variant>`) so the user always knows which side is which.
+- The 1:1 button drives both viewers via the sync, still DPR-aware.
+- **No A/B picker yet** — that's the next iteration. Future sketch: dropdowns or thumbnail strip in the lightbox bar that swap either viewer's tile source without re-mounting the lightbox.
+
+**Why a single lightbox shell:** click flow stays identical (click image, see comparison), no separate page state to coordinate, OSD viewports + clip-path keep all the zoom semantics working without duplication.
 
 ### Hosting & deployment
 
