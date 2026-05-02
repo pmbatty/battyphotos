@@ -21,6 +21,9 @@ export function renderBrowseMode(root, data) {
       "--crop-aspect",
       `${data.detail_crop.w} / ${data.detail_crop.h}`,
     );
+    // Intrinsic width for the crop JPEG (so 100% crop renders 1:1 when column has
+    // room; falls back to scaling proportionally on narrow viewports).
+    root.style.setProperty("--crop-width", `${data.detail_crop.w}px`);
   }
 
   const prevLink = data.previous_scenario
@@ -82,13 +85,13 @@ function variantCard(img) {
         ${critiqueBlock(img.critique)}
       </div>
       <div class="variant__crops">
-        <figure class="variant__crop">
-          <img src="${img.crop_100}" alt="100% pixel crop of ${escapeAttr(img.title)}" loading="lazy" />
+        <figure class="variant__crop" data-level="100">
+          <img src="${img.crop_100}" alt="100% pixel detail of ${escapeAttr(img.title)}" loading="lazy" />
           <figcaption>100% pixel detail</figcaption>
         </figure>
-        <figure class="variant__crop">
-          <img src="${img.crop_200}" alt="200% pixel crop of ${escapeAttr(img.title)}" loading="lazy" />
-          <figcaption>200% pixel detail</figcaption>
+        <figure class="variant__crop" data-level="200">
+          <img src="${img.crop_200}" alt="200% pixel detail of ${escapeAttr(img.title)}" loading="lazy" />
+          <figcaption>200% pixel detail (centered, nearest-neighbor upscaled)</figcaption>
         </figure>
       </div>
     </article>

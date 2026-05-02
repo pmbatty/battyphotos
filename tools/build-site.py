@@ -198,23 +198,38 @@ def copy_display_jpeg(src: Path, dst: Path, force: bool) -> None:
 
 
 def write_crop(
-    src: Path, crop: dict, dst: Path, upscale: int, force: bool
+    src: Path, crop: dict, dst: Path, level: int, force: bool
 ) -> None:
+    """Write a detail-crop JPEG at the given zoom level.
+
+    level=100 -> the full detail_crop rectangle, native-size.
+    level=200 -> the center half of detail_crop (w/2 x h/2 of source pixels),
+                 nearest-neighbor upscaled to the same output dimensions as
+                 level=100 so both crops occupy the same on-page footprint.
+                 Each source pixel becomes a 2x2 block of output pixels — the
+                 honest "200% zoom" look from Lightroom / Photoshop.
+    """
     if not needs_rebuild(src, dst, force):
         return
     dst.parent.mkdir(parents=True, exist_ok=True)
     with Image.open(src) as im:
         x, y, w, h = crop["x"], crop["y"], crop["w"], crop["h"]
         x2, y2 = x + w, y + h
-        if x2 > im.width or y2 > im.height or x < 0 or y < 0:
+        if x < 0 or y < 0 or x2 > im.width or y2 > im.height:
             raise ValueError(
                 f"detail_crop {crop} falls outside {src.name} ({im.width}x{im.height})"
             )
-        cropped = im.crop((x, y, x2, y2))
-        if upscale != 1:
-            cropped = cropped.resize(
-                (w * upscale, h * upscale), Image.Resampling.BILINEAR
-            )
+        if level == 100:
+            cropped = im.crop((x, y, x2, y2))
+        elif level == 200:
+            # Take the centered w/2 x h/2 sub-rectangle of detail_crop.
+            inner_w, inner_h = w // 2, h // 2
+            ix = x + (w - inner_w) // 2
+            iy = y + (h - inner_h) // 2
+            inner = im.crop((ix, iy, ix + inner_w, iy + inner_h))
+            cropped = inner.resize((w, h), Image.Resampling.NEAREST)
+        else:
+            raise ValueError(f"unsupported crop level: {level}")
         # Preserve sRGB ICC profile if present
         icc = im.info.get("icc_profile")
         save_kwargs = {"quality": JPEG_QUALITY_DISPLAY, "optimize": True}
@@ -298,8 +313,8 @@ def build_scenario(scenario_dir: Path, manifest: dict, repo_root: Path, force: b
         out_crop_100 = images_out / f"{variant_slug}-crop-100.jpg"
         out_crop_200 = images_out / f"{variant_slug}-crop-200.jpg"
         copy_display_jpeg(jpeg_path, out_display, force)
-        write_crop(jpeg_path, crop, out_crop_100, upscale=1, force=force)
-        write_crop(jpeg_path, crop, out_crop_200, upscale=2, force=force)
+        write_crop(jpeg_path, crop, out_crop_100, level=100, force=force)
+        write_crop(jpeg_path, crop, out_crop_200, level=200, force=force)
 
         if image_dimensions is None:
             with Image.open(jpeg_path) as im:

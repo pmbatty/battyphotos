@@ -337,14 +337,30 @@
   border: 1px solid var(--color-border);
   border-radius: 6px;
   overflow: hidden;
+  /* Don't stretch beyond the JPEG's intrinsic width — once the column has more
+     room than the crop needs, the figure stays at native size to preserve a
+     true 1:1 source-to-display pixel mapping for the 100% view. */
+  max-width: var(--crop-width, 100%);
 }
 
 .variant__crop > img {
   display: block;
-  width: 100%;
+  /* Native intrinsic width when the column allows; scale down proportionally
+     on narrow viewports so the figure never overflows. */
+  width: var(--crop-width, 100%);
+  max-width: 100%;
   height: auto;
   aspect-ratio: var(--crop-aspect, 3 / 2);
-  object-fit: cover;
+}
+
+.variant__crop[data-level="200"] > img {
+  /* The 200% crop is a centered half of the source region nearest-neighbor
+     upscaled to match the 100% crop's footprint. Force the browser to keep
+     pixel boundaries crisp on any incidental scaling so doubled pixels stay
+     visible as 2x2 blocks (the photo-app "200% zoom" look). */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
 }
 
 .variant__crop figcaption {
