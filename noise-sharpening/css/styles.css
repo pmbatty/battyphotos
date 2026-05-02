@@ -1,6 +1,9 @@
 /* noise-sharpening project styles — extends css/site.css */
 
-/* Gallery grid */
+/* =========================================================================
+ * Gallery
+ * ========================================================================= */
+
 .gallery__loading,
 .gallery__error,
 .gallery__empty {
@@ -86,4 +89,332 @@
   font-size: 0.85rem;
   color: var(--color-accent);
   font-weight: 600;
+}
+
+/* =========================================================================
+ * Scenario page
+ * ========================================================================= */
+
+.scenario-main {
+  max-width: 80rem;
+}
+
+.scenario__loading,
+.scenario__error {
+  color: var(--color-muted);
+}
+
+.scenario__error {
+  color: #b54545;
+}
+
+.scenario__breadcrumb {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  margin-bottom: var(--gap-md);
+}
+
+.scenario__breadcrumb a {
+  color: var(--color-muted);
+}
+
+.scenario__breadcrumb a:hover {
+  color: var(--color-accent);
+}
+
+.scenario__breadcrumb span[aria-hidden] {
+  margin: 0 0.5em;
+}
+
+.scenario__header {
+  margin-bottom: var(--gap-xl);
+}
+
+.scenario__pager {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  margin-top: var(--gap-xl);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.95rem;
+}
+
+.scenario__nav-link {
+  font-weight: 600;
+}
+
+/* =========================================================================
+ * Variants list
+ * ========================================================================= */
+
+.variants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+  margin-top: var(--gap-lg);
+}
+
+.variant {
+  display: grid;
+  grid-template-areas:
+    "display"
+    "meta"
+    "crops";
+  gap: var(--gap-md);
+  padding-bottom: var(--gap-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.variant:last-child {
+  border-bottom: none;
+}
+
+@media (min-width: 64rem) {
+  .variant {
+    grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+    grid-template-areas:
+      "display meta"
+      "crops crops";
+    gap: var(--gap-lg);
+  }
+}
+
+.variant__display {
+  grid-area: display;
+}
+
+.variant__display-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #000;
+  cursor: zoom-in;
+  overflow: hidden;
+  position: relative;
+  transition: border-color 0.15s ease;
+  aspect-ratio: var(--variant-aspect, 4 / 3);
+}
+
+.variant__display-btn:hover,
+.variant__display-btn:focus-visible {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+.variant__display-btn img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.variant__zoom-hint {
+  position: absolute;
+  bottom: 0.6rem;
+  right: 0.6rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.variant__display-btn:hover .variant__zoom-hint,
+.variant__display-btn:focus-visible .variant__zoom-hint {
+  opacity: 1;
+}
+
+.variant__meta {
+  grid-area: meta;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+}
+
+.variant__title {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.variant__caption {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.variant__no-critique {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* Critique block */
+
+.critique {
+  background: #f4f3ee;
+  border-left: 3px solid var(--color-accent);
+  border-radius: 4px;
+  padding: var(--gap-md);
+}
+
+.critique__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.critique__score {
+  color: #c98e1d;
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+}
+
+.critique__label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+}
+
+.critique__model {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.critique__details {
+  font-size: 0.92rem;
+}
+
+.critique__summary {
+  cursor: pointer;
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  list-style: none;
+}
+
+.critique__summary::-webkit-details-marker {
+  display: none;
+}
+
+.critique__details[open] .critique__summary {
+  display: none;
+}
+
+.critique__text {
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Crops */
+
+.variant__crops {
+  grid-area: crops;
+  display: grid;
+  gap: var(--gap-md);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 32rem) {
+  .variant__crops {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.variant__crop {
+  margin: 0;
+  background: #000;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.variant__crop > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--crop-aspect, 3 / 2);
+  object-fit: cover;
+}
+
+.variant__crop figcaption {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  padding: 0.4rem 0.6rem;
+  background: var(--color-card-bg);
+  font-weight: 700;
+}
+
+/* =========================================================================
+ * Lightbox (full-resolution OpenSeadragon viewer)
+ * ========================================================================= */
+
+.body--lightbox-open {
+  overflow: hidden;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(10, 10, 10, 0.96);
+  display: flex;
+  flex-direction: column;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.lightbox__close:hover,
+.lightbox__close:focus-visible {
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
+.lightbox__caption {
+  padding: 0.85rem 4rem 0.85rem 1.5rem;
+  color: #fff;
+  font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.6);
+  flex: 0 0 auto;
+}
+
+.lightbox__caption strong {
+  font-weight: 700;
+  margin-right: 0.4em;
+}
+
+.lightbox__viewer {
+  flex: 1 1 auto;
+  background: #000;
 }
