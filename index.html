@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>batty.photos — Peter Batty's wildlife-photography reference projects</title>
+    <meta
+      name="description"
+      content="Companion sites and reference material for Peter Batty's wildlife photography presentations and tutorials."
+    />
+    <link rel="stylesheet" href="css/site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-header__brand" href="./">batty.photos</a>
+        <span class="site-header__nav">Wildlife photography reference</span>
+      </div>
+    </header>
+
+    <main class="site-main">
+      <h1>Wildlife photography reference projects</h1>
+      <p class="lede">
+        Companion material for Peter Batty's wildlife photography presentations
+        and tutorials. Each sub-project below is a self-contained reference site.
+      </p>
+
+      <section class="project-list">
+        <a class="project-card" href="noise-sharpening/">
+          <h2 class="project-card__title">Noise reduction, sharpening, and upsizing</h2>
+          <p class="project-card__body">
+            Full-resolution comparison of AI denoising and sharpening tools —
+            Lightroom AI Denoise, Topaz Photo, DxO PureRAW, ON1 — applied to
+            the same wildlife photographs. Companion to a May 2026 MHWPC
+            digital training session.
+          </p>
+          <span class="project-card__cta">View project →</span>
+        </a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Photographs and analysis &copy; Peter Batty. AI image analysis powered
+        by <a href="https://github.com/pmbatty/darwain">darwain</a>, using
+        Google Gemini vision models.
+      </p>
+    </footer>
+
+    <style>
+      .project-list {
+        display: grid;
+        gap: var(--gap-lg);
+        margin-top: var(--gap-xl);
+        grid-template-columns: 1fr;
+      }
+
+      @media (min-width: 48rem) {
+        .project-list {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .project-card {
+        display: block;
+        padding: var(--gap-lg);
+        background: var(--color-card-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        box-shadow: var(--color-card-shadow);
+        color: inherit;
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+      }
+
+      .project-card:hover {
+        box-shadow: var(--color-card-shadow-hover);
+        transform: translateY(-2px);
+        border-color: var(--color-accent);
+      }
+
+      .project-card__title {
+        margin-top: 0;
+      }
+
+      .project-card__body {
+        color: var(--color-muted);
+        margin-bottom: 0.75em;
+      }
+
+      .project-card__cta {
+        font-weight: 600;
+        color: var(--color-accent);
+        font-size: 0.95rem;
+      }
+    </style>
+  </body>
+</html>
