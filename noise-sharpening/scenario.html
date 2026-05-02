@@ -35,17 +35,46 @@
       </p>
     </footer>
 
-    <!-- Full-screen lightbox container; OpenSeadragon viewer mounts inside on demand -->
+    <!-- Full-screen lightbox: hosts either a single OSD viewer (single-image
+         mode) or two stacked OSD viewers with a draggable divider between
+         them (comparison mode). -->
     <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Full-resolution viewer">
       <div class="lightbox__bar">
         <div class="lightbox__caption" id="lightbox-caption"></div>
         <div class="lightbox__controls">
           <span class="lightbox__zoom" id="lightbox-zoom" aria-live="polite" aria-label="Current zoom">&hellip;</span>
-          <button class="lightbox__btn" type="button" id="lightbox-1to1" title="Zoom to 100% (one source pixel per CSS pixel)">1:1</button>
+          <button class="lightbox__btn" type="button" id="lightbox-1to1" title="Zoom to 100% (one source pixel per device pixel)">1:1</button>
           <button class="lightbox__close" type="button" aria-label="Close viewer">&times;</button>
         </div>
       </div>
-      <div class="lightbox__viewer" id="lightbox-viewer"></div>
+      <div class="lightbox__stage" id="lightbox-stage">
+        <!-- Each layer is an absolutely-positioned shell that the inner OSD viewer
+             fills. OSD sets position: relative inline on its host element, so we
+             can't put position: absolute on the viewer itself — hence the shell. -->
+        <div class="lightbox__layer">
+          <div class="lightbox__viewer" id="lightbox-viewer-a"></div>
+        </div>
+        <div class="lightbox__layer lightbox__layer--top" id="lightbox-layer-b" hidden>
+          <div class="lightbox__viewer" id="lightbox-viewer-b"></div>
+        </div>
+        <div class="lightbox__badge lightbox__badge--left" id="lightbox-badge-left" hidden></div>
+        <div class="lightbox__badge lightbox__badge--right" id="lightbox-badge-right" hidden></div>
+        <div class="lightbox__divider" id="lightbox-divider" hidden>
+          <button
+            class="lightbox__divider-handle"
+            id="lightbox-divider-handle"
+            type="button"
+            aria-label="Drag to compare. Arrow keys nudge, double-click resets."
+            role="separator"
+            aria-orientation="vertical"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="50"
+          >
+            <span aria-hidden="true">&#x21C4;</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/openseadragon.min.js"></script>

@@ -1,17 +1,21 @@
 /**
  * Browse mode: render every variant of a scenario as an image + metadata block.
- * Provides click-to-zoom into an OpenSeadragon-powered lightbox for full-resolution
- * pixel inspection.
+ *
+ * Clicking a variant's display image opens the lightbox in one of two modes:
+ *   - Single mode: just the clicked image (used when you click the baseline /
+ *     RAW variant — there's nothing to compare against).
+ *   - Compare mode: baseline (RAW) on the left, the clicked variant on the
+ *     right, with a draggable vertical divider revealing one or the other.
+ *     Both viewers stay synced for pan / zoom / 1:1.
  */
 
-let viewerInstance = null;
+let viewerA = null; // baseline / single
+let viewerB = null; // top variant in compare mode
 
 export function renderBrowseMode(root, data) {
   root.classList.add("scenario--browse");
   root.removeAttribute("aria-busy");
 
-  // Reserve layout space for variant images and crops so lazy-loading doesn't shift
-  // the page. All variants share the same dimensions (LR crop is identical).
   const dims = data.image_dimensions;
   if (dims && dims.width && dims.height) {
     root.style.setProperty("--variant-aspect", `${dims.width} / ${dims.height}`);
@@ -21,8 +25,6 @@ export function renderBrowseMode(root, data) {
       "--crop-aspect",
       `${data.detail_crop.w} / ${data.detail_crop.h}`,
     );
-    // Intrinsic width for the crop JPEG (so 100% crop renders 1:1 when column has
-    // room; falls back to scaling proportionally on narrow viewports).
     root.style.setProperty("--crop-width", `${data.detail_crop.w}px`);
   }
 
@@ -70,13 +72,11 @@ function variantCard(img) {
         <button
           class="variant__display-btn"
           type="button"
-          data-zoom-src="${escapeAttr(img.display)}"
-          data-zoom-title="${escapeAttr(img.title)}"
-          data-zoom-caption="${escapeAttr(img.caption)}"
+          data-slug="${escapeAttr(img.slug)}"
           aria-label="Open ${escapeAttr(img.title)} at full resolution"
         >
           <img src="${img.display}" alt="${escapeAttr(img.caption || img.title)}" loading="lazy" />
-          <span class="variant__zoom-hint">Click to zoom &middot; full resolution</span>
+          <span class="variant__zoom-hint">Click to compare &middot; full resolution</span>
         </button>
       </div>
       <div class="variant__meta">
@@ -132,25 +132,40 @@ function renderStars(score) {
 
 function attachLightboxHandlers(data) {
   const lightbox = document.getElementById("lightbox");
-  const viewerEl = document.getElementById("lightbox-viewer");
   const captionEl = document.getElementById("lightbox-caption");
   const zoomEl = document.getElementById("lightbox-zoom");
   const oneToOneBtn = document.getElementById("lightbox-1to1");
   const closeBtn = lightbox.querySelector(".lightbox__close");
+  const stage = document.getElementById("lightbox-stage");
+  const viewerAEl = document.getElementById("lightbox-viewer-a");
+  const viewerBEl = document.getElementById("lightbox-viewer-b");
+  const layerB = document.getElementById("lightbox-layer-b");
+  const divider = document.getElementById("lightbox-divider");
+  const handle = document.getElementById("lightbox-divider-handle");
+  const badgeLeft = document.getElementById("lightbox-badge-left");
+  const badgeRight = document.getElementById("lightbox-badge-right");
+
+  // First image in display order is the baseline (RAW) for compare mode.
+  // image_order in the manifest puts RAW first in every Spotted Owlet-style
+  // scenario; we'll add an explicit baseline_image manifest field if the
+  // convention ever needs to bend.
+  const baseline = data.images[0];
 
   document.querySelectorAll(".variant__display-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      openLightbox(btn.dataset.zoomSrc, btn.dataset.zoomTitle, btn.dataset.zoomCaption);
+      const slug = btn.dataset.slug;
+      const variant = data.images.find((v) => v.slug === slug);
+      if (!variant) return;
+      const compare = baseline && variant.slug !== baseline.slug;
+      openLightbox({ baseline, variant, compare });
     });
   });
 
   closeBtn.addEventListener("click", closeLightbox);
   oneToOneBtn.addEventListener("click", () => {
-    if (!viewerInstance) return;
-    const vp = viewerInstance.viewport;
-    // Lightroom's "1:1" means 1 source pixel = 1 *device* pixel. On a Retina
-    // display, 1 CSS pixel covers `devicePixelRatio` device pixels, so we need
-    // OSD's image-zoom (which is CSS-pixels-per-source-pixel) to be 1 / DPR.
+    if (!viewerA) return;
+    const vp = viewerA.viewport;
+    // Lightroom's 1:1 = 1 source pixel per *device* pixel. Account for DPR.
     vp.zoomTo(vp.imageToViewportZoom(1 / (window.devicePixelRatio || 1)));
     vp.applyConstraints();
   });
@@ -161,31 +176,99 @@ function attachLightboxHandlers(data) {
     if (e.key === "Escape" && !lightbox.hidden) closeLightbox();
   });
 
-  function openLightbox(src, title, caption) {
-    captionEl.innerHTML = `
-      <strong>${escapeHtml(title)}</strong>
-      ${caption ? `<span> &middot; ${escapeHtml(caption)}</span>` : ""}
-    `;
+  // Divider drag: handle is the only pointer-target so OSD pan still works
+  // anywhere else inside the stage.
+  let dragging = false;
+  function setDividerX(percent) {
+    const pct = Math.max(0, Math.min(100, percent));
+    divider.style.left = `${pct}%`;
+    // Clip the layer (the absolutely-positioned shell) — OSD owns the inner
+    // viewer's inline styles, so we can't reliably target that.
+    layerB.style.clipPath = `inset(0 0 0 ${pct}%)`;
+    handle.setAttribute("aria-valuenow", String(Math.round(pct)));
+  }
+  handle.addEventListener("pointerdown", (e) => {
+    dragging = true;
+    handle.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  handle.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const rect = stage.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    setDividerX(x);
+  });
+  const endDrag = (e) => {
+    if (!dragging) return;
+    dragging = false;
+    if (handle.hasPointerCapture(e.pointerId)) {
+      handle.releasePointerCapture(e.pointerId);
+    }
+  };
+  handle.addEventListener("pointerup", endDrag);
+  handle.addEventListener("pointercancel", endDrag);
+  handle.addEventListener("dblclick", (e) => {
+    e.preventDefault();
+    setDividerX(50);
+  });
+  handle.addEventListener("keydown", (e) => {
+    const step = e.shiftKey ? 10 : 2;
+    const current = parseFloat(divider.style.left) || 50;
+    if (e.key === "ArrowLeft") {
+      setDividerX(current - step);
+      e.preventDefault();
+    } else if (e.key === "ArrowRight") {
+      setDividerX(current + step);
+      e.preventDefault();
+    } else if (e.key === "Home") {
+      setDividerX(0);
+      e.preventDefault();
+    } else if (e.key === "End") {
+      setDividerX(100);
+      e.preventDefault();
+    }
+  });
+
+  function openLightbox({ baseline, variant, compare }) {
+    closeViewers();
+
+    if (compare) {
+      captionEl.innerHTML = `
+        <strong>${escapeHtml(baseline.title)}</strong>
+        <span class="lightbox__sep" aria-hidden="true">&#x21C4;</span>
+        <strong>${escapeHtml(variant.title)}</strong>
+        ${variant.caption ? `<span class="lightbox__caption-detail"> &middot; ${escapeHtml(variant.caption)}</span>` : ""}
+      `;
+      badgeLeft.textContent = baseline.title;
+      badgeRight.textContent = variant.title;
+      badgeLeft.hidden = false;
+      badgeRight.hidden = false;
+      divider.hidden = false;
+      layerB.hidden = false;
+      setDividerX(50);
+    } else {
+      captionEl.innerHTML = `
+        <strong>${escapeHtml(baseline.title)}</strong>
+        ${baseline.caption ? `<span> &middot; ${escapeHtml(baseline.caption)}</span>` : ""}
+      `;
+      badgeLeft.hidden = true;
+      badgeRight.hidden = true;
+      divider.hidden = true;
+      layerB.hidden = true;
+      layerB.style.clipPath = "";
+    }
+
     zoomEl.textContent = "…";
     lightbox.hidden = false;
     document.body.classList.add("body--lightbox-open");
 
-    if (viewerInstance) {
-      viewerInstance.destroy();
-      viewerInstance = null;
-    }
-    viewerInstance = OpenSeadragon({
-      element: viewerEl,
-      tileSources: { type: "image", url: src, buildPyramid: false },
-      // Point at the CDN-hosted control icons so the zoom-in / zoom-out / home
-      // buttons render. Without this, OSD looks for /images/ relative to the page.
+    viewerA = OpenSeadragon({
+      element: viewerAEl,
+      tileSources: { type: "image", url: baseline.display, buildPyramid: false },
       prefixUrl: "https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/images/",
       showNavigator: false,
       showRotationControl: false,
       showFullPageControl: false,
-      // Keep the zoom-in / zoom-out / home buttons permanently visible — OSD's
-      // default fades them out after a few seconds of inactivity which Peter
-      // (and likely many others) finds disorienting.
       autoHideControls: false,
       maxZoomPixelRatio: 4,
       minZoomImageRatio: 0.5,
@@ -194,22 +277,57 @@ function attachLightboxHandlers(data) {
       gestureSettingsTouch: { clickToZoom: false },
       animationTime: 0.4,
     });
+    viewerA.addHandler("open", updateZoomReadout);
+    viewerA.addHandler("zoom", updateZoomReadout);
+    viewerA.addHandler("animation", updateZoomReadout);
 
-    // Keep the zoom percentage in sync with the viewport. Wire on `open` so
-    // the viewport is initialised; update on every viewport change.
-    viewerInstance.addHandler("open", updateZoomReadout);
-    viewerInstance.addHandler("zoom", updateZoomReadout);
-    viewerInstance.addHandler("animation", updateZoomReadout);
+    if (compare) {
+      viewerB = OpenSeadragon({
+        element: viewerBEl,
+        tileSources: { type: "image", url: variant.display, buildPyramid: false },
+        // Top viewer reuses A's controls — no zoom buttons of its own.
+        showNavigationControl: false,
+        showNavigator: false,
+        showRotationControl: false,
+        showFullPageControl: false,
+        autoHideControls: false,
+        maxZoomPixelRatio: 4,
+        minZoomImageRatio: 0.5,
+        defaultZoomLevel: 0,
+        gestureSettingsMouse: { clickToZoom: false, scrollToZoom: true },
+        gestureSettingsTouch: { clickToZoom: false },
+        // Snap immediately — A drives the animation; B follows frame-by-frame.
+        animationTime: 0,
+      });
+
+      bindViewportSync(viewerA, viewerB);
+    }
+  }
+
+  function bindViewportSync(a, b) {
+    let syncing = false;
+    function sync(src, dst) {
+      if (syncing) return;
+      if (!dst || !dst.viewport) return;
+      syncing = true;
+      try {
+        dst.viewport.zoomTo(src.viewport.getZoom(), null, true);
+        dst.viewport.panTo(src.viewport.getCenter(), true);
+      } finally {
+        syncing = false;
+      }
+    }
+    a.addHandler("pan", () => sync(a, b));
+    a.addHandler("zoom", () => sync(a, b));
+    a.addHandler("animation", () => sync(a, b));
+    b.addHandler("pan", () => sync(b, a));
+    b.addHandler("zoom", () => sync(b, a));
+    b.addHandler("animation", () => sync(b, a));
   }
 
   function updateZoomReadout() {
-    if (!viewerInstance) return;
-    const vp = viewerInstance.viewport;
-    if (!vp) return;
-    // viewportToImageZoom() returns CSS-pixels-per-source-pixel. To match
-    // Lightroom / Photoshop's notion of percent (where 100% means 1 source
-    // pixel = 1 *device* pixel), multiply by devicePixelRatio. On a 2x Retina
-    // display this means OSD's "image zoom 1.0" maps to "200%" here.
+    if (!viewerA || !viewerA.viewport) return;
+    const vp = viewerA.viewport;
     const dpr = window.devicePixelRatio || 1;
     const pct = Math.round(vp.viewportToImageZoom(vp.getZoom()) * dpr * 100);
     if (Number.isFinite(pct)) {
@@ -217,13 +335,21 @@ function attachLightboxHandlers(data) {
     }
   }
 
+  function closeViewers() {
+    if (viewerA) {
+      try { viewerA.destroy(); } catch (e) { /* ignore */ }
+      viewerA = null;
+    }
+    if (viewerB) {
+      try { viewerB.destroy(); } catch (e) { /* ignore */ }
+      viewerB = null;
+    }
+  }
+
   function closeLightbox() {
     lightbox.hidden = true;
     document.body.classList.remove("body--lightbox-open");
-    if (viewerInstance) {
-      viewerInstance.destroy();
-      viewerInstance = null;
-    }
+    closeViewers();
   }
 }
 
