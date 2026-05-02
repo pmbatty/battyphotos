@@ -148,7 +148,10 @@ function attachLightboxHandlers(data) {
   oneToOneBtn.addEventListener("click", () => {
     if (!viewerInstance) return;
     const vp = viewerInstance.viewport;
-    vp.zoomTo(vp.imageToViewportZoom(1));
+    // Lightroom's "1:1" means 1 source pixel = 1 *device* pixel. On a Retina
+    // display, 1 CSS pixel covers `devicePixelRatio` device pixels, so we need
+    // OSD's image-zoom (which is CSS-pixels-per-source-pixel) to be 1 / DPR.
+    vp.zoomTo(vp.imageToViewportZoom(1 / (window.devicePixelRatio || 1)));
     vp.applyConstraints();
   });
   lightbox.addEventListener("click", (e) => {
@@ -203,9 +206,12 @@ function attachLightboxHandlers(data) {
     if (!viewerInstance) return;
     const vp = viewerInstance.viewport;
     if (!vp) return;
-    // viewportToImageZoom returns CSS-pixels-per-source-pixel; multiply by 100
-    // for the photographer-style percentage (100% = 1 source pixel : 1 CSS pixel).
-    const pct = Math.round(vp.viewportToImageZoom(vp.getZoom()) * 100);
+    // viewportToImageZoom() returns CSS-pixels-per-source-pixel. To match
+    // Lightroom / Photoshop's notion of percent (where 100% means 1 source
+    // pixel = 1 *device* pixel), multiply by devicePixelRatio. On a 2x Retina
+    // display this means OSD's "image zoom 1.0" maps to "200%" here.
+    const dpr = window.devicePixelRatio || 1;
+    const pct = Math.round(vp.viewportToImageZoom(vp.getZoom()) * dpr * 100);
     if (Number.isFinite(pct)) {
       zoomEl.textContent = `${pct}%`;
     }
