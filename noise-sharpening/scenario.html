@@ -40,7 +40,12 @@
          them (comparison mode). -->
     <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Full-resolution viewer">
       <div class="lightbox__bar">
-        <div class="lightbox__caption" id="lightbox-caption"></div>
+        <div class="lightbox__pickers" id="lightbox-pickers">
+          <select class="lightbox__pick" id="lightbox-pick-a" aria-label="Choose left image"></select>
+          <span class="lightbox__sep" id="lightbox-sep" aria-hidden="true">&#x21C4;</span>
+          <select class="lightbox__pick" id="lightbox-pick-b" aria-label="Choose right image"></select>
+          <span class="lightbox__caption" id="lightbox-caption" aria-live="polite"></span>
+        </div>
         <div class="lightbox__controls">
           <span class="lightbox__zoom" id="lightbox-zoom" aria-live="polite" aria-label="Current zoom">&hellip;</span>
           <button class="lightbox__btn" type="button" id="lightbox-1to1" title="Zoom to 100% (one source pixel per device pixel)">1:1</button>

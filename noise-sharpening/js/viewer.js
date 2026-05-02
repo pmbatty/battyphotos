@@ -144,6 +144,9 @@ function attachLightboxHandlers(data) {
   const handle = document.getElementById("lightbox-divider-handle");
   const badgeLeft = document.getElementById("lightbox-badge-left");
   const badgeRight = document.getElementById("lightbox-badge-right");
+  const pickA = document.getElementById("lightbox-pick-a");
+  const pickB = document.getElementById("lightbox-pick-b");
+  const sepEl = document.getElementById("lightbox-sep");
 
   // First image in display order is the baseline (RAW) for compare mode.
   // image_order in the manifest puts RAW first in every Spotted Owlet-style
@@ -151,14 +154,47 @@ function attachLightboxHandlers(data) {
   // convention ever needs to bend.
   const baseline = data.images[0];
 
+  // Sync state shared between the in-flight viewport-sync handlers and the
+  // image-swap operation so swapping doesn't trigger feedback loops.
+  let syncing = false;
+  let currentA = null; // variant currently in viewerA
+  let currentB = null; // variant currently in viewerB
+
+  // Picker option HTML — title plus AI rating in parens (1-5) when present.
+  function buildOptions(selectedSlug) {
+    return data.images
+      .map((img) => {
+        const score = img.critique && Number.isInteger(img.critique.potential_score)
+          ? img.critique.potential_score
+          : null;
+        const label = score !== null ? `${img.title} (${score})` : img.title;
+        const sel = img.slug === selectedSlug ? " selected" : "";
+        const titleAttr = img.caption
+          ? ` title="${escapeAttr(img.caption)}"`
+          : "";
+        return `<option value="${escapeAttr(img.slug)}"${sel}${titleAttr}>${escapeHtml(label)}</option>`;
+      })
+      .join("");
+  }
+
   document.querySelectorAll(".variant__display-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const slug = btn.dataset.slug;
       const variant = data.images.find((v) => v.slug === slug);
       if (!variant) return;
-      const compare = baseline && variant.slug !== baseline.slug;
-      openLightbox({ baseline, variant, compare });
+      // Always open with both A and B set: A=baseline, B=clicked variant.
+      // If user clicked the baseline, A==B and we visually present as single mode.
+      openLightbox({ a: baseline, b: variant });
     });
+  });
+
+  pickA.addEventListener("change", () => {
+    const variant = data.images.find((v) => v.slug === pickA.value);
+    if (variant) swapVariant("a", variant);
+  });
+  pickB.addEventListener("change", () => {
+    const variant = data.images.find((v) => v.slug === pickB.value);
+    if (variant) swapVariant("b", variant);
   });
 
   closeBtn.addEventListener("click", closeLightbox);
@@ -229,42 +265,24 @@ function attachLightboxHandlers(data) {
     }
   });
 
-  function openLightbox({ baseline, variant, compare }) {
+  function openLightbox({ a, b }) {
     closeViewers();
 
-    if (compare) {
-      captionEl.innerHTML = `
-        <strong>${escapeHtml(baseline.title)}</strong>
-        <span class="lightbox__sep" aria-hidden="true">&#x21C4;</span>
-        <strong>${escapeHtml(variant.title)}</strong>
-        ${variant.caption ? `<span class="lightbox__caption-detail"> &middot; ${escapeHtml(variant.caption)}</span>` : ""}
-      `;
-      badgeLeft.textContent = baseline.title;
-      badgeRight.textContent = variant.title;
-      badgeLeft.hidden = false;
-      badgeRight.hidden = false;
-      divider.hidden = false;
-      layerB.hidden = false;
-      setDividerX(50);
-    } else {
-      captionEl.innerHTML = `
-        <strong>${escapeHtml(baseline.title)}</strong>
-        ${baseline.caption ? `<span> &middot; ${escapeHtml(baseline.caption)}</span>` : ""}
-      `;
-      badgeLeft.hidden = true;
-      badgeRight.hidden = true;
-      divider.hidden = true;
-      layerB.hidden = true;
-      layerB.style.clipPath = "";
-    }
+    currentA = a;
+    currentB = b;
+
+    pickA.innerHTML = buildOptions(a.slug);
+    pickB.innerHTML = buildOptions(b.slug);
 
     zoomEl.textContent = "…";
     lightbox.hidden = false;
     document.body.classList.add("body--lightbox-open");
 
+    // Always create both viewers — they always exist, we just toggle visibility
+    // of the divider / badges / clip-path based on whether A and B differ.
     viewerA = OpenSeadragon({
       element: viewerAEl,
-      tileSources: { type: "image", url: baseline.display, buildPyramid: false },
+      tileSources: { type: "image", url: a.display, buildPyramid: false },
       prefixUrl: "https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/images/",
       showNavigator: false,
       showRotationControl: false,
@@ -281,31 +299,80 @@ function attachLightboxHandlers(data) {
     viewerA.addHandler("zoom", updateZoomReadout);
     viewerA.addHandler("animation", updateZoomReadout);
 
-    if (compare) {
-      viewerB = OpenSeadragon({
-        element: viewerBEl,
-        tileSources: { type: "image", url: variant.display, buildPyramid: false },
-        // Top viewer reuses A's controls — no zoom buttons of its own.
-        showNavigationControl: false,
-        showNavigator: false,
-        showRotationControl: false,
-        showFullPageControl: false,
-        autoHideControls: false,
-        maxZoomPixelRatio: 4,
-        minZoomImageRatio: 0.5,
-        defaultZoomLevel: 0,
-        gestureSettingsMouse: { clickToZoom: false, scrollToZoom: true },
-        gestureSettingsTouch: { clickToZoom: false },
-        // Snap immediately — A drives the animation; B follows frame-by-frame.
-        animationTime: 0,
-      });
+    viewerB = OpenSeadragon({
+      element: viewerBEl,
+      tileSources: { type: "image", url: b.display, buildPyramid: false },
+      // Top viewer reuses A's controls — no zoom buttons of its own.
+      showNavigationControl: false,
+      showNavigator: false,
+      showRotationControl: false,
+      showFullPageControl: false,
+      autoHideControls: false,
+      maxZoomPixelRatio: 4,
+      minZoomImageRatio: 0.5,
+      defaultZoomLevel: 0,
+      gestureSettingsMouse: { clickToZoom: false, scrollToZoom: true },
+      gestureSettingsTouch: { clickToZoom: false },
+      // Snap immediately — A drives the animation; B follows frame-by-frame.
+      animationTime: 0,
+    });
 
-      bindViewportSync(viewerA, viewerB);
+    bindViewportSync(viewerA, viewerB);
+
+    setDividerX(50);
+    updateMode();
+  }
+
+  // Toggle divider / badges / layer visibility based on whether A and B differ.
+  // Both pickers + the separator stay visible in single mode so the user can
+  // change the right picker to enter compare mode without any extra step.
+  function updateMode() {
+    const isCompare = !!(currentA && currentB && currentA.slug !== currentB.slug);
+    divider.hidden = !isCompare;
+    badgeLeft.hidden = !isCompare;
+    badgeRight.hidden = !isCompare;
+    layerB.hidden = false; // layer always present so OSD keeps rendering
+    if (isCompare) {
+      badgeLeft.textContent = currentA.title;
+      badgeRight.textContent = currentB.title;
+      // Restore the divider's last position (default 50%).
+      const pct = parseFloat(divider.style.left) || 50;
+      setDividerX(pct);
+      captionEl.textContent = currentB.caption ? `· ${currentB.caption}` : "";
+    } else {
+      // Single-image presentation: clip the top layer entirely so only A shows,
+      // even though both viewers exist behind the scenes.
+      layerB.style.clipPath = "inset(0 0 0 100%)";
+      captionEl.textContent = currentA && currentA.caption ? `· ${currentA.caption}` : "";
     }
   }
 
+  // Swap the variant in viewer A or B (driven by picker change). Preserves the
+  // current viewport (zoom + center) so the user doesn't lose their place. The
+  // sync handler is suppressed during the swap to avoid the partner viewer
+  // getting yanked while the new image is loading.
+  function swapVariant(which, variant) {
+    const viewer = which === "a" ? viewerA : viewerB;
+    if (!viewer || !viewer.viewport) return;
+    const zoom = viewer.viewport.getZoom();
+    const center = viewer.viewport.getCenter();
+    syncing = true;
+    viewer.addOnceHandler("open", () => {
+      viewer.viewport.zoomTo(zoom, null, true);
+      viewer.viewport.panTo(center, true);
+      syncing = false;
+      updateZoomReadout();
+    });
+    viewer.open({ type: "image", url: variant.display });
+    if (which === "a") {
+      currentA = variant;
+    } else {
+      currentB = variant;
+    }
+    updateMode();
+  }
+
   function bindViewportSync(a, b) {
-    let syncing = false;
     function sync(src, dst) {
       if (syncing) return;
       if (!dst || !dst.viewport) return;
