@@ -145,8 +145,8 @@ The build script reads these directly from each JPEG's XMP block. **No per-image
 ```
 
 - `slug`, `title`, `subtitle`, `sort_order` — scenario-level display metadata.
-- `detail_crop` — pixel rectangle for the 100% / 200% detail views, applied identically to every variant in the scenario.
-- `hero_image` — the title (matching a JPEG's `dc:title`) used to generate the gallery thumbnail.
+- `detail_crop` — pixel rectangle for the 200% detail crop, applied identically to every variant in the scenario.
+- `hero_image` — the title (matching a JPEG's `dc:title`) used to generate both the gallery thumbnail and the downscaled hero image at the top of the scenario page.
 - `image_order` — array of titles in display order. Optional; if omitted, build script falls back to natural filename order. Useful because alphabetical filename sort puts the master last.
 
 The build script:
@@ -166,10 +166,13 @@ Peter exports JPEGs from Lightroom directly (one batch per scenario, full resolu
 
 From each Lightroom-exported full-resolution JPEG, the script generates:
 
-- **The display JPEG** — used as-is (no resizing, no recompression). LR exports are already at sensible web sizes (e.g., the Spotted Owlet variants are 2883px longest edge after Lightroom's crop; uncropped OM-1 native is 5184px). With <100 total images on the site, payload stays well within GitHub's repo size limits.
-- **Detail crop at 100%** — a smaller region of the image (e.g., the bird's eye area) at native pixel resolution, for direct pixel-level comparison without the user needing to zoom. JPEG quality ~92.
-- **Detail crop at 200%** — same region, upscaled 2× (bilinear) to make pixel-level differences obvious at a glance.
-- **Thumbnail** — one per scenario, ~600px wide, for the gallery card.
+- **The display JPEG** — re-encoded as a progressive, optimised JPEG with the original ICC profile preserved. Used by the comparison lightbox at full resolution; no longer inlined as an `<img>` on the scenario page (a smaller hero takes that role). Quality ~90.
+- **Detail crop at 200%** — the centred half of `detail_crop`, nearest-neighbor upscaled 2× so each source pixel becomes a 2×2 block. This is the at-a-glance comparison view shown next to each variant. JPEG quality ~92.
+
+Once per scenario, additionally (from the variant matching `hero_image`):
+
+- **Hero JPEG** — `hero.jpg`, downscaled to 1600 px wide @ q90 (~300–500 KB). Sits at the top of the scenario page as the "best of" example, eager-loaded as the LCP element.
+- **Thumbnail** — `thumbnail.jpg`, ~600 px wide, for the gallery card.
 
 ### Conversion Notes
 
@@ -183,7 +186,7 @@ A Python script (`tools/build-site.py`) that:
 
 1. Reads a path to the source root (e.g., `~/Pictures/MHWPC-training-noise-sharpening/`).
 2. For each scenario folder, reads `manifest.json` and the matching `jpeg/` subfolder.
-3. For each image in the manifest: produces web JPEG, 100% crop, 200% crop. Generates one thumbnail per scenario.
+3. For each image in the manifest: produces a re-encoded display JPEG and a 200% nearest-upscaled detail crop. The variant matching `hero_image` additionally yields the scenario hero (1600 px wide) and thumbnail (600 px wide).
 4. Extracts the most recent `critique_text` and `potential_score` from each darwain JSON sidecar → writes a per-scenario `critiques.json`.
 5. Writes outputs into the site repo's `images/{scenario-slug}/` and `data/{scenario-slug}/` directories.
 
@@ -212,14 +215,16 @@ Shows all image variants for one scenario. Two viewing modes:
 
 #### Browse Mode (default)
 
-A filmstrip or grid of all variants in the scenario. For each image:
+A single hero image at the top followed by a vertical list of variant cards. For each variant card:
 
-- **The image itself** — displayed at a comfortable viewing size (fit to viewport width), with the ability to **zoom in** (at least 100% pixel view, ideally 200%) via click or scroll. Smooth pan when zoomed.
+- **200% detail crop** on the left — the diagnostic view of the scenario's `detail_crop` region (centred half, nearest-neighbor upscaled 2×). This is the at-a-glance comparison element — the viewer can see individual feather barbs, noise grain texture, sharpening halos, etc., without zooming.
+- Click target: the crop opens the comparison lightbox with the clicked variant on top of the baseline (RAW). The full-resolution display JPEG is loaded lazily by the lightbox via OpenSeadragon.
 - **Title** — short label (e.g., "Topaz Default")
 - **Caption** — what processing was applied
-- **AI Critique** — the `critique_text` from the darwain JSON, displayed in a collapsible/expandable panel below the image. This is typically 3–6 sentences of detailed analysis.
-- **Potential Score** — the 1–5 star rating from darwain, displayed as stars or a badge.
-- **Pre-cropped detail views** — 100% and 200% crops of the key detail area, shown below or alongside the full image. These are the most important elements for comparison — the viewer needs to see individual feather barbs, noise grain texture, sharpening halos, etc.
+- **AI Critique** — the `critique_text` from the darwain JSON, displayed in a collapsible/expandable panel below the meta. This is typically 3–6 sentences of detailed analysis.
+- **Potential Score** — the 1–5 star rating from darwain, displayed as stars in the critique header.
+
+Above the variant list, the **hero image** (downscaled to 1600 px wide from the variant named in `hero_image`) gives scene context and is also a click target into the lightbox. Native-pixel and deeper-than-200% viewing happen in the lightbox via the 1:1 button rather than as separate inline crops.
 
 #### Comparison Mode
 
@@ -313,8 +318,8 @@ battyphotos/                              # Repo root, served at batty.photos
     └── images/
         └── spotted-owlet/
             ├── thumbnail.jpg
-            ├── original-raw.jpg
-            ├── original-raw-crop-100.jpg
+            ├── hero.jpg                  # downscaled hero, displayed atop the page
+            ├── original-raw.jpg          # full-res, served only by the lightbox
             ├── original-raw-crop-200.jpg
             ├── lr-ai-denoise.jpg
             ├── ...
@@ -327,10 +332,9 @@ The `tools/build-site.py` script should:
 1. Take a path to the source root (e.g., `~/Pictures/MHWPC-training-noise-sharpening/`) and walk each scenario subfolder.
 2. Read each scenario's `manifest.json` and the matching `jpeg/` subfolder of Lightroom exports.
 3. For each image in the manifest:
-   - Recompress / resize the source JPEG to the web target (quality ~90, optional max-dimension cap) → `{slug}.jpg`
-   - 100% crop of the scenario's defined region → `{slug}-crop-100.jpg`
-   - 200% upscaled crop (same region) → `{slug}-crop-200.jpg`
-4. Generate one thumbnail per scenario (600px wide, derived from a designated "hero" variant) → `thumbnail.jpg`.
+   - Recompress the source JPEG (progressive, quality ~90, ICC profile preserved) → `{slug}.jpg`
+   - 200% nearest-upscaled crop of the scenario's defined region → `{slug}-crop-200.jpg`
+4. From the variant matching `hero_image`: generate the scenario hero (1600 px wide @ q90) → `hero.jpg`, and the gallery thumbnail (600 px wide) → `thumbnail.jpg`.
 5. Extract the most recent `critique_text` and `potential_score` from each darwain JSON sidecar → write to `data/{scenario-slug}/critiques.json`.
 6. Write outputs into the site repo's `images/{scenario-slug}/` and `data/{scenario-slug}/` directories.
 
@@ -369,7 +373,7 @@ The MHWPC presentation is on **May 11, 2026**. Working backward from there, the 
 1. **Repo skeleton + GitHub Pages + custom domain.** `battyphotos` deploying to `batty.photos`, top-level `index.html` linking to the noise-sharpening sub-project.
 2. **Build script (Pillow-only).** Reads source folder, copies display JPEGs, generates detail crops + thumbnails, extracts darwain critiques into `critiques.json`.
 3. **Scenario gallery page.** Cards with thumbnail + title + variant count.
-4. **Scenario detail page — browse mode.** Image, title, caption, AI critique, potential score, pre-cropped 100% / 200% detail views. Click-to-zoom on full image (simple lightbox or basic OpenSeadragon).
+4. **Scenario detail page — browse mode.** Single hero image at the top, then a vertical list of variant cards (200% detail crop + title + caption + star rating + AI critique). Click-to-zoom from any card opens the comparison lightbox (OpenSeadragon).
 
 ### v1.1 (target: by/just after May 11) — Comparison mode
 

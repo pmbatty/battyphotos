@@ -18,6 +18,8 @@ export function renderBrowseMode(root, data) {
 
   const dims = data.image_dimensions;
   if (dims && dims.width && dims.height) {
+    // Repurposed: the hero (above the variant cards) reserves layout space
+    // using this aspect-ratio, eliminating CLS while the JPEG decodes.
     root.style.setProperty("--variant-aspect", `${dims.width} / ${dims.height}`);
   }
   if (data.detail_crop && data.detail_crop.w && data.detail_crop.h) {
@@ -35,6 +37,10 @@ export function renderBrowseMode(root, data) {
   const variantH = dims?.height || 0;
   const cropW = data.detail_crop?.w || 0;
   const cropH = data.detail_crop?.h || 0;
+
+  const heroVariant = data.hero_slug
+    ? data.images.find((v) => v.slug === data.hero_slug)
+    : null;
 
   const prevLink = data.previous_scenario
     ? `<a class="scenario__nav-link" href="scenario.html?id=${encodeURIComponent(
@@ -59,8 +65,10 @@ export function renderBrowseMode(root, data) {
       ${data.subtitle ? `<p class="lede">${escapeHtml(data.subtitle)}</p>` : ""}
     </header>
 
+    ${heroBlock(data, heroVariant, variantW, variantH)}
+
     <section class="variants">
-      ${data.images.map((img) => variantCard(img, variantW, variantH, cropW, cropH)).join("")}
+      ${data.images.map((img) => variantCard(img, cropW, cropH)).join("")}
     </section>
 
     <nav class="scenario__pager" aria-label="Scenario navigation">
@@ -73,36 +81,53 @@ export function renderBrowseMode(root, data) {
   attachLightboxHandlers(data);
 }
 
-function variantCard(img, variantW, variantH, cropW, cropH) {
+function heroBlock(data, heroVariant, variantW, variantH) {
+  // Hero is optional. When the manifest's hero_image isn't found among
+  // variants the build script emits page-data without one, and we render
+  // the page without it.
+  if (!data.hero || !heroVariant) return "";
   const sizeAttrs = variantW && variantH ? ` width="${variantW}" height="${variantH}"` : "";
+  const altText = heroVariant.caption || heroVariant.title || data.title;
+  return `
+    <figure class="scenario__hero">
+      <button
+        class="scenario__hero-btn"
+        type="button"
+        data-slug="${escapeAttr(heroVariant.slug)}"
+        aria-label="Open ${escapeAttr(heroVariant.title)} at full resolution"
+      >
+        <img
+          src="${escapeAttr(data.hero)}"${sizeAttrs}
+          alt="${escapeAttr(altText)}"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <span class="scenario__hero-hint">${escapeHtml(heroVariant.title)} &middot; click to compare</span>
+      </button>
+    </figure>
+  `;
+}
+
+function variantCard(img, cropW, cropH) {
   const cropAttrs = cropW && cropH ? ` width="${cropW}" height="${cropH}"` : "";
   return `
     <article class="variant" data-slug="${escapeAttr(img.slug)}">
-      <div class="variant__display">
-        <button
-          class="variant__display-btn"
-          type="button"
-          data-slug="${escapeAttr(img.slug)}"
-          aria-label="Open ${escapeAttr(img.title)} at full resolution"
-        >
-          <img src="${img.display}"${sizeAttrs} alt="${escapeAttr(img.caption || img.title)}" loading="lazy" decoding="async" />
-          <span class="variant__zoom-hint">Click to compare &middot; full resolution</span>
-        </button>
-      </div>
+      <button
+        class="variant__open-btn"
+        type="button"
+        data-slug="${escapeAttr(img.slug)}"
+        aria-label="Open ${escapeAttr(img.title)} at full resolution"
+      >
+        <figure class="variant__crop">
+          <img src="${img.crop_200}"${cropAttrs} alt="200% pixel detail of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
+          <figcaption>200% pixel detail (centered, nearest-neighbor upscaled)</figcaption>
+        </figure>
+        <span class="variant__zoom-hint">Click to compare &middot; full resolution</span>
+      </button>
       <div class="variant__meta">
         <h2 class="variant__title">${escapeHtml(img.title)}</h2>
         ${img.caption ? `<p class="variant__caption">${escapeHtml(img.caption)}</p>` : ""}
         ${critiqueBlock(img.critique)}
-      </div>
-      <div class="variant__crops">
-        <figure class="variant__crop" data-level="100">
-          <img src="${img.crop_100}"${cropAttrs} alt="100% pixel detail of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
-          <figcaption>100% pixel detail</figcaption>
-        </figure>
-        <figure class="variant__crop" data-level="200">
-          <img src="${img.crop_200}"${cropAttrs} alt="200% pixel detail of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
-          <figcaption>200% pixel detail (centered, nearest-neighbor upscaled)</figcaption>
-        </figure>
       </div>
     </article>
   `;
@@ -199,14 +224,16 @@ function attachLightboxHandlers(data) {
       .join("");
   }
 
-  // ---- Variant grid → open lightbox -------------------------------------
-  document.querySelectorAll(".variant__display-btn").forEach((btn) => {
+  // ---- Variant grid + hero → open lightbox ------------------------------
+  // Both the per-variant crop button and the page hero use `data-slug` to
+  // identify the right-hand variant; baseline (RAW) is always the left.
+  // If the slug is the baseline itself the lightbox renders single-image
+  // mode automatically (A==B path inside openLightbox).
+  document.querySelectorAll(".variant__open-btn, .scenario__hero-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const slug = btn.dataset.slug;
       const variant = data.images.find((v) => v.slug === slug);
       if (!variant) return;
-      // Always open with both A and B set: A=baseline, B=clicked variant.
-      // If user clicked the baseline, A==B and we visually present as single mode.
       openLightbox({ a: baseline, b: variant });
     });
   });

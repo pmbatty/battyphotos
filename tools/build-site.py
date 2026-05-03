@@ -14,7 +14,11 @@ For each JPEG under jpeg/:
   - derives a URL slug from the title (slugify)
   - maps filename -> (master source file, copy_name) using LR virtual-copy naming
   - loads matching darwain analysis (filtered by copy_name, latest by timestamp)
-  - writes a re-encoded display JPEG + 100% / 200% detail crops
+  - writes a re-encoded display JPEG + a 200% nearest-upscaled detail crop
+
+The hero variant (manifest.hero_image) additionally yields hero.jpg (a
+HERO_WIDTH-wide downscaled JPEG used at the top of the scenario page) and
+thumbnail.jpg (smaller still, for the gallery card).
 
 Writes per-scenario noise-sharpening/data/{slug}/page-data.json plus a top-level
 noise-sharpening/data/scenarios.json index for the gallery page.
@@ -49,6 +53,8 @@ SOURCE_EXTS = (".orf", ".tif", ".tiff", ".dng")
 JPEG_QUALITY_DISPLAY = 90
 JPEG_QUALITY_CROP = 92
 THUMBNAIL_WIDTH = 600
+HERO_WIDTH = 1600
+JPEG_QUALITY_HERO = 90
 SLUG_RE = re.compile(r"[a-z0-9][a-z0-9-]*")
 
 
@@ -65,7 +71,6 @@ class Variant:
     title: str
     caption: str
     display: str
-    crop_100: str
     crop_200: str
     critique: Critique | None = None
 
@@ -77,6 +82,8 @@ class PageData:
     subtitle: str
     image_dimensions: dict
     detail_crop: dict
+    hero: str | None = None
+    hero_slug: str | None = None
     previous_scenario: str | None = None
     next_scenario: str | None = None
     images: list = field(default_factory=list)
@@ -264,32 +271,25 @@ def save_display(im: Image.Image, dst: Path, icc: bytes | None) -> None:
     im.save(dst, "JPEG", **kwargs)
 
 
-def save_crop_at_level(
+def save_crop_200(
     im: Image.Image,
     crop: dict,
     dst: Path,
-    level: int,
     icc: bytes | None,
 ) -> None:
-    """Crop and (for level=200) nearest-neighbor upscale, then save.
+    """Take the centred half of detail_crop (w/2 x h/2 of source pixels),
+    nearest-upscale 2x to match the original detail_crop footprint, save.
 
-    level=100 -> the full detail_crop rectangle, native-size.
-    level=200 -> the centred half of detail_crop (w/2 x h/2 of source pixels),
-                 nearest-upscaled to match the level=100 footprint so each
-                 source pixel becomes a 2x2 block. The honest "200% zoom" look.
+    Each source pixel becomes a 2x2 block — the honest "200% zoom" look that
+    photo apps render natively when you punch in to 200%.
     """
     dst.parent.mkdir(parents=True, exist_ok=True)
     x, y, w, h = crop["x"], crop["y"], crop["w"], crop["h"]
-    if level == 100:
-        cropped = im.crop((x, y, x + w, y + h))
-    elif level == 200:
-        inner_w, inner_h = w // 2, h // 2
-        ix = x + (w - inner_w) // 2
-        iy = y + (h - inner_h) // 2
-        inner = im.crop((ix, iy, ix + inner_w, iy + inner_h))
-        cropped = inner.resize((w, h), Image.Resampling.NEAREST)
-    else:
-        raise ValueError(f"unsupported crop level: {level}")
+    inner_w, inner_h = w // 2, h // 2
+    ix = x + (w - inner_w) // 2
+    iy = y + (h - inner_h) // 2
+    inner = im.crop((ix, iy, ix + inner_w, iy + inner_h))
+    cropped = inner.resize((w, h), Image.Resampling.NEAREST)
     kwargs: dict = {"quality": JPEG_QUALITY_CROP, "optimize": True}
     if icc:
         kwargs["icc_profile"] = icc
@@ -299,14 +299,43 @@ def save_crop_at_level(
 def save_thumbnail(im: Image.Image, dst: Path, icc: bytes | None) -> None:
     """Resize the open image to THUMBNAIL_WIDTH wide (proportional height) and
     save as a small JPEG for the gallery card."""
+    _save_resized(im, dst, THUMBNAIL_WIDTH, quality=85, icc=icc)
+
+
+def save_hero(im: Image.Image, dst: Path, icc: bytes | None) -> None:
+    """Resize the chosen hero variant to HERO_WIDTH wide (proportional height)
+    and save as a progressive JPEG for the scenario page header.
+
+    The hero gives scene context above the variant cards. It is the LCP
+    element for the page; ~1600 px wide @ q90 lands around 300-500 KB and
+    looks crisp on retina up to ~800 CSS pixels."""
+    _save_resized(
+        im, dst, HERO_WIDTH, quality=JPEG_QUALITY_HERO, icc=icc, progressive=True
+    )
+
+
+def _save_resized(
+    im: Image.Image,
+    dst: Path,
+    width: int,
+    quality: int,
+    icc: bytes | None,
+    progressive: bool = False,
+) -> None:
+    """Shared core: LANCZOS-downscale to `width` px wide (never upscale), save."""
     dst.parent.mkdir(parents=True, exist_ok=True)
-    w = THUMBNAIL_WIDTH
-    h = round(im.height * w / im.width)
-    thumb = im.resize((w, h), Image.Resampling.LANCZOS)
-    kwargs: dict = {"quality": 85, "optimize": True}
+    if im.width <= width:
+        # Source narrower than target — copy intrinsic dims, no upscale.
+        resized = im.copy()
+    else:
+        h = round(im.height * width / im.width)
+        resized = im.resize((width, h), Image.Resampling.LANCZOS)
+    kwargs: dict = {"quality": quality, "optimize": True}
+    if progressive:
+        kwargs["progressive"] = True
     if icc:
         kwargs["icc_profile"] = icc
-    thumb.save(dst, "JPEG", **kwargs)
+    resized.save(dst, "JPEG", **kwargs)
 
 
 def order_variants(
@@ -364,11 +393,13 @@ def build_scenario(
     master_stems = find_master_stems(scenario_dir)
     hero_title = manifest.get("hero_image")
     out_thumbnail = images_out / "thumbnail.jpg"
+    out_hero = images_out / "hero.jpg"
 
     variants: list[Variant] = []
     seen_slugs: set[str] = set()
     image_dimensions: dict | None = None
     hero_jpeg_path: Path | None = None
+    hero_variant_slug: str | None = None
     fallback_thumb_handled = False
 
     for jpeg_path in jpegs:
@@ -408,41 +439,40 @@ def build_scenario(
             )
 
             out_display = images_out / f"{variant_slug}.jpg"
-            out_crop_100 = images_out / f"{variant_slug}-crop-100.jpg"
             out_crop_200 = images_out / f"{variant_slug}-crop-200.jpg"
 
             if needs_rebuild(jpeg_path, out_display, force, manifest_mtime):
                 save_display(im, out_display, icc)
 
-            if needs_rebuild(jpeg_path, out_crop_100, force, manifest_mtime) or needs_rebuild(
-                jpeg_path, out_crop_200, force, manifest_mtime
-            ):
+            if needs_rebuild(jpeg_path, out_crop_200, force, manifest_mtime):
                 # Validate the crop rectangle against actual dimensions before
-                # we touch either crop output.
+                # we touch the crop output.
                 cx, cy, cw, ch = crop["x"], crop["y"], crop["w"], crop["h"]
                 if cw < 2 or ch < 2:
                     raise ValueError(
-                        f"detail_crop {crop} too small for level=200 (need w,h >= 2)"
+                        f"detail_crop {crop} too small (need w,h >= 2)"
                     )
                 if cx < 0 or cy < 0 or cx + cw > im.width or cy + ch > im.height:
                     raise ValueError(
                         f"detail_crop {crop} falls outside {jpeg_path.name} "
                         f"({im.width}x{im.height})"
                     )
-                if needs_rebuild(jpeg_path, out_crop_100, force, manifest_mtime):
-                    save_crop_at_level(im, crop, out_crop_100, 100, icc)
-                if needs_rebuild(jpeg_path, out_crop_200, force, manifest_mtime):
-                    save_crop_at_level(im, crop, out_crop_200, 200, icc)
+                save_crop_200(im, crop, out_crop_200, icc)
 
-            # If this variant is the configured hero, write its thumbnail now
-            # — saves an extra Image.open after the loop.
+            # If this variant is the configured hero, write its thumbnail and
+            # downscaled hero JPEG now — saves extra Image.open passes after.
             if title == hero_title:
                 hero_jpeg_path = jpeg_path
+                hero_variant_slug = variant_slug
                 if needs_rebuild(jpeg_path, out_thumbnail, force, manifest_mtime):
                     save_thumbnail(im, out_thumbnail, icc)
+                if needs_rebuild(jpeg_path, out_hero, force, manifest_mtime):
+                    save_hero(im, out_hero, icc)
 
             # If hero was missing or didn't match, write a fallback thumbnail
-            # from the very first variant rather than re-opening it later.
+            # from the very first variant rather than re-opening it later. No
+            # fallback for the hero — page-data.hero stays null and the
+            # frontend renders without one.
             if (
                 hero_title is None or hero_jpeg_path is None
             ) and not fallback_thumb_handled and jpeg_path == jpegs[0]:
@@ -457,18 +487,17 @@ def build_scenario(
                 title=title,
                 caption=caption,
                 display=f"{rel_dir}/{out_display.name}",
-                crop_100=f"{rel_dir}/{out_crop_100.name}",
                 crop_200=f"{rel_dir}/{out_crop_200.name}",
                 critique=critique,
             )
         )
 
     if hero_title is not None and hero_jpeg_path is None:
-        # Misconfigured hero — emit a WARN but the fallback thumbnail was
-        # already saved from the first variant inside the loop.
+        # Misconfigured hero — emit a WARN. Fallback thumbnail was already
+        # saved from the first variant; no hero is rendered on the page.
         print(
             f"  WARN  hero_image {hero_title!r} not found among variants; "
-            f"using {jpegs[0].name} for thumbnail",
+            f"using {jpegs[0].name} for thumbnail and skipping page hero",
             file=sys.stderr,
         )
 
@@ -480,6 +509,8 @@ def build_scenario(
         subtitle=manifest.get("subtitle", ""),
         image_dimensions=image_dimensions or {},
         detail_crop=crop,
+        hero=f"images/{slug}/hero.jpg" if hero_jpeg_path else None,
+        hero_slug=hero_variant_slug,
         images=[asdict(v) for v in variants],
     )
 
