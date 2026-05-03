@@ -62,8 +62,63 @@
         <div class="lightbox__layer lightbox__layer--top" id="lightbox-layer-b" hidden>
           <div class="lightbox__viewer" id="lightbox-viewer-b"></div>
         </div>
-        <div class="lightbox__badge lightbox__badge--left" id="lightbox-badge-left" hidden></div>
-        <div class="lightbox__badge lightbox__badge--right" id="lightbox-badge-right" hidden></div>
+        <button
+          class="lightbox__badge lightbox__badge--left"
+          id="lightbox-badge-left"
+          type="button"
+          data-side="left"
+          hidden
+          aria-expanded="false"
+          aria-controls="lightbox-critique-left"
+        >
+          <span class="lightbox__badge-title"></span>
+          <span class="lightbox__info-icon" aria-hidden="true">i</span>
+        </button>
+        <button
+          class="lightbox__badge lightbox__badge--right"
+          id="lightbox-badge-right"
+          type="button"
+          data-side="right"
+          hidden
+          aria-expanded="false"
+          aria-controls="lightbox-critique-right"
+        >
+          <span class="lightbox__info-icon" aria-hidden="true">i</span>
+          <span class="lightbox__badge-title"></span>
+        </button>
+
+        <aside
+          class="lightbox__critique lightbox__critique--left"
+          id="lightbox-critique-left"
+          data-side="left"
+          hidden
+          role="region"
+          aria-label="Left image AI critique"
+        >
+          <div class="lightbox__critique-header">
+            <span class="lightbox__critique-stars"></span>
+            <span class="lightbox__critique-label">darwain critique</span>
+            <span class="lightbox__critique-model"></span>
+            <button class="lightbox__critique-close" type="button" aria-label="Close critique">&times;</button>
+          </div>
+          <p class="lightbox__critique-text"></p>
+        </aside>
+        <aside
+          class="lightbox__critique lightbox__critique--right"
+          id="lightbox-critique-right"
+          data-side="right"
+          hidden
+          role="region"
+          aria-label="Right image AI critique"
+        >
+          <div class="lightbox__critique-header">
+            <span class="lightbox__critique-stars"></span>
+            <span class="lightbox__critique-label">darwain critique</span>
+            <span class="lightbox__critique-model"></span>
+            <button class="lightbox__critique-close" type="button" aria-label="Close critique">&times;</button>
+          </div>
+          <p class="lightbox__critique-text"></p>
+        </aside>
         <div class="lightbox__divider" id="lightbox-divider" hidden>
           <button
             class="lightbox__divider-handle"

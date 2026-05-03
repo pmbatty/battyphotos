@@ -566,20 +566,43 @@
   margin: 0.6rem;
 }
 
-/* Side badges — small title labels in the bottom corners so the user always
-   knows which side is which, even when the divider is fully to one extreme. */
+/* Side badges — clickable buttons in the bottom corners. The title sits at the
+   outer corner; the "i" icon sits toward the centre so the user can always
+   reach it without crossing the image. Clicking opens the critique panel. */
 .lightbox__badge {
   position: absolute;
   bottom: 0.75rem;
   z-index: 5;
-  padding: 0.3rem 0.7rem;
-  background: rgba(0, 0, 0, 0.6);
+  padding: 0.3rem 0.6rem;
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   font-size: 0.8rem;
   font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 4px;
-  pointer-events: none;
   letter-spacing: 0.02em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.lightbox__badge:hover:not([disabled]),
+.lightbox__badge:focus-visible:not([disabled]) {
+  background: rgba(0, 0, 0, 0.85);
+  border-color: rgba(255, 255, 255, 0.35);
+  outline: none;
+}
+
+.lightbox__badge[disabled] {
+  cursor: default;
+}
+
+.lightbox__badge[aria-expanded="true"] {
+  background: rgba(20, 20, 20, 0.95);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .lightbox__badge--left {
@@ -592,6 +615,124 @@
 
 .lightbox__badge[hidden] {
   display: none;
+}
+
+.lightbox__info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1a1a1a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.lightbox__info-icon[hidden] {
+  display: none;
+}
+
+/* Critique panel — anchored to the bottom corner, sized to fit the text up to
+   half the stage width. height:auto so it stays as shallow as the content
+   allows; max-height clamps and scrolls if a critique ever runs long. */
+.lightbox__critique {
+  position: absolute;
+  bottom: 3.25rem; /* sits just above the badge */
+  z-index: 6;
+  width: calc(50% - 1.5rem);
+  max-width: 30rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 0.7rem 0.85rem;
+  background: rgba(15, 15, 15, 0.94);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.lightbox__critique--left {
+  left: 0.75rem;
+}
+
+.lightbox__critique--right {
+  right: 0.75rem;
+}
+
+.lightbox__critique[hidden] {
+  display: none;
+}
+
+.lightbox__critique-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.lightbox__critique-stars {
+  color: #d39d2c;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.lightbox__critique-stars:empty {
+  display: none;
+}
+
+.lightbox__critique-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+
+.lightbox__critique-model {
+  font-size: 0.7rem;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  opacity: 0.65;
+}
+
+.lightbox__critique-model:empty {
+  display: none;
+}
+
+.lightbox__critique-close {
+  margin-left: auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.lightbox__critique-close:hover,
+.lightbox__critique-close:focus-visible {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  outline: none;
+}
+
+.lightbox__critique-text {
+  margin: 0;
 }
 
 /* Divider — vertical line spanning full stage height, with a circular drag

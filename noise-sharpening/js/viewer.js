@@ -144,9 +144,16 @@ function attachLightboxHandlers(data) {
   const handle = document.getElementById("lightbox-divider-handle");
   const badgeLeft = document.getElementById("lightbox-badge-left");
   const badgeRight = document.getElementById("lightbox-badge-right");
+  const critiqueLeft = document.getElementById("lightbox-critique-left");
+  const critiqueRight = document.getElementById("lightbox-critique-right");
   const pickA = document.getElementById("lightbox-pick-a");
   const pickB = document.getElementById("lightbox-pick-b");
   const sepEl = document.getElementById("lightbox-sep");
+
+  const sides = {
+    left: { badge: badgeLeft, panel: critiqueLeft },
+    right: { badge: badgeRight, panel: critiqueRight },
+  };
 
   // First image in display order is the baseline (RAW) for compare mode.
   // image_order in the manifest puts RAW first in every Spotted Owlet-style
@@ -195,6 +202,19 @@ function attachLightboxHandlers(data) {
   pickB.addEventListener("change", () => {
     const variant = data.images.find((v) => v.slug === pickB.value);
     if (variant) swapVariant("b", variant);
+  });
+
+  // Critique badge / panel toggles. The badge is the trigger (clicking the
+  // whole title or the "i" icon does the same thing). Each panel also has its
+  // own close button for explicit dismissal.
+  Object.keys(sides).forEach((sideKey) => {
+    const { badge, panel } = sides[sideKey];
+    badge.addEventListener("click", () => {
+      if (badge.disabled) return;
+      setCritiqueOpen(sideKey, panel.hidden);
+    });
+    const close = panel.querySelector(".lightbox__critique-close");
+    close.addEventListener("click", () => setCritiqueOpen(sideKey, false));
   });
 
   closeBtn.addEventListener("click", closeLightbox);
@@ -333,8 +353,8 @@ function attachLightboxHandlers(data) {
     badgeRight.hidden = !isCompare;
     layerB.hidden = false; // layer always present so OSD keeps rendering
     if (isCompare) {
-      badgeLeft.textContent = currentA.title;
-      badgeRight.textContent = currentB.title;
+      setBadgeContent("left", currentA);
+      setBadgeContent("right", currentB);
       // Restore the divider's last position (default 50%).
       const pct = parseFloat(divider.style.left) || 50;
       setDividerX(pct);
@@ -343,8 +363,41 @@ function attachLightboxHandlers(data) {
       // Single-image presentation: clip the top layer entirely so only A shows,
       // even though both viewers exist behind the scenes.
       layerB.style.clipPath = "inset(0 0 0 100%)";
+      // Force-close any open critique panels — their badges are now hidden.
+      setCritiqueOpen("left", false);
+      setCritiqueOpen("right", false);
       captionEl.textContent = currentA && currentA.caption ? `· ${currentA.caption}` : "";
     }
+  }
+
+  // Set a side's badge title + info-icon visibility based on whether the
+  // variant has a critique. Also refresh the critique panel content so a panel
+  // that's currently open updates in place when the user swaps the variant.
+  function setBadgeContent(sideKey, variant) {
+    const { badge, panel } = sides[sideKey];
+    const titleEl = badge.querySelector(".lightbox__badge-title");
+    const iconEl = badge.querySelector(".lightbox__info-icon");
+    titleEl.textContent = variant.title;
+    const hasCritique = !!(variant.critique && variant.critique.text);
+    iconEl.hidden = !hasCritique;
+    badge.disabled = !hasCritique;
+    if (hasCritique) {
+      const stars = renderStars(variant.critique.potential_score);
+      panel.querySelector(".lightbox__critique-stars").innerHTML = stars;
+      panel.querySelector(".lightbox__critique-model").textContent =
+        variant.critique.model || "";
+      panel.querySelector(".lightbox__critique-text").textContent = variant.critique.text;
+    } else {
+      // Close panel if a previously-open variant gets swapped to one without
+      // a critique.
+      setCritiqueOpen(sideKey, false);
+    }
+  }
+
+  function setCritiqueOpen(sideKey, open) {
+    const { badge, panel } = sides[sideKey];
+    panel.hidden = !open;
+    badge.setAttribute("aria-expanded", String(!!open));
   }
 
   // Swap the variant in viewer A or B (driven by picker change). Preserves the
