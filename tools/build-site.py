@@ -277,17 +277,19 @@ def save_crop_200(
     dst: Path,
     icc: bytes | None,
 ) -> None:
-    """Take the centred half of detail_crop (w/2 x h/2 of source pixels),
-    nearest-upscale 2x to match the original detail_crop footprint, save.
+    """Render the 200% detail crop and save it.
 
-    Each source pixel becomes a 2x2 block — the honest "200% zoom" look that
-    photo apps render natively when you punch in to 200%.
+    `crop` carries (x, y) as the CENTRE of the diagnostic region in source
+    pixels, plus (w, h) as the rendered output size. The build script pulls
+    a (w/2 × h/2) region of source pixels centred on (x, y), nearest-upscales
+    it 2× to fill (w, h), and saves the JPEG. Each source pixel becomes a
+    2×2 block — the honest "200% zoom" look that photo apps render natively.
     """
     dst.parent.mkdir(parents=True, exist_ok=True)
-    x, y, w, h = crop["x"], crop["y"], crop["w"], crop["h"]
+    cx, cy, w, h = crop["x"], crop["y"], crop["w"], crop["h"]
     inner_w, inner_h = w // 2, h // 2
-    ix = x + (w - inner_w) // 2
-    iy = y + (h - inner_h) // 2
+    ix = cx - inner_w // 2
+    iy = cy - inner_h // 2
     inner = im.crop((ix, iy, ix + inner_w, iy + inner_h))
     cropped = inner.resize((w, h), Image.Resampling.NEAREST)
     kwargs: dict = {"quality": JPEG_QUALITY_CROP, "optimize": True}
@@ -446,16 +448,25 @@ def build_scenario(
 
             if needs_rebuild(jpeg_path, out_crop_200, force, manifest_mtime):
                 # Validate the crop rectangle against actual dimensions before
-                # we touch the crop output.
+                # we touch the crop output. (cx, cy) is the centre of the
+                # diagnostic region; (cw, ch) is the rendered output size.
+                # The actual source region pulled is half each side, centred
+                # on (cx, cy), so the meaningful bounds check is also against
+                # the half-dims (the outer cw × ch is just a render-size
+                # convention, not a source-pixel constraint).
                 cx, cy, cw, ch = crop["x"], crop["y"], crop["w"], crop["h"]
                 if cw < 2 or ch < 2:
                     raise ValueError(
                         f"detail_crop {crop} too small (need w,h >= 2)"
                     )
-                if cx < 0 or cy < 0 or cx + cw > im.width or cy + ch > im.height:
+                half_w, half_h = cw // 2, ch // 2
+                left = cx - half_w // 2
+                top = cy - half_h // 2
+                if left < 0 or top < 0 or left + half_w > im.width or top + half_h > im.height:
                     raise ValueError(
-                        f"detail_crop {crop} falls outside {jpeg_path.name} "
-                        f"({im.width}x{im.height})"
+                        f"detail_crop center=({cx},{cy}) size={cw}x{ch} extends "
+                        f"outside {jpeg_path.name} ({im.width}x{im.height}); "
+                        f"inner region would be ({left},{top})..({left + half_w},{top + half_h})"
                     )
                 save_crop_200(im, crop, out_crop_200, icc)
 
