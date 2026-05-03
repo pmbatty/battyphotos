@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p1
 issue_id: 006
 tags: [code-review, frontend, performance]
@@ -62,3 +62,4 @@ _(Filled during triage)_
 ## Resources
 
 - performance-oracle report
+- 2026-05-02: resolved during /workflows:work pass on review findings

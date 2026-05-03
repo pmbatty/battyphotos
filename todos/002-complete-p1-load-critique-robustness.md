@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p1
 issue_id: 002
 tags: [code-review, build-script, robustness]
@@ -77,3 +77,4 @@ _(Filled during triage)_
 ## Resources
 
 - kieran-python-reviewer report
+- 2026-05-02: resolved during /workflows:work pass on review findings

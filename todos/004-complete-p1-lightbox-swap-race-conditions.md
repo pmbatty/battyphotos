@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p1
 issue_id: 004
 tags: [code-review, frontend, races, concurrency]
@@ -93,3 +93,4 @@ _(Filled during triage)_
 
 - julik-frontend-races-reviewer report
 - code-simplicity-reviewer also flagged that the `syncing` flag's three call sites could be simplified
+- 2026-05-02: resolved during /workflows:work pass on review findings

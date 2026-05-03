@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p2
 issue_id: 014
 tags: [code-review, build-script, performance, cleanup]
@@ -94,3 +94,4 @@ _(Filled during triage)_
 
 - kieran-python-reviewer report
 - performance-oracle report
+- 2026-05-02: resolved during /workflows:work pass on review findings

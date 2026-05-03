@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p2
 issue_id: 009
 tags: [code-review, security, build-script]
@@ -85,3 +85,4 @@ _(Filled during triage)_
 
 - security-sentinel report
 - kieran-python-reviewer report
+- 2026-05-02: resolved during /workflows:work pass on review findings

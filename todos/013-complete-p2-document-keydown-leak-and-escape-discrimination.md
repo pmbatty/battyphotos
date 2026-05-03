@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p2
 issue_id: 013
 tags: [code-review, frontend, accessibility, lifecycle]
@@ -78,3 +78,4 @@ _(Filled during triage)_
 ## Resources
 
 - julik-frontend-races-reviewer report
+- 2026-05-02: resolved during /workflows:work pass on review findings

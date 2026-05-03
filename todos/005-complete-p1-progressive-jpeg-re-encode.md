@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p1
 issue_id: 005
 tags: [code-review, build-script, performance]
@@ -80,3 +80,4 @@ _(Filled during triage)_
 
 - performance-oracle report
 - kieran-python-reviewer also flagged the multiple-`Image.open`-per-JPEG perf concern (todo 014) that should land alongside this
+- 2026-05-02: resolved during /workflows:work pass on review findings

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p2
 issue_id: 007
 tags: [code-review, security, supply-chain]
@@ -69,3 +69,4 @@ _(Filled during triage)_
 
 - security-sentinel report
 - performance-oracle also flagged that `<link rel="preconnect">` is missing if we keep the CDN (P2-4)
+- 2026-05-02: resolved during /workflows:work pass on review findings

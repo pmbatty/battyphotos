@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p2
 issue_id: 012
 tags: [code-review, frontend, performance]
@@ -81,3 +81,4 @@ _(Filled during triage)_
 
 - performance-oracle report
 - julik-frontend-races-reviewer report
+- 2026-05-02: resolved during /workflows:work pass on review findings

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p2
 issue_id: 010
 tags: [code-review, frontend, security, simplicity]
@@ -85,3 +85,4 @@ _(Filled during triage)_
 
 - code-simplicity-reviewer report
 - security-sentinel report
+- 2026-05-02: resolved during /workflows:work pass on review findings
