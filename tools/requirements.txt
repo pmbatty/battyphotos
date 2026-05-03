@@ -1,2 +1,5 @@
-Pillow>=10.0
-defusedxml>=0.7
+# Build-time dependencies for tools/build-site.py.
+# Python 3.10+ (uses `X | None` PEP 604 syntax under `from __future__ import annotations`).
+
+Pillow>=11,<12
+defusedxml>=0.7.1,<0.8
