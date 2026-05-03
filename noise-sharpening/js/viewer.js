@@ -14,7 +14,6 @@ let viewerA = null; // baseline / single
 let viewerB = null; // top variant in compare mode
 
 export function renderBrowseMode(root, data) {
-  root.classList.add("scenario--browse");
   root.removeAttribute("aria-busy");
 
   const dims = data.image_dimensions;
@@ -148,26 +147,32 @@ function attachLightboxHandlers(data) {
   const critiqueRight = document.getElementById("lightbox-critique-right");
   const pickA = document.getElementById("lightbox-pick-a");
   const pickB = document.getElementById("lightbox-pick-b");
-  const sepEl = document.getElementById("lightbox-sep");
 
   const sides = {
     left: { badge: badgeLeft, panel: critiqueLeft },
     right: { badge: badgeRight, panel: critiqueRight },
   };
+  const pickers = { a: pickA, b: pickB };
 
   // First image in display order is the baseline (RAW) for compare mode.
-  // image_order in the manifest puts RAW first in every Spotted Owlet-style
-  // scenario; we'll add an explicit baseline_image manifest field if the
-  // convention ever needs to bend.
   const baseline = data.images[0];
 
-  // Sync state shared between the in-flight viewport-sync handlers and the
-  // image-swap operation so swapping doesn't trigger feedback loops.
-  let syncing = false;
-  let currentA = null; // variant currently in viewerA
-  let currentB = null; // variant currently in viewerB
+  // ---- Lightbox state ----------------------------------------------------
+  // `swapsInFlight` counts viewer.open() calls whose post-load handlers
+  // haven't fired yet. While > 0, viewport-sync handlers suppress
+  // themselves so an in-flight swap doesn't yank the partner viewer.
+  // `insideSync` is the conventional bidirectional-sync feedback guard.
+  let swapsInFlight = 0;
+  let insideSync = false;
+  const pendingSwapTokens = new Set();
+  let currentA = null;
+  let currentB = null;
+  let lastZoomPct = null;
+  function shouldSuppressSync() {
+    return swapsInFlight > 0 || insideSync;
+  }
 
-  // Picker option HTML — title plus AI rating in parens (1-5) when present.
+  // ---- Picker option HTML ------------------------------------------------
   function buildOptions(selectedSlug) {
     return data.images
       .map((img) => {
@@ -184,6 +189,7 @@ function attachLightboxHandlers(data) {
       .join("");
   }
 
+  // ---- Variant grid → open lightbox -------------------------------------
   document.querySelectorAll(".variant__display-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const slug = btn.dataset.slug;
@@ -195,6 +201,7 @@ function attachLightboxHandlers(data) {
     });
   });
 
+  // ---- Picker change → swap viewer image --------------------------------
   pickA.addEventListener("change", () => {
     const variant = data.images.find((v) => v.slug === pickA.value);
     if (variant) swapVariant("a", variant);
@@ -204,9 +211,7 @@ function attachLightboxHandlers(data) {
     if (variant) swapVariant("b", variant);
   });
 
-  // Critique badge / panel toggles. The badge is the trigger (clicking the
-  // whole title or the "i" icon does the same thing). Each panel also has its
-  // own close button for explicit dismissal.
+  // ---- Critique badges + panels -----------------------------------------
   Object.keys(sides).forEach((sideKey) => {
     const { badge, panel } = sides[sideKey];
     badge.addEventListener("click", () => {
@@ -217,9 +222,10 @@ function attachLightboxHandlers(data) {
     close.addEventListener("click", () => setCritiqueOpen(sideKey, false));
   });
 
+  // ---- Close, 1:1, backdrop ---------------------------------------------
   closeBtn.addEventListener("click", closeLightbox);
   oneToOneBtn.addEventListener("click", () => {
-    if (!viewerA) return;
+    if (!viewerA || !viewerA.viewport) return;
     const vp = viewerA.viewport;
     // Lightroom's 1:1 = 1 source pixel per *device* pixel. Account for DPR.
     vp.zoomTo(vp.imageToViewportZoom(1 / (window.devicePixelRatio || 1)));
@@ -228,13 +234,24 @@ function attachLightboxHandlers(data) {
   lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) closeLightbox();
   });
+
+  // Document-level Escape close. Skip when focus is inside a `<select>` —
+  // native dropdowns also consume Escape to cancel; we don't want to steal
+  // it and accidentally close the whole lightbox while the user is just
+  // backing out of a picker.
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !lightbox.hidden) closeLightbox();
+    if (e.key !== "Escape" || lightbox.hidden) return;
+    if (e.target && e.target.tagName === "SELECT") return;
+    closeLightbox();
   });
 
-  // Divider drag: handle is the only pointer-target so OSD pan still works
-  // anywhere else inside the stage.
+  // ---- Divider drag (rAF-throttled) -------------------------------------
   let dragging = false;
+  let capturedPointerId = null;
+  let dragRect = null;
+  let pendingDividerPct = null;
+  let dividerRafQueued = false;
+
   function setDividerX(percent) {
     const pct = Math.max(0, Math.min(100, percent));
     divider.style.left = `${pct}%`;
@@ -243,24 +260,46 @@ function attachLightboxHandlers(data) {
     layerB.style.clipPath = `inset(0 0 0 ${pct}%)`;
     handle.setAttribute("aria-valuenow", String(Math.round(pct)));
   }
+
+  function readDividerPct() {
+    const parsed = parseFloat(divider.style.left);
+    return Number.isFinite(parsed) ? parsed : 50;
+  }
+
   handle.addEventListener("pointerdown", (e) => {
     dragging = true;
+    capturedPointerId = e.pointerId;
+    // Cache the stage rect once: it doesn't move during a drag, and reading
+    // getBoundingClientRect on every pointermove forces synchronous layout
+    // (especially after the previous frame's clip-path write dirtied things).
+    dragRect = stage.getBoundingClientRect();
     handle.setPointerCapture(e.pointerId);
     e.preventDefault();
   });
   handle.addEventListener("pointermove", (e) => {
-    if (!dragging) return;
-    const rect = stage.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    setDividerX(x);
+    if (!dragging || !dragRect) return;
+    pendingDividerPct = ((e.clientX - dragRect.left) / dragRect.width) * 100;
+    if (!dividerRafQueued) {
+      dividerRafQueued = true;
+      requestAnimationFrame(() => {
+        dividerRafQueued = false;
+        if (pendingDividerPct !== null) {
+          setDividerX(pendingDividerPct);
+          pendingDividerPct = null;
+        }
+      });
+    }
   });
-  const endDrag = (e) => {
+  function endDrag(e) {
     if (!dragging) return;
     dragging = false;
-    if (handle.hasPointerCapture(e.pointerId)) {
+    dragRect = null;
+    pendingDividerPct = null;
+    if (e && handle.hasPointerCapture(e.pointerId)) {
       handle.releasePointerCapture(e.pointerId);
     }
-  };
+    capturedPointerId = null;
+  }
   handle.addEventListener("pointerup", endDrag);
   handle.addEventListener("pointercancel", endDrag);
   handle.addEventListener("dblclick", (e) => {
@@ -269,7 +308,7 @@ function attachLightboxHandlers(data) {
   });
   handle.addEventListener("keydown", (e) => {
     const step = e.shiftKey ? 10 : 2;
-    const current = parseFloat(divider.style.left) || 50;
+    const current = readDividerPct();
     if (e.key === "ArrowLeft") {
       setDividerX(current - step);
       e.preventDefault();
@@ -285,16 +324,20 @@ function attachLightboxHandlers(data) {
     }
   });
 
+  // ---- Open / close lightbox --------------------------------------------
   function openLightbox({ a, b }) {
     closeViewers();
 
     currentA = a;
     currentB = b;
+    lastZoomPct = null;
 
     pickA.innerHTML = buildOptions(a.slug);
     pickB.innerHTML = buildOptions(b.slug);
     pickA.title = a.caption || "";
     pickB.title = b.caption || "";
+    setPickerLocked("a", false);
+    setPickerLocked("b", false);
 
     zoomEl.textContent = "…";
     lightbox.hidden = false;
@@ -318,8 +361,10 @@ function attachLightboxHandlers(data) {
       animationTime: 0.4,
     });
     viewerA.addHandler("open", updateZoomReadout);
+    // pan + zoom cover both interactive and animated viewport changes; we
+    // intentionally don't subscribe to `animation` (every-frame) — it fires
+    // on top of pan/zoom and would multiply the work without adding signal.
     viewerA.addHandler("zoom", updateZoomReadout);
-    viewerA.addHandler("animation", updateZoomReadout);
 
     viewerB = OpenSeadragon({
       element: viewerBEl,
@@ -345,38 +390,68 @@ function attachLightboxHandlers(data) {
     updateMode();
   }
 
-  // Toggle divider / badges / layer visibility based on whether A and B differ.
-  // Both pickers + the separator stay visible in single mode so the user can
-  // change the right picker to enter compare mode without any extra step.
+  function closeViewers() {
+    // Cancel any in-flight swap restorations so they don't fire on a
+    // destroyed viewer (and don't leave swapsInFlight counter stranded).
+    pendingSwapTokens.forEach((token) => {
+      token.cancelled = true;
+    });
+    pendingSwapTokens.clear();
+    swapsInFlight = 0;
+    insideSync = false;
+
+    if (viewerA) {
+      try { viewerA.destroy(); } catch (e) { /* ignore */ }
+      viewerA = null;
+    }
+    if (viewerB) {
+      try { viewerB.destroy(); } catch (e) { /* ignore */ }
+      viewerB = null;
+    }
+  }
+
+  function closeLightbox() {
+    // Release pointer capture if mid-drag — otherwise `dragging` would stay
+    // true into the next open and the divider would jump on first hover.
+    if (dragging && capturedPointerId !== null) {
+      try {
+        if (handle.hasPointerCapture(capturedPointerId)) {
+          handle.releasePointerCapture(capturedPointerId);
+        }
+      } catch (e) { /* ignore */ }
+    }
+    dragging = false;
+    capturedPointerId = null;
+    dragRect = null;
+    pendingDividerPct = null;
+    dividerRafQueued = false;
+
+    lightbox.hidden = true;
+    document.body.classList.remove("body--lightbox-open");
+    closeViewers();
+  }
+
+  // ---- Mode + side state ------------------------------------------------
   function updateMode() {
     const isCompare = !!(currentA && currentB && currentA.slug !== currentB.slug);
     divider.hidden = !isCompare;
     badgeLeft.hidden = !isCompare;
     badgeRight.hidden = !isCompare;
-    layerB.hidden = false; // layer always present so OSD keeps rendering
+    layerB.hidden = false;
     if (isCompare) {
       setBadgeContent("left", currentA);
       setBadgeContent("right", currentB);
       // Restore the divider's last position (default 50%).
-      const pct = parseFloat(divider.style.left) || 50;
-      setDividerX(pct);
+      setDividerX(readDividerPct());
     } else {
-      // Single-image presentation: clip the top layer entirely so only A shows,
-      // even though both viewers exist behind the scenes.
+      // Single-image presentation: clip the top layer entirely so only A
+      // shows even though both viewers exist.
       layerB.style.clipPath = "inset(0 0 0 100%)";
-      // Force-close any open critique panels — their badges are now hidden.
       setCritiqueOpen("left", false);
       setCritiqueOpen("right", false);
     }
   }
 
-  // Set a side's badge title + info-icon visibility based on whether the
-  // variant has a critique. Also refresh the critique panel content so a panel
-  // that's currently open updates in place when the user swaps the variant.
-  // The variant's caption (from XMP dc:description) is included in the panel
-  // even when there's no AI critique — though in that case the badge is
-  // disabled and there's nothing to click open. The badge with no critique
-  // still surfaces the caption via the picker's hover tooltip, set elsewhere.
   function setBadgeContent(sideKey, variant) {
     const { badge, panel } = sides[sideKey];
     const titleEl = badge.querySelector(".lightbox__badge-title");
@@ -397,8 +472,6 @@ function attachLightboxHandlers(data) {
       panel.querySelector(".lightbox__critique-stars").innerHTML = "";
       panel.querySelector(".lightbox__critique-model").textContent = "";
       panel.querySelector(".lightbox__critique-text").textContent = "";
-      // Close panel if a previously-open variant gets swapped to one without
-      // a critique.
       setCritiqueOpen(sideKey, false);
     }
   }
@@ -409,23 +482,70 @@ function attachLightboxHandlers(data) {
     badge.setAttribute("aria-expanded", String(!!open));
   }
 
-  // Swap the variant in viewer A or B (driven by picker change). Preserves the
-  // current viewport (zoom + center) so the user doesn't lose their place. The
-  // sync handler is suppressed during the swap to avoid the partner viewer
-  // getting yanked while the new image is loading.
+  function setPickerLocked(which, locked) {
+    pickers[which].disabled = locked;
+  }
+
+  // ---- Picker swap with viewport preservation ---------------------------
   function swapVariant(which, variant) {
     const viewer = which === "a" ? viewerA : viewerB;
     if (!viewer || !viewer.viewport) return;
+
+    const previousVariant = which === "a" ? currentA : currentB;
     const zoom = viewer.viewport.getZoom();
     const center = viewer.viewport.getCenter();
-    syncing = true;
+
+    // Disable the picker while its swap is in flight — prevents back-to-back
+    // changes piling up on the same viewer. Other side's picker stays usable.
+    setPickerLocked(which, true);
+
+    // Track this swap so closeViewers can cancel it cleanly. swapsInFlight
+    // suppresses sync until ALL pending swaps complete.
+    const token = { cancelled: false };
+    pendingSwapTokens.add(token);
+    swapsInFlight++;
+
+    function clearSwap() {
+      if (pendingSwapTokens.has(token)) {
+        pendingSwapTokens.delete(token);
+        swapsInFlight = Math.max(0, swapsInFlight - 1);
+      }
+      setPickerLocked(which, false);
+    }
+
     viewer.addOnceHandler("open", () => {
-      viewer.viewport.zoomTo(zoom, null, true);
-      viewer.viewport.panTo(center, true);
-      syncing = false;
+      if (token.cancelled || !viewer.viewport) {
+        clearSwap();
+        return;
+      }
+      // Restore captured viewport. Uses insideSync so the partner viewer
+      // doesn't react to A's transient zoom/pan events during the restore.
+      insideSync = true;
+      try {
+        viewer.viewport.zoomTo(zoom, null, true);
+        viewer.viewport.panTo(center, true);
+      } finally {
+        insideSync = false;
+      }
+      clearSwap();
       updateZoomReadout();
     });
-    viewer.open({ type: "image", url: variant.display });
+    viewer.addOnceHandler("open-failed", () => {
+      if (token.cancelled) {
+        clearSwap();
+        return;
+      }
+      // Roll back the picker selection + currentA/B to the last good value.
+      // Otherwise the picker shows variant X while the viewer is empty.
+      pickers[which].value = previousVariant ? previousVariant.slug : "";
+      pickers[which].title = previousVariant && previousVariant.caption ? previousVariant.caption : "";
+      if (which === "a") currentA = previousVariant;
+      else currentB = previousVariant;
+      clearSwap();
+      updateMode();
+    });
+
+    // Optimistically update state — `open-failed` rolls back if the load fails.
     if (which === "a") {
       currentA = variant;
       pickA.title = variant.caption || "";
@@ -434,26 +554,27 @@ function attachLightboxHandlers(data) {
       pickB.title = variant.caption || "";
     }
     updateMode();
+
+    viewer.open({ type: "image", url: variant.display });
   }
 
+  // ---- Viewport sync ----------------------------------------------------
   function bindViewportSync(a, b) {
     function sync(src, dst) {
-      if (syncing) return;
+      if (shouldSuppressSync()) return;
       if (!dst || !dst.viewport) return;
-      syncing = true;
+      insideSync = true;
       try {
         dst.viewport.zoomTo(src.viewport.getZoom(), null, true);
         dst.viewport.panTo(src.viewport.getCenter(), true);
       } finally {
-        syncing = false;
+        insideSync = false;
       }
     }
     a.addHandler("pan", () => sync(a, b));
     a.addHandler("zoom", () => sync(a, b));
-    a.addHandler("animation", () => sync(a, b));
     b.addHandler("pan", () => sync(b, a));
     b.addHandler("zoom", () => sync(b, a));
-    b.addHandler("animation", () => sync(b, a));
   }
 
   function updateZoomReadout() {
@@ -461,26 +582,10 @@ function attachLightboxHandlers(data) {
     const vp = viewerA.viewport;
     const dpr = window.devicePixelRatio || 1;
     const pct = Math.round(vp.viewportToImageZoom(vp.getZoom()) * dpr * 100);
-    if (Number.isFinite(pct)) {
+    if (Number.isFinite(pct) && pct !== lastZoomPct) {
       zoomEl.textContent = `${pct}%`;
+      lastZoomPct = pct;
     }
-  }
-
-  function closeViewers() {
-    if (viewerA) {
-      try { viewerA.destroy(); } catch (e) { /* ignore */ }
-      viewerA = null;
-    }
-    if (viewerB) {
-      try { viewerB.destroy(); } catch (e) { /* ignore */ }
-      viewerB = null;
-    }
-  }
-
-  function closeLightbox() {
-    lightbox.hidden = true;
-    document.body.classList.remove("body--lightbox-open");
-    closeViewers();
   }
 }
 
