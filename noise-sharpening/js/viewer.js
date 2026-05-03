@@ -305,7 +305,7 @@ function attachLightboxHandlers(data) {
     viewerA = OpenSeadragon({
       element: viewerAEl,
       tileSources: { type: "image", url: a.display, buildPyramid: false },
-      prefixUrl: "https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/images/",
+      prefixUrl: "vendor/openseadragon-4.1.1/images/",
       showNavigator: false,
       showRotationControl: false,
       showFullPageControl: false,

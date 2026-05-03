@@ -6,12 +6,9 @@
     <title>Scenario — Noise reduction &amp; sharpening — batty.photos</title>
     <link rel="stylesheet" href="../css/site.css" />
     <link rel="stylesheet" href="css/styles.css" />
-    <!-- OpenSeadragon for full-resolution pan / zoom on image click -->
-    <link
-      rel="preload"
-      as="script"
-      href="https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/openseadragon.min.js"
-    />
+    <!-- OpenSeadragon (vendored locally — see noise-sharpening/vendor/) for
+         full-resolution pan / zoom on image click. -->
+    <link rel="preload" as="script" href="vendor/openseadragon-4.1.1/openseadragon.min.js" />
   </head>
   <body>
     <header class="site-header">
@@ -138,7 +135,7 @@
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/openseadragon.min.js"></script>
+    <script src="vendor/openseadragon-4.1.1/openseadragon.min.js"></script>
     <script type="module" src="js/app.js"></script>
   </body>
 </html>
