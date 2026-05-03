@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p3
 issue_id: 019
 tags: [code-review, security, defense-in-depth]
@@ -86,3 +86,4 @@ _(Filled during triage)_
 
 - security-sentinel report
 - depends on todo 007 (vendor OSD) and todo 010 (escape consolidation)
+- 2026-05-03: resolved during /workflows:work P3 sweep

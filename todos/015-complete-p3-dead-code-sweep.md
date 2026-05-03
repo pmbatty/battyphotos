@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p3
 issue_id: 015
 tags: [code-review, simplicity, cleanup]
@@ -68,3 +68,4 @@ See line refs above.
 ## Resources
 
 - code-simplicity-reviewer report
+- 2026-05-03: resolved during /workflows:work P3 sweep

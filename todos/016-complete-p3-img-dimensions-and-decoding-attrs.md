@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p3
 issue_id: 016
 tags: [code-review, frontend, performance, accessibility]
@@ -70,3 +70,4 @@ _(Filled during triage)_
 ## Resources
 
 - performance-oracle report
+- 2026-05-03: resolved during /workflows:work P3 sweep

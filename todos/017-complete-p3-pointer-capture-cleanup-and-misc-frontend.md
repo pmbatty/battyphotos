@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p3
 issue_id: 017
 tags: [code-review, frontend, lifecycle, polish]
@@ -76,3 +76,4 @@ See line refs above.
 ## Resources
 
 - julik-frontend-races-reviewer report
+- 2026-05-03: resolved during /workflows:work P3 sweep

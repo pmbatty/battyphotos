@@ -1,5 +1,5 @@
 ---
-status: pending
+status: complete
 priority: p3
 issue_id: 018
 tags: [code-review, build-script, polish]
@@ -73,3 +73,4 @@ _(Filled during triage)_
 ## Resources
 
 - kieran-python-reviewer report
+- 2026-05-03: resolved during /workflows:work P3 sweep
