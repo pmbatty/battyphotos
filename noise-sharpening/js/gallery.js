@@ -1,16 +1,18 @@
 /**
  * Gallery landing page — fetches data/scenarios.json and renders one card per scenario.
  */
+import { escapeHtml } from "./escape.js";
+
 const galleryEl = document.getElementById("gallery");
 
 async function render() {
   let scenarios;
   try {
-    const res = await fetch("data/scenarios.json", { cache: "no-cache" });
+    const res = await fetch("data/scenarios.json");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     scenarios = await res.json();
   } catch (err) {
-    galleryEl.innerHTML = `<p class="gallery__error">Couldn't load the scenario list: ${err.message}</p>`;
+    galleryEl.innerHTML = `<p class="gallery__error">Couldn't load the scenario list: ${escapeHtml(err.message)}</p>`;
     galleryEl.removeAttribute("aria-busy");
     return;
   }
@@ -40,16 +42,6 @@ function card(s) {
       </div>
     </a>
   `;
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  }[c]));
 }
 
 render();

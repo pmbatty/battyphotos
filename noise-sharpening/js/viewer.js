@@ -8,6 +8,7 @@
  *     right, with a draggable vertical divider revealing one or the other.
  *     Both viewers stay synced for pan / zoom / 1:1.
  */
+import { escapeHtml } from "./escape.js";
 
 let viewerA = null; // baseline / single
 let viewerB = null; // top variant in compare mode
@@ -483,16 +484,6 @@ function attachLightboxHandlers(data) {
   }
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  }[c]));
-}
-
-function escapeAttr(s) {
-  return escapeHtml(s);
-}
+// `escapeAttr` is identical to `escapeHtml` — kept as an alias to make sinks
+// self-documenting (template-literal use in attribute vs body context).
+const escapeAttr = escapeHtml;
