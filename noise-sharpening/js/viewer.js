@@ -27,7 +27,17 @@ export function renderBrowseMode(root, data) {
       "--crop-aspect",
       `${data.detail_crop.w} / ${data.detail_crop.h}`,
     );
-    root.style.setProperty("--crop-width", `${data.detail_crop.w}px`);
+    // The crop JPEG is detail_crop.w × detail_crop.h pixels and contains the
+    // centred half of the source crop nearest-upscaled 2× (so 1 source pixel
+    // = 2×2 JPEG pixels = the photo-app "200% zoom" look). To make that
+    // match Lightroom's 200% on a Retina display, the JPEG must render at
+    // one JPEG pixel per *device* pixel — which means the CSS width must be
+    // the JPEG width divided by devicePixelRatio. Without this, on DPR=2 the
+    // browser stretches the JPEG to twice its intended on-screen size,
+    // producing a 400% view masquerading as 200%.
+    // See: docs/solutions/ui-patterns/openseadragon-synced-comparison-viewer.md (gotcha #4)
+    const dpr = window.devicePixelRatio || 1;
+    root.style.setProperty("--crop-width", `${data.detail_crop.w / dpr}px`);
   }
 
   // Pass intrinsic dimensions through to the templated <img> tags so the
