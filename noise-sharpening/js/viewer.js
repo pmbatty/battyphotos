@@ -27,17 +27,18 @@ export function renderBrowseMode(root, data) {
       "--crop-aspect",
       `${data.detail_crop.w} / ${data.detail_crop.h}`,
     );
-    // The crop JPEG is detail_crop.w × detail_crop.h pixels and contains the
-    // centred half of the source crop nearest-upscaled 2× (so 1 source pixel
-    // = 2×2 JPEG pixels = the photo-app "200% zoom" look). To make that
-    // match Lightroom's 200% on a Retina display, the JPEG must render at
-    // one JPEG pixel per *device* pixel — which means the CSS width must be
-    // the JPEG width divided by devicePixelRatio. Without this, on DPR=2 the
-    // browser stretches the JPEG to twice its intended on-screen size,
-    // producing a 400% view masquerading as 200%.
+    // detail_crop.w/h are *source* pixel dimensions; the build script
+    // nearest-upscales 2× so the JPEG file is (2w × 2h) pixels with each
+    // source pixel rendered as a 2×2 block (= "200% zoom"). To match
+    // Lightroom's 200% on a Retina display, the JPEG must render at one
+    // JPEG pixel per *device* pixel, which means CSS width = (2w) / dpr.
+    // - DPR=1: crop renders at 2w CSS px = 2w device px = 200% view.
+    // - DPR=2: crop renders at  w CSS px = 2w device px = 200% view.
+    // Without the /dpr scaling, on DPR=2 the browser would stretch the JPEG
+    // to 4w device px wide — a 400% view masquerading as 200%.
     // See: docs/solutions/ui-patterns/openseadragon-synced-comparison-viewer.md (gotcha #4)
     const dpr = window.devicePixelRatio || 1;
-    root.style.setProperty("--crop-width", `${data.detail_crop.w / dpr}px`);
+    root.style.setProperty("--crop-width", `${(data.detail_crop.w * 2) / dpr}px`);
   }
 
   // Pass intrinsic dimensions through to the templated <img> tags so the
@@ -119,7 +120,11 @@ function heroBlock(data, heroVariant, variantW, variantH) {
 }
 
 function variantCard(img, cropW, cropH) {
-  const cropAttrs = cropW && cropH ? ` width="${cropW}" height="${cropH}"` : "";
+  // The JPEG file's intrinsic dimensions are (2 × source w, 2 × source h)
+  // because the build script upscales 2× to bake in the "200% zoom" look.
+  // Emit those as the img attrs so the natural-size aspect matches the
+  // file and CLS reservation is exact.
+  const cropAttrs = cropW && cropH ? ` width="${cropW * 2}" height="${cropH * 2}"` : "";
   return `
     <article class="variant" data-slug="${escapeAttr(img.slug)}">
       <button
