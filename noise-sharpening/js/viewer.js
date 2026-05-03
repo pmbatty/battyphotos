@@ -132,7 +132,6 @@ function renderStars(score) {
 
 function attachLightboxHandlers(data) {
   const lightbox = document.getElementById("lightbox");
-  const captionEl = document.getElementById("lightbox-caption");
   const zoomEl = document.getElementById("lightbox-zoom");
   const oneToOneBtn = document.getElementById("lightbox-1to1");
   const closeBtn = lightbox.querySelector(".lightbox__close");
@@ -293,6 +292,8 @@ function attachLightboxHandlers(data) {
 
     pickA.innerHTML = buildOptions(a.slug);
     pickB.innerHTML = buildOptions(b.slug);
+    pickA.title = a.caption || "";
+    pickB.title = b.caption || "";
 
     zoomEl.textContent = "…";
     lightbox.hidden = false;
@@ -358,7 +359,6 @@ function attachLightboxHandlers(data) {
       // Restore the divider's last position (default 50%).
       const pct = parseFloat(divider.style.left) || 50;
       setDividerX(pct);
-      captionEl.textContent = currentB.caption ? `· ${currentB.caption}` : "";
     } else {
       // Single-image presentation: clip the top layer entirely so only A shows,
       // even though both viewers exist behind the scenes.
@@ -366,13 +366,16 @@ function attachLightboxHandlers(data) {
       // Force-close any open critique panels — their badges are now hidden.
       setCritiqueOpen("left", false);
       setCritiqueOpen("right", false);
-      captionEl.textContent = currentA && currentA.caption ? `· ${currentA.caption}` : "";
     }
   }
 
   // Set a side's badge title + info-icon visibility based on whether the
   // variant has a critique. Also refresh the critique panel content so a panel
   // that's currently open updates in place when the user swaps the variant.
+  // The variant's caption (from XMP dc:description) is included in the panel
+  // even when there's no AI critique — though in that case the badge is
+  // disabled and there's nothing to click open. The badge with no critique
+  // still surfaces the caption via the picker's hover tooltip, set elsewhere.
   function setBadgeContent(sideKey, variant) {
     const { badge, panel } = sides[sideKey];
     const titleEl = badge.querySelector(".lightbox__badge-title");
@@ -381,6 +384,8 @@ function attachLightboxHandlers(data) {
     const hasCritique = !!(variant.critique && variant.critique.text);
     iconEl.hidden = !hasCritique;
     badge.disabled = !hasCritique;
+    panel.querySelector(".lightbox__critique-caption").textContent =
+      variant.caption || "";
     if (hasCritique) {
       const stars = renderStars(variant.critique.potential_score);
       panel.querySelector(".lightbox__critique-stars").innerHTML = stars;
@@ -388,6 +393,9 @@ function attachLightboxHandlers(data) {
         variant.critique.model || "";
       panel.querySelector(".lightbox__critique-text").textContent = variant.critique.text;
     } else {
+      panel.querySelector(".lightbox__critique-stars").innerHTML = "";
+      panel.querySelector(".lightbox__critique-model").textContent = "";
+      panel.querySelector(".lightbox__critique-text").textContent = "";
       // Close panel if a previously-open variant gets swapped to one without
       // a critique.
       setCritiqueOpen(sideKey, false);
@@ -419,8 +427,10 @@ function attachLightboxHandlers(data) {
     viewer.open({ type: "image", url: variant.display });
     if (which === "a") {
       currentA = variant;
+      pickA.title = variant.caption || "";
     } else {
       currentB = variant;
+      pickB.title = variant.caption || "";
     }
     updateMode();
   }

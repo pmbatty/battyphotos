@@ -415,15 +415,6 @@
   flex-wrap: nowrap;
 }
 
-.lightbox__caption {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  opacity: 0.75;
-  font-size: 0.85rem;
-}
-
 .lightbox__pick {
   /* Strip default <select> chrome so it reads as bold inline text. */
   appearance: none;
@@ -729,6 +720,21 @@
   background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.5);
   outline: none;
+}
+
+/* Per-variant description (from the JPEG's dc:description) sits between the
+   header and the AI critique. Visually softer so the AI text remains the focal
+   content. Hidden when the caption is empty. */
+.lightbox__critique-caption {
+  margin: 0 0 0.55rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.78);
+  font-style: italic;
+}
+
+.lightbox__critique-caption:empty {
+  display: none;
 }
 
 .lightbox__critique-text {
