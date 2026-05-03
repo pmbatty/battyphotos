@@ -28,6 +28,14 @@ export function renderBrowseMode(root, data) {
     root.style.setProperty("--crop-width", `${data.detail_crop.w}px`);
   }
 
+  // Pass intrinsic dimensions through to the templated <img> tags so the
+  // browser can reserve layout space before the source loads (eliminates
+  // CLS, especially with loading="lazy") and decode off the main thread.
+  const variantW = dims?.width || 0;
+  const variantH = dims?.height || 0;
+  const cropW = data.detail_crop?.w || 0;
+  const cropH = data.detail_crop?.h || 0;
+
   const prevLink = data.previous_scenario
     ? `<a class="scenario__nav-link" href="scenario.html?id=${encodeURIComponent(
         data.previous_scenario,
@@ -52,7 +60,7 @@ export function renderBrowseMode(root, data) {
     </header>
 
     <section class="variants">
-      ${data.images.map((img) => variantCard(img)).join("")}
+      ${data.images.map((img) => variantCard(img, variantW, variantH, cropW, cropH)).join("")}
     </section>
 
     <nav class="scenario__pager" aria-label="Scenario navigation">
@@ -65,7 +73,9 @@ export function renderBrowseMode(root, data) {
   attachLightboxHandlers(data);
 }
 
-function variantCard(img) {
+function variantCard(img, variantW, variantH, cropW, cropH) {
+  const sizeAttrs = variantW && variantH ? ` width="${variantW}" height="${variantH}"` : "";
+  const cropAttrs = cropW && cropH ? ` width="${cropW}" height="${cropH}"` : "";
   return `
     <article class="variant" data-slug="${escapeAttr(img.slug)}">
       <div class="variant__display">
@@ -75,7 +85,7 @@ function variantCard(img) {
           data-slug="${escapeAttr(img.slug)}"
           aria-label="Open ${escapeAttr(img.title)} at full resolution"
         >
-          <img src="${img.display}" alt="${escapeAttr(img.caption || img.title)}" loading="lazy" />
+          <img src="${img.display}"${sizeAttrs} alt="${escapeAttr(img.caption || img.title)}" loading="lazy" decoding="async" />
           <span class="variant__zoom-hint">Click to compare &middot; full resolution</span>
         </button>
       </div>
@@ -86,11 +96,11 @@ function variantCard(img) {
       </div>
       <div class="variant__crops">
         <figure class="variant__crop" data-level="100">
-          <img src="${img.crop_100}" alt="100% pixel detail of ${escapeAttr(img.title)}" loading="lazy" />
+          <img src="${img.crop_100}"${cropAttrs} alt="100% pixel detail of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
           <figcaption>100% pixel detail</figcaption>
         </figure>
         <figure class="variant__crop" data-level="200">
-          <img src="${img.crop_200}" alt="200% pixel detail of ${escapeAttr(img.title)}" loading="lazy" />
+          <img src="${img.crop_200}"${cropAttrs} alt="200% pixel detail of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
           <figcaption>200% pixel detail (centered, nearest-neighbor upscaled)</figcaption>
         </figure>
       </div>
@@ -437,7 +447,8 @@ function attachLightboxHandlers(data) {
     divider.hidden = !isCompare;
     badgeLeft.hidden = !isCompare;
     badgeRight.hidden = !isCompare;
-    layerB.hidden = false;
+    // Layer B is always visible (its OSD instance always renders); single-mode
+    // visually hides it via clip-path: inset(0 0 0 100%) below.
     if (isCompare) {
       setBadgeContent("left", currentA);
       setBadgeContent("right", currentB);

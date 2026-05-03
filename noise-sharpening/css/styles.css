@@ -453,8 +453,9 @@
   outline: none;
 }
 
-/* Native option list shows on dark systems differently — leave styling to UA. */
 .lightbox__pick option {
+  /* Force a dark drop-down panel — without this, some systems render the
+     option list with default light-mode colours that clash with the bar. */
   background: #1a1a1a;
   color: #fff;
 }
@@ -462,10 +463,6 @@
 .lightbox__sep {
   opacity: 0.65;
   flex: 0 0 auto;
-}
-
-.lightbox__sep[hidden] {
-  display: none;
 }
 
 .lightbox__controls {
@@ -539,10 +536,6 @@
    divider drag updates (clip-path: inset(0 0 0 X%)). */
 .lightbox__layer--top {
   z-index: 2;
-}
-
-.lightbox__layer[hidden] {
-  display: none;
 }
 
 .lightbox__viewer {

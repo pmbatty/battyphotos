@@ -33,7 +33,7 @@ function card(s) {
   return `
     <a class="scenario-card" href="scenario.html?id=${encodeURIComponent(s.slug)}">
       <div class="scenario-card__thumb">
-        <img src="${s.thumbnail}" alt="" loading="lazy" />
+        <img src="${s.thumbnail}" alt="" loading="lazy" decoding="async" />
       </div>
       <div class="scenario-card__body">
         <h2 class="scenario-card__title">${escapeHtml(s.title)}</h2>

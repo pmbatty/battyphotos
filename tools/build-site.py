@@ -57,8 +57,6 @@ class Critique:
     text: str
     potential_score: int | None
     model: str | None
-    darwain_version: str | None
-    timestamp: str | None
 
 
 @dataclass
@@ -232,8 +230,6 @@ def load_critique(darwain_path: Path, copy_name: str | None) -> Critique | None:
         text=text,
         potential_score=latest.get("potential_score"),
         model=(latest.get("request") or {}).get("model"),
-        darwain_version=latest.get("darwain_version"),
-        timestamp=latest.get("timestamp"),
     )
 
 
