@@ -15,7 +15,7 @@
   "hero": "images/spotted-owlet/hero.jpg",
   "hero_slug": "lightroom-denoise",
   "previous_scenario": null,
-  "next_scenario": null,
+  "next_scenario": "hummingbird-1",
   "images": [
     {
       "slug": "raw",

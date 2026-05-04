@@ -1,0 +1,105 @@
+{
+  "slug": "hummingbird-1",
+  "title": "Hummingbird — Costa Rica",
+  "subtitle": "A hummingbird feeding at a flower in Costa Rica, shot on the OM-1. Iridescent feathers, fine eye detail, and motion-blurred wing tips give noise-reduction and sharpening tools several distinct regions to handle differently.",
+  "image_dimensions": {
+    "width": 4155,
+    "height": 2770
+  },
+  "detail_crop": {
+    "x": 2120,
+    "y": 1135,
+    "w": 600,
+    "h": 400
+  },
+  "hero": "images/hummingbird-1/hero.jpg",
+  "hero_slug": "lightrom-denoise",
+  "previous_scenario": "spotted-owlet",
+  "next_scenario": null,
+  "images": [
+    {
+      "slug": "raw",
+      "title": "RAW",
+      "caption": "Original undited RAW",
+      "display": "images/hummingbird-1/raw.jpg",
+      "crop_200": "images/hummingbird-1/raw-crop-200.jpg",
+      "critique": {
+        "text": "The original unedited RAW image exhibits significant luminance and color noise throughout, particularly visible as coarse grain in the otherwise smooth green background. The baseline sharpness of the hummingbird and flower is acceptable, but fine details are noticeably muted by the high noise floor and lack of contrast. High-level overview of edits: All edited images successfully eliminate the heavy background noise. The primary differences emerge in how they handle sharpness. Topaz Wildlife and Motion Blur tend to look overly 'crunchy' or artificially textured. Lightroom AI, Topaz Default, and ON1 provide a better recovery of feather detail, with LR looking the most authentic. General ranking of how well the edits worked: 1) Lightroom AI Denoise (most natural balance), 2) Topaz Default, 3) ON1, 4) Topaz NR Only, 5) Topaz Wildlife, 6) Topaz Motion Blur, 7) Original RAW.",
+        "potential_score": 2,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "lightrom-denoise",
+      "title": "Lightrom Denoise",
+      "caption": "Edited with the new Lightroom AI denoise - default settings",
+      "display": "images/hummingbird-1/lightrom-denoise.jpg",
+      "crop_200": "images/hummingbird-1/lightrom-denoise-crop-200.jpg",
+      "critique": {
+        "text": "Edited with Lightroom AI Denoise on default settings. This edit provides arguably the most natural-looking result of the entire set. The AI denoise entirely clears the distracting background grain while preserving excellent, organic sharpness in the hummingbird's eye, feathers, and the flower. It completely avoids the 'crunchy', over-processed, or 'plasticky' artifacts seen in some of the more aggressive Topaz and ON1 sharpening models, representing an exceptional, beautifully balanced improvement over the RAW.",
+        "potential_score": 5,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-1",
+      "title": "Topaz 1",
+      "caption": "Edit with Topaz Photo, noise reduction (all) followed by sharpen - default (subject)",
+      "display": "images/hummingbird-1/topaz-1.jpg",
+      "crop_200": "images/hummingbird-1/topaz-1-crop-200.jpg",
+      "critique": {
+        "text": "Edited with Topaz Photo using noise reduction and 'Default' sharpening. This edit strikes a significantly better balance than the Topaz 'Wildlife' or 'Motion Blur' settings. The background is perfectly smooth, and the subject sharpening is crisp without becoming overly crunchy or introducing severe artifacts. It represents a massive step up from the noisy RAW image, recovering excellent feather texture while remaining relatively natural and pleasing to the eye.",
+        "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "on1-1",
+      "title": "ON1 1",
+      "caption": "ON1 using NoNoise AI and TackSharp AI",
+      "display": "images/hummingbird-1/on1-1.jpg",
+      "crop_200": "images/hummingbird-1/on1-1-crop-200.jpg",
+      "critique": {
+        "text": "This image uses ON1 NoNoise AI and TackSharp AI. The background noise present in the RAW file has been completely eliminated, resulting in a perfectly smooth green canvas. The TackSharp AI has aggressively enhanced the fine details in the hummingbird's feathers and the purple flower, resulting in a highly crisp image. Compared to the RAW, the improvement in clarity is dramatic, though the heavy sharpening borders on looking slightly unnatural or overly contrasty compared to more conservative edits.",
+        "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-3",
+      "title": "Topaz 3",
+      "caption": "Edit with Topaz Photo, noise reduction (all) followed by sharpen - wildlife (subject)",
+      "display": "images/hummingbird-1/topaz-3.jpg",
+      "crop_200": "images/hummingbird-1/topaz-3-crop-200.jpg",
+      "critique": {
+        "text": "Edited with Topaz Photo using noise reduction and the 'Wildlife' sharpening model. The noise reduction yields a pristine background comparable to the others. The wildlife sharpening model brings out intense, microscopic detail in the bird's feathers and the flower's petals. However, compared to the RAW and the NR-only image, it feels somewhat over-sharpened. The micro-contrast is quite high, making the subject look a bit 'crunchy' and giving the edges an unnatural, almost illustrated appearance.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-4",
+      "title": "Topaz 4",
+      "caption": "Topaz Photo with noise reduction only, no sharpening",
+      "display": "images/hummingbird-1/topaz-4.jpg",
+      "crop_200": "images/hummingbird-1/topaz-4-crop-200.jpg",
+      "critique": {
+        "text": "Processed with Topaz Photo using noise reduction only and no added sharpening. The heavy luminance noise from the RAW file is effectively removed from the background, creating a very clean, distraction-free look. Because no additional sharpening was applied, the bird and flower appear slightly softer than the other AI-processed edits. However, this lack of aggressive sharpening means it retains a highly natural, photographic look free from the artificial halos or crunchy textures seen in the heavily sharpened versions.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-2",
+      "title": "Topaz 2",
+      "caption": "Edit with Topaz Photo, noise reduction (all) followed by sharpen - motion blur (subject)",
+      "display": "images/hummingbird-1/topaz-2.jpg",
+      "crop_200": "images/hummingbird-1/topaz-2-crop-200.jpg",
+      "critique": {
+        "text": "Processed with Topaz Photo using noise reduction and the 'Motion Blur' sharpening model. The background remains pleasantly clean. This model attempts to correct movement, which gives the trailing edges of the wings slightly more definition. Unfortunately, it introduces noticeable AI artifacting and a somewhat 'plasticky' texture on the static parts of the bird, such as the head and body. While the noise is gone compared to the original RAW, the overall sharpness and texture feel the least organic of the edited batch.",
+        "potential_score": 2,
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  ]
+}

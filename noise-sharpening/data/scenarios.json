@@ -6,5 +6,13 @@
     "thumbnail": "images/spotted-owlet/thumbnail.jpg",
     "variant_count": 7,
     "sort_order": 1
+  },
+  {
+    "slug": "hummingbird-1",
+    "title": "Hummingbird — Costa Rica",
+    "subtitle": "A hummingbird feeding at a flower in Costa Rica, shot on the OM-1. Iridescent feathers, fine eye detail, and motion-blurred wing tips give noise-reduction and sharpening tools several distinct regions to handle differently.",
+    "thumbnail": "images/hummingbird-1/thumbnail.jpg",
+    "variant_count": 7,
+    "sort_order": 2
   }
 ]
