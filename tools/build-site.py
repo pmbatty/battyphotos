@@ -339,7 +339,70 @@ def _save_resized(
     resized.save(dst, "JPEG", **kwargs)
 
 
+VALID_VARIANT_SORTS = ("manual", "rating_desc", "rating_desc_baseline_first")
+
+
 def order_variants(
+    variants: list[Variant],
+    image_order: list[str] | None,
+    variant_sort: str = "manual",
+) -> list[Variant]:
+    """Order variants for a scenario.
+
+    Modes:
+      - "manual" (default): use `image_order` as a list of titles in display
+        order; titles missing or extra produce WARNs and are appended at end.
+        Without `image_order`, falls back to alphabetical-by-title.
+      - "rating_desc": sort by darwain potential_score descending. Variants
+        with no critique drop to the end. Ties break on image_order position
+        (if provided) then alphabetical title.
+      - "rating_desc_baseline_first": pin the first entry of `image_order`
+        (the "before" baseline, e.g. RAW) at the top regardless of its
+        score, then sort the remaining variants by rating_desc rules.
+    """
+    if variant_sort not in VALID_VARIANT_SORTS:
+        raise ValueError(
+            f"unknown variant_sort {variant_sort!r}; "
+            f"expected one of {VALID_VARIANT_SORTS}"
+        )
+
+    if variant_sort == "manual":
+        return _order_manual(variants, image_order)
+
+    title_pos = {t: i for i, t in enumerate(image_order or [])}
+
+    def rating_key(v: Variant) -> tuple:
+        score = v.critique.potential_score if v.critique else None
+        if not isinstance(score, int):
+            score = None
+        return (
+            0 if score is not None else 1,        # rated variants first
+            -score if score is not None else 0,   # higher score first
+            title_pos.get(v.title, 1_000_000),    # then image_order position
+            v.title.lower(),                      # then alphabetical
+        )
+
+    if variant_sort == "rating_desc":
+        return sorted(variants, key=rating_key)
+
+    # rating_desc_baseline_first
+    if not image_order:
+        raise ValueError(
+            "variant_sort 'rating_desc_baseline_first' requires image_order "
+            "(its first element identifies the baseline to pin at the top)"
+        )
+    baseline_title = image_order[0]
+    baseline = next((v for v in variants if v.title == baseline_title), None)
+    if baseline is None:
+        raise ValueError(
+            f"variant_sort baseline {baseline_title!r} (image_order[0]) "
+            "not found among variants"
+        )
+    rest = [v for v in variants if v.title != baseline_title]
+    return [baseline] + sorted(rest, key=rating_key)
+
+
+def _order_manual(
     variants: list[Variant], image_order: list[str] | None
 ) -> list[Variant]:
     if not image_order:
@@ -507,7 +570,11 @@ def build_scenario(
             file=sys.stderr,
         )
 
-    variants = order_variants(variants, manifest.get("image_order"))
+    variants = order_variants(
+        variants,
+        manifest.get("image_order"),
+        manifest.get("variant_sort", "manual"),
+    )
 
     return PageData(
         slug=slug,

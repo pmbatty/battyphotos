@@ -42,14 +42,14 @@
       }
     },
     {
-      "slug": "topaz-photo",
-      "title": "Topaz Photo",
-      "caption": "Topaz Photo with default noise reduction only (strength 53, original detail 0)",
-      "display": "images/spotted-owlet/topaz-photo.jpg",
-      "crop_200": "images/spotted-owlet/topaz-photo-crop-200.jpg",
+      "slug": "dxo-pureraw-6",
+      "title": "DxO PureRAW 6",
+      "caption": "DxO PureRAW with DeepPRIME XD3",
+      "display": "images/spotted-owlet/dxo-pureraw-6.jpg",
+      "crop_200": "images/spotted-owlet/dxo-pureraw-6-crop-200.jpg",
       "critique": {
-        "text": "This image shows the result of applying noise reduction without additional sharpening. It is remarkably cleaner than the original RAW, with the heavy ISO 10,000 grain mostly removed. Because no extra sharpening was applied, it is noticeably softer than the other Topaz edited versions (Images 3 and 4). While it looks very natural and avoids any over-processing artifacts, it lacks the pop and fine detail definition that makes the DxO or Lightroom versions stand out.",
-        "potential_score": 3,
+        "text": "This image demonstrates exceptional noise reduction while maintaining and enhancing fine details. The DeepPRIME XD3 processing has successfully eliminated the heavy high-ISO noise present in the original RAW file without introducing significant artifacts. The sharpness is outstanding, particularly noticeable in the fine feather details around the owls' eyes and the texture of the tree bark. It looks very natural, avoiding the over-processed look seen in some other edits. This is one of the strongest results in the set.",
+        "potential_score": 5,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -78,6 +78,18 @@
       }
     },
     {
+      "slug": "topaz-photo",
+      "title": "Topaz Photo",
+      "caption": "Topaz Photo with default noise reduction only (strength 53, original detail 0)",
+      "display": "images/spotted-owlet/topaz-photo.jpg",
+      "crop_200": "images/spotted-owlet/topaz-photo-crop-200.jpg",
+      "critique": {
+        "text": "This image shows the result of applying noise reduction without additional sharpening. It is remarkably cleaner than the original RAW, with the heavy ISO 10,000 grain mostly removed. Because no extra sharpening was applied, it is noticeably softer than the other Topaz edited versions (Images 3 and 4). While it looks very natural and avoids any over-processing artifacts, it lacks the pop and fine detail definition that makes the DxO or Lightroom versions stand out.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
       "slug": "on1-raw",
       "title": "ON1 RAW",
       "caption": "Processed in ON1 RAW using NoNoise and TackSharp combined",
@@ -86,18 +98,6 @@
       "critique": {
         "text": "While the NoNoise feature has successfully removed the base noise from the original RAW, the combined TackSharp processing has resulted in a heavily over-processed image. The details, especially the owls' feathers, look unnatural, smeared, and almost painterly or plasticky. It lacks the fine, crisp resolution of individual feather structures seen in the DxO or Lightroom edits, trading noise for bizarre artifacts. This is the weakest edit in the set.",
         "potential_score": 2,
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
-    {
-      "slug": "dxo-pureraw-6",
-      "title": "DxO PureRAW 6",
-      "caption": "DxO PureRAW with DeepPRIME XD3",
-      "display": "images/spotted-owlet/dxo-pureraw-6.jpg",
-      "crop_200": "images/spotted-owlet/dxo-pureraw-6-crop-200.jpg",
-      "critique": {
-        "text": "This image demonstrates exceptional noise reduction while maintaining and enhancing fine details. The DeepPRIME XD3 processing has successfully eliminated the heavy high-ISO noise present in the original RAW file without introducing significant artifacts. The sharpness is outstanding, particularly noticeable in the fine feather details around the owls' eyes and the texture of the tree bark. It looks very natural, avoiding the over-processed look seen in some other edits. This is one of the strongest results in the set.",
-        "potential_score": 5,
         "model": "gemini-3.1-pro-preview"
       }
     }

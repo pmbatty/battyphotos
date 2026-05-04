@@ -147,7 +147,11 @@ The build script reads these directly from each JPEG's XMP block. **No per-image
 - `slug`, `title`, `subtitle`, `sort_order` — scenario-level display metadata.
 - `detail_crop` — `{x, y, w, h}` for the 200% detail crop, applied identically to every variant in the scenario. **`(x, y)` is the centre of the diagnostic region** in source pixels (top-left origin, +y down) and **`(w, h)` is the source region size** (also in source pixels). The build script pulls a `(w × h)` region centred on `(x, y)` and nearest-upscales it 2× to a `(2w × 2h)` JPEG so 1 source pixel renders as a 2×2 block. The frontend then displays that JPEG at `(2w / devicePixelRatio)` CSS px wide so 1 JPEG pixel = 1 device pixel — matching Lightroom's 200% on Retina.
 - `hero_image` — the title (matching a JPEG's `dc:title`) used to generate both the gallery thumbnail and the downscaled hero image at the top of the scenario page.
-- `image_order` — array of titles in display order. Optional; if omitted, build script falls back to natural filename order. Useful because alphabetical filename sort puts the master last.
+- `image_order` — array of titles in display order. Optional; if omitted, build script falls back to alphabetical-by-title. Useful because alphabetical sort puts RAW last and we want it first.
+- `variant_sort` — how the build script orders variants on the scenario page. Optional; defaults to `"manual"`. One of:
+    - `"manual"` — use `image_order` exactly (current behaviour).
+    - `"rating_desc"` — sort by darwain `potential_score` descending. Ties break on `image_order` position then alphabetical. Variants without a critique drop to the end.
+    - `"rating_desc_baseline_first"` — pin `image_order[0]` (the "before" baseline, typically RAW) at the top regardless of its score, then sort the rest by `rating_desc` rules.
 
 The build script:
 1. Walks `jpeg/*.jpg`.
