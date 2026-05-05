@@ -74,6 +74,7 @@ export function renderBrowseMode(root, data) {
     <header class="scenario__header">
       <h1>${escapeHtml(data.title)}</h1>
       ${data.subtitle ? `<p class="lede">${escapeHtml(data.subtitle)}</p>` : ""}
+      ${data.editor_note ? `<aside class="editor-note" role="note"><strong>Editor's note:</strong> ${escapeHtml(data.editor_note)}</aside>` : ""}
     </header>
 
     ${heroBlock(data, heroVariant, variantW, variantH)}

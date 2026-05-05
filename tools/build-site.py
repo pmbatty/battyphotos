@@ -84,6 +84,7 @@ class PageData:
     detail_crop: dict
     hero: str | None = None
     hero_slug: str | None = None
+    editor_note: str | None = None
     previous_scenario: str | None = None
     next_scenario: str | None = None
     images: list = field(default_factory=list)
@@ -650,6 +651,7 @@ def build_scenario(
         detail_crop=crop,
         hero=f"images/{slug}/hero.jpg" if hero_jpeg_path else None,
         hero_slug=hero_variant_slug,
+        editor_note=manifest.get("editor_note") or None,
         images=[asdict(v) for v in variants],
     )
 
