@@ -30,5 +30,13 @@
     "thumbnail": "images/bald-eagle-blurred/thumbnail.jpg",
     "variant_count": 3,
     "sort_order": 4
+  },
+  {
+    "slug": "black-throated-trogon",
+    "title": "Black-throated Trogon — ISO 12,800",
+    "subtitle": "A black-throated trogon perched in rainforest in Costa Rica's Osa Peninsula, shot at ISO 12,800. Iridescent green plumage, a deep black throat, vivid yellow chest, and finely barred tail feathers give noise-reduction tools a demanding mix of saturated colour, fine detail, and graded tones to handle at very high ISO.",
+    "thumbnail": "images/black-throated-trogon/thumbnail.jpg",
+    "variant_count": 5,
+    "sort_order": 5
   }
 ]

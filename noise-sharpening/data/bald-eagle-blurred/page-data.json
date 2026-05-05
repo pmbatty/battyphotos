@@ -15,7 +15,7 @@
   "hero": "images/bald-eagle-blurred/hero.jpg",
   "hero_slug": "topaz-photo-2",
   "previous_scenario": "stellers-sea-eagle",
-  "next_scenario": null,
+  "next_scenario": "black-throated-trogon",
   "images": [
     {
       "slug": "raw",
