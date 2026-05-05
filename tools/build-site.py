@@ -6,7 +6,7 @@ Reads each scenario folder under SOURCE, expects:
     {Scenario}/
         manifest.json                       (scenario-level metadata, authored by Peter)
         jpeg/*.jpg                          (Lightroom exports — title/caption in XMP)
-        {original}.{orf,tif,dng}            (source files; never read directly)
+        {original}.{orf,tif,dng,rw2}        (source files; never read directly)
         {original}.{ext}.darwain.json       (AI critique sidecars)
 
 For each JPEG under jpeg/:
@@ -44,7 +44,7 @@ XMP_NS = {
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "dc": "http://purl.org/dc/elements/1.1/",
 }
-SOURCE_EXTS = (".orf", ".tif", ".tiff", ".dng")
+SOURCE_EXTS = (".orf", ".tif", ".tiff", ".dng", ".rw2")
 
 # Display JPEG re-encode params. We re-save Lightroom exports rather than
 # copying them so the served files are progressive (visible incrementally as
