@@ -15,7 +15,7 @@
   "hero": "images/hummingbird-1/hero.jpg",
   "hero_slug": "lightrom-denoise",
   "previous_scenario": "spotted-owlet",
-  "next_scenario": null,
+  "next_scenario": "stellers-sea-eagle",
   "images": [
     {
       "slug": "raw",

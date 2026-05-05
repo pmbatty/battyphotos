@@ -152,6 +152,16 @@ The build script reads these directly from each JPEG's XMP block. **No per-image
     - `"manual"` — use `image_order` exactly (current behaviour).
     - `"rating_desc"` — sort by darwain `potential_score` descending. Ties break on `image_order` position then alphabetical. Variants without a critique drop to the end.
     - `"rating_desc_baseline_first"` — pin `image_order[0]` (the "before" baseline, typically RAW) at the top regardless of its score, then sort the rest by `rating_desc` rules.
+- `variant_sources` — optional per-variant override of the JPEG-stem-based critique-source heuristic. Use when each variant in a scenario derives from a *different* processed source file (e.g. one variant from `.rw2`, another from a Topaz `.tif`, a third from a DxO `.dng`) rather than the simple "single master + LR virtual copies" model. Keyed by variant title (matching XMP `dc:title`), each value is one of:
+    - **String form** — the source filename. The build script reads `<source>.darwain.json` and filters by `copy_name = None` (master analysis).
+        ```json
+        "Topaz Photo": "scene-Edit.tif"
+        ```
+    - **Object form** — explicit `source` and `copy` for cases where the darwain analysis sits under a virtual-copy tag rather than the master.
+        ```json
+        "Lightroom Denoise": { "source": "scene.rw2", "copy": "Copy 1" }
+        ```
+  Variants not listed in `variant_sources` use the default JPEG-stem virtual-copy resolution against `master_stems`. Unknown title keys produce a WARN.
 
 The build script:
 1. Walks `jpeg/*.jpg`.

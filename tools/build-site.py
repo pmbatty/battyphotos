@@ -160,6 +160,47 @@ def resolve_source(stem: str, master_stems: dict[str, Path]) -> tuple[str, str |
     )
 
 
+def resolve_critique_source(
+    jpeg_stem: str,
+    title: str,
+    variant_sources: dict,
+    master_stems: dict[str, Path],
+) -> tuple[str, str | None]:
+    """Determine which darwain JSON file + copy_name to use for this variant.
+
+    `variant_sources` (manifest field, optional) lets a manifest override the
+    default JPEG-stem-based virtual-copy heuristic when each variant comes
+    from a different processed source file (e.g. one variant from .rw2,
+    another from a Topaz .tif, a third from a DxO .dng — all in the same
+    scenario folder). Two value forms per variant title:
+
+      "Topaz Photo": "scene-Edit.tif"
+        # string form: source filename. copy_name implicitly None.
+
+      "Lightroom Denoise": {"source": "scene.rw2", "copy": "Copy 1"}
+        # object form: explicit (source, copy) override.
+
+    When `variant_sources` has no entry for `title`, falls back to the
+    standard JPEG-stem virtual-copy resolution against `master_stems`.
+    """
+    spec = variant_sources.get(title) if variant_sources else None
+    if isinstance(spec, str):
+        return spec, None
+    if isinstance(spec, dict):
+        source = spec.get("source")
+        if not source:
+            raise ValueError(
+                f"variant_sources[{title!r}] requires a 'source' key"
+            )
+        return source, spec.get("copy")
+    if spec is not None:
+        raise ValueError(
+            f"variant_sources[{title!r}] must be a string or "
+            f"{{source, copy}} object, got {type(spec).__name__}"
+        )
+    return resolve_source(jpeg_stem, master_stems)
+
+
 def read_xmp(im: Image.Image, jpeg_path: Path) -> tuple[str, str]:
     """Return (dc:title, dc:description) from a Pillow-opened JPEG.
 
@@ -455,6 +496,12 @@ def build_scenario(
 
     crop = manifest["detail_crop"]
     master_stems = find_master_stems(scenario_dir)
+    variant_sources = manifest.get("variant_sources") or {}
+    if not isinstance(variant_sources, dict):
+        raise ValueError(
+            f"manifest.variant_sources must be an object, got "
+            f"{type(variant_sources).__name__}"
+        )
     hero_title = manifest.get("hero_image")
     out_thumbnail = images_out / "thumbnail.jpg"
     out_hero = images_out / "hero.jpg"
@@ -493,8 +540,8 @@ def build_scenario(
                 )
 
             try:
-                master_filename, copy_name = resolve_source(
-                    jpeg_path.stem, master_stems
+                master_filename, copy_name = resolve_critique_source(
+                    jpeg_path.stem, title, variant_sources, master_stems
                 )
             except FileNotFoundError as e:
                 raise FileNotFoundError(f"{e} in {scenario_dir}") from e
@@ -559,6 +606,15 @@ def build_scenario(
                 crop_200=f"{rel_dir}/{out_crop_200.name}",
                 critique=critique,
             )
+        )
+
+    unused_overrides = set(variant_sources.keys()) - {v.title for v in variants}
+    if unused_overrides:
+        print(
+            f"  WARN  variant_sources references unknown titles: "
+            f"{sorted(unused_overrides)} (variants found: "
+            f"{sorted(v.title for v in variants)})",
+            file=sys.stderr,
         )
 
     if hero_title is not None and hero_jpeg_path is None:
