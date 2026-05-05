@@ -15,7 +15,7 @@
   "hero": "images/stellers-sea-eagle/hero.jpg",
   "hero_slug": "lightroom-denoise",
   "previous_scenario": "hummingbird-1",
-  "next_scenario": null,
+  "next_scenario": "bald-eagle-blurred",
   "images": [
     {
       "slug": "raw",

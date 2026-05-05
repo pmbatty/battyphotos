@@ -1,0 +1,57 @@
+{
+  "slug": "bald-eagle-blurred",
+  "title": "Bald Eagle — motion blurred",
+  "subtitle": "Two bald eagles in mid-air confrontation. The original RAW is significantly motion-blurred from the eagle's wing motion combined with shutter speed. Tests Topaz Photo's two subject-sharpening modes — Focus Blur vs Motion Blur — for how well each recovers apparent sharpness on the bald eagle's head and wings.",
+  "image_dimensions": {
+    "width": 3132,
+    "height": 2349
+  },
+  "detail_crop": {
+    "x": 1942,
+    "y": 1135,
+    "w": 600,
+    "h": 400
+  },
+  "hero": "images/bald-eagle-blurred/hero.jpg",
+  "hero_slug": "topaz-photo-2",
+  "previous_scenario": "stellers-sea-eagle",
+  "next_scenario": null,
+  "images": [
+    {
+      "slug": "raw",
+      "title": "RAW",
+      "caption": "RAW images which is very blurred",
+      "display": "images/bald-eagle-blurred/raw.jpg",
+      "crop_200": "images/bald-eagle-blurred/raw-crop-200.jpg",
+      "critique": {
+        "text": "Image 3 (RAW): The original RAW image suffers from significant softness and blur, likely a combination of motion blur from the dynamic subjects and slight focus inaccuracies. The fine feather details are almost completely lost, and the overall image lacks crisp edges. There is also a moderate amount of standard digital noise/luminance grain visible throughout the background and shadow areas. High-level overview: The two edited images drastically reduce this noise and attempt to recover sharpness using different AI models. Image 1 (Motion Blur setting) handles the recovery much better, providing relatively natural-looking sharpness that aligns with the movement in the frame, whereas Image 2 (Focus Blur setting) creates unnatural, crunchy artifacts. Overall ranking: Image 1 is the best result, Image 2 is second due to over-sharpening artifacts, and Image 3 is the weakest due to the severe uncorrected blur.",
+        "potential_score": 2,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-photo-2",
+      "title": "Topaz Photo 2",
+      "caption": "Topaz Photo with sharpening on subject using Motion Blur setting at 100",
+      "display": "images/bald-eagle-blurred/topaz-photo-2.jpg",
+      "crop_200": "images/bald-eagle-blurred/topaz-photo-2-crop-200.jpg",
+      "critique": {
+        "text": "Image 1 (Topaz Photo 2 - Motion Blur at 100): This edit successfully addresses the original RAW's blur by applying a motion blur correction algorithm. The sharpness is vastly improved over the RAW, bringing out distinct feather details and defining the eagles' features much more clearly. Background noise has been effectively eliminated, resulting in a smooth, clean aesthetic. Compared to Image 2, this edit looks significantly more natural, largely avoiding the harsh, crunchy artifacts of the focus blur setting. While there is still a slight 'painted' look typical of heavy AI processing upon close inspection, it is by far the strongest and most usable image in the set.",
+        "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-photo-1",
+      "title": "Topaz Photo 1",
+      "caption": "Topaz Photo with sharpening on subject using Focus Blur setting at 100",
+      "display": "images/bald-eagle-blurred/topaz-photo-1.jpg",
+      "crop_200": "images/bald-eagle-blurred/topaz-photo-1-crop-200.jpg",
+      "critique": {
+        "text": "Image 2 (Topaz Photo 1 - Focus Blur at 100): This edit effectively removes the background noise present in the original RAW, yielding a similarly clean background to Image 1. However, the Focus Blur sharpening algorithm applied at 100% struggles significantly with the specific type of blur in the original image. While technically sharper than the RAW, the resulting fine details—especially in the feathers, wings, and high-contrast edges—appear brittle, over-processed, and artifact-heavy. It lacks the natural feather texture achieved in Image 1, making the aggressive AI sharpening heavily apparent and distracting.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  ]
+}

@@ -22,5 +22,13 @@
     "thumbnail": "images/stellers-sea-eagle/thumbnail.jpg",
     "variant_count": 7,
     "sort_order": 3
+  },
+  {
+    "slug": "bald-eagle-blurred",
+    "title": "Bald Eagle — motion blurred",
+    "subtitle": "Two bald eagles in mid-air confrontation. The original RAW is significantly motion-blurred from the eagle's wing motion combined with shutter speed. Tests Topaz Photo's two subject-sharpening modes — Focus Blur vs Motion Blur — for how well each recovers apparent sharpness on the bald eagle's head and wings.",
+    "thumbnail": "images/bald-eagle-blurred/thumbnail.jpg",
+    "variant_count": 3,
+    "sort_order": 4
   }
 ]

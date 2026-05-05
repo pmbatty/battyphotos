@@ -120,13 +120,23 @@ def validate_slug(value: str, field_name: str) -> str:
 
 
 def find_master_stems(scenario_dir: Path) -> dict[str, Path]:
-    """Index every {orf,tif,dng} source file in the scenario folder by its stem."""
+    """Index every recognised raw/source file in the scenario folder by its stem.
+
+    Matches `SOURCE_EXTS` case-insensitively (Olympus exports `.ORF` uppercase;
+    Lightroom may preserve it). Preserves `SOURCE_EXTS` precedence: when two
+    files share a stem (e.g. `scene.rw2` and `scene.tif`) the one whose
+    extension appears later in the tuple wins.
+    """
+    files = [
+        p for p in scenario_dir.iterdir()
+        if p.is_file() and not p.name.startswith(".")
+    ]
     stems: dict[str, Path] = {}
     for ext in SOURCE_EXTS:
-        for p in scenario_dir.glob(f"*{ext}"):
-            if p.name.startswith("."):
-                continue
-            stems[p.stem] = p
+        ext_lower = ext.lower()
+        for p in files:
+            if p.suffix.lower() == ext_lower:
+                stems[p.stem] = p
     return stems
 
 
