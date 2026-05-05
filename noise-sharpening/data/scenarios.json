@@ -38,5 +38,13 @@
     "thumbnail": "images/black-throated-trogon/thumbnail.jpg",
     "variant_count": 5,
     "sort_order": 5
+  },
+  {
+    "slug": "burrowing-owl-and-moth",
+    "title": "Burrowing Owl with moth",
+    "subtitle": "A burrowing owl in low flight at Rocky Mountain Arsenal, Colorado, locked onto a moth in mid-air. Soft, uniform grass behind the bird sits alongside finely-detailed feather and face structure — giving noise-reduction tools both a smooth gradient region and a high-detail region to handle.",
+    "thumbnail": "images/burrowing-owl-and-moth/thumbnail.jpg",
+    "variant_count": 5,
+    "sort_order": 7
   }
 ]
