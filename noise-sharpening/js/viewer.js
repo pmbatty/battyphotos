@@ -183,7 +183,9 @@ function renderStars(score) {
 function attachLightboxHandlers(data) {
   const lightbox = document.getElementById("lightbox");
   const zoomEl = document.getElementById("lightbox-zoom");
-  const oneToOneBtn = document.getElementById("lightbox-1to1");
+  const fitBtn = document.getElementById("lightbox-fit");
+  const zoom100Btn = document.getElementById("lightbox-100");
+  const zoom200Btn = document.getElementById("lightbox-200");
   const closeBtn = lightbox.querySelector(".lightbox__close");
   const stage = document.getElementById("lightbox-stage");
   const viewerAEl = document.getElementById("lightbox-viewer-a");
@@ -274,15 +276,29 @@ function attachLightboxHandlers(data) {
     close.addEventListener("click", () => setCritiqueOpen(sideKey, false));
   });
 
-  // ---- Close, 1:1, backdrop ---------------------------------------------
+  // ---- Close, zoom presets, backdrop ------------------------------------
   closeBtn.addEventListener("click", closeLightbox);
-  oneToOneBtn.addEventListener("click", () => {
+
+  // Photo-app-style zoom: pct=100 → 1 source pixel per device pixel
+  // (Lightroom's "1:1"). pct=200 → each source pixel covers a 2×2 block of
+  // device pixels. The /dpr term converts CSS-pixels-per-source-pixel
+  // (what OSD's imageToViewportZoom takes) to device-pixels-per-source-pixel
+  // (what photographers mean by "100%"). See gotcha #4 in
+  // docs/solutions/ui-patterns/openseadragon-synced-comparison-viewer.md.
+  function zoomToPct(pct) {
     if (!viewerA || !viewerA.viewport) return;
     const vp = viewerA.viewport;
-    // Lightroom's 1:1 = 1 source pixel per *device* pixel. Account for DPR.
-    vp.zoomTo(vp.imageToViewportZoom(1 / (window.devicePixelRatio || 1)));
+    const dpr = window.devicePixelRatio || 1;
+    vp.zoomTo(vp.imageToViewportZoom(pct / 100 / dpr));
     vp.applyConstraints();
+  }
+  fitBtn.addEventListener("click", () => {
+    // Reset to the configured defaultZoomLevel (0 → fit-to-viewport).
+    if (!viewerA || !viewerA.viewport) return;
+    viewerA.viewport.goHome();
   });
+  zoom100Btn.addEventListener("click", () => zoomToPct(100));
+  zoom200Btn.addEventListener("click", () => zoomToPct(200));
   lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) closeLightbox();
   });
@@ -391,7 +407,7 @@ function attachLightboxHandlers(data) {
     setPickerLocked("a", false);
     setPickerLocked("b", false);
 
-    zoomEl.textContent = "…";
+    zoomEl.textContent = "Current: …";
     lightbox.hidden = false;
     document.body.classList.add("body--lightbox-open");
 
@@ -636,7 +652,7 @@ function attachLightboxHandlers(data) {
     const dpr = window.devicePixelRatio || 1;
     const pct = Math.round(vp.viewportToImageZoom(vp.getZoom()) * dpr * 100);
     if (Number.isFinite(pct) && pct !== lastZoomPct) {
-      zoomEl.textContent = `${pct}%`;
+      zoomEl.textContent = `Current: ${pct}%`;
       lastZoomPct = pct;
     }
   }

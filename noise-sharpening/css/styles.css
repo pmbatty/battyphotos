@@ -501,12 +501,17 @@
 }
 
 .lightbox__zoom {
+  /* Tabular-nums + a fixed min-width keep the readout from jittering as the
+     percentage digit count changes. Yellow makes it visually distinct from
+     the (white) preset buttons so it reads as a status, not a control. */
   font-variant-numeric: tabular-nums;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.85);
-  min-width: 3.2rem;
+  font-weight: 600;
+  color: #f4c542;
+  min-width: 7rem;
   text-align: right;
   padding: 0 0.25rem;
+  white-space: nowrap;
 }
 
 .lightbox__btn,

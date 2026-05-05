@@ -44,8 +44,10 @@
           <select class="lightbox__pick" id="lightbox-pick-b" aria-label="Choose right image"></select>
         </div>
         <div class="lightbox__controls">
-          <span class="lightbox__zoom" id="lightbox-zoom" aria-live="polite" aria-label="Current zoom">&hellip;</span>
-          <button class="lightbox__btn" type="button" id="lightbox-1to1" title="Zoom to 100% (one source pixel per device pixel)">1:1</button>
+          <span class="lightbox__zoom" id="lightbox-zoom" aria-live="polite" aria-label="Current zoom">Current: &hellip;</span>
+          <button class="lightbox__btn" type="button" id="lightbox-fit" title="Fit the whole image to the viewer">Fit</button>
+          <button class="lightbox__btn" type="button" id="lightbox-100" title="Zoom to 100% — one source pixel per device pixel (Lightroom 1:1)">100%</button>
+          <button class="lightbox__btn" type="button" id="lightbox-200" title="Zoom to 200% — each source pixel covers a 2&times;2 block of device pixels">200%</button>
           <button class="lightbox__close" type="button" aria-label="Close viewer">&times;</button>
         </div>
       </div>
