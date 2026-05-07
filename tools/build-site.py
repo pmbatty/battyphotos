@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Build the noise-sharpening sub-project from a source folder of Lightroom-exported JPEGs.
+"""Build a comparison sub-project from a source folder of Lightroom-exported JPEGs.
+
+Two sub-projects share this pipeline:
+  - `noise-sharpening`: every variant has identical pixel dimensions (compare
+    AI denoise / sharpening tools at the original resolution).
+  - `upsizing`:         variants differ in pixel dimensions by integer scale
+    factors (1×, 2×, 4×) (compare AI upsamplers).
+
+The CLI selects the project: `--project noise-sharpening|upsizing`. Output is
+routed to `{out}/{project}/...`.
 
 Reads each scenario folder under SOURCE, expects:
 
@@ -14,17 +23,25 @@ For each JPEG under jpeg/:
   - derives a URL slug from the title (slugify)
   - maps filename -> (master source file, copy_name) using LR virtual-copy naming
   - loads matching darwain analysis (filtered by copy_name, latest by timestamp)
-  - writes a re-encoded display JPEG + a 200% nearest-upscaled detail crop
+  - writes a re-encoded display JPEG + a Lanczos-resampled detail crop
+
+INVARIANT: `manifest.detail_crop` (`{x, y, w, h}` with x/y as the CENTRE of the
+diagnostic region, w/h as size) is in *baseline (1×) source pixels* always.
+The per-variant pixel rectangle is `detail_crop × variant_scale`. For the
+noise-sharpening project (every variant scale=1) this is a no-op; for upsizing
+the smaller-scale variants get a smaller crop region in their own pixel space
+mapped back to the same scene region.
 
 The hero variant (manifest.hero_image) additionally yields hero.jpg (a
 HERO_WIDTH-wide downscaled JPEG used at the top of the scenario page) and
 thumbnail.jpg (smaller still, for the gallery card).
 
-Writes per-scenario noise-sharpening/data/{slug}/page-data.json plus a top-level
-noise-sharpening/data/scenarios.json index for the gallery page.
+Writes per-scenario {project}/data/{slug}/page-data.json plus a top-level
+{project}/data/scenarios.json index for the gallery page.
 
 The image is opened exactly once per variant — XMP, dimensions, and all derivative
-outputs come out of a single `Image.open` context.
+outputs come out of a single `Image.open` context. A cheap header-only pre-pass
+captures every variant's intrinsic width to derive the baseline before the main walk.
 """
 from __future__ import annotations
 
@@ -45,6 +62,25 @@ XMP_NS = {
     "dc": "http://purl.org/dc/elements/1.1/",
 }
 SOURCE_EXTS = (".orf", ".tif", ".tiff", ".dng", ".rw2")
+
+
+@dataclass(frozen=True)
+class ProjectConfig:
+    """Per-project routing + display knobs.
+
+    `slug` doubles as the output sub-folder name AND the URL path segment
+    (e.g. `noise-sharpening/scenario.html?id=...`). Today only `slug` is
+    needed; the dataclass exists so per-project knobs (quality settings,
+    crop dims, validation rules) can grow here without growing CLI flags.
+    """
+    slug: str
+    display_title: str
+
+
+PROJECTS = {
+    "noise-sharpening": ProjectConfig("noise-sharpening", "Noise reduction & sharpening"),
+    "upsizing":         ProjectConfig("upsizing",         "AI image upsizing"),
+}
 
 # Display JPEG re-encode params. We re-save Lightroom exports rather than
 # copying them so the served files are progressive (visible incrementally as
@@ -70,8 +106,10 @@ class Variant:
     slug: str
     title: str
     caption: str
+    width: int
+    height: int
     display: str
-    crop_200: str
+    crop: str
     critique: Critique | None = None
 
 
@@ -323,30 +361,46 @@ def save_display(im: Image.Image, dst: Path, icc: bytes | None) -> None:
     im.save(dst, "JPEG", **kwargs)
 
 
-def save_crop_200(
+def save_diagnostic_crop(
     im: Image.Image,
     crop: dict,
+    variant_scale: int,
     dst: Path,
     icc: bytes | None,
 ) -> None:
-    """Render the 200% detail crop and save it.
+    """Render the per-variant detail crop and save it.
 
-    `crop` carries (x, y) as the CENTRE of the diagnostic region and
-    (w, h) as the SOURCE region size in source pixels. The build script
-    pulls a (w × h) region centred on (x, y), nearest-upscales 2× to
-    (2w × 2h), and saves the JPEG. Each source pixel becomes a 2×2 block
-    — the honest "200% zoom" look that photo apps render natively.
+    INVARIANT: `crop` is in baseline (1×) source coordinates always.
+      - x, y    centre of the diagnostic region
+      - w, h    size of the region
+
+    The per-variant pixel rectangle is centred at (x×scale, y×scale) and sized
+    (w×scale)×(h×scale). All variants resample to a constant output size
+    (2w × 2h) so every variant's crop card occupies the same physical screen
+    area; the *content* of those pixels differs (true AI output for a 2×
+    variant, downsampled output for a 4× variant, Lanczos-upscaled source for
+    a 1× variant). The lightbox is where users see actual native-pixel detail.
+
+    Single Lanczos resampler for every scale — visually honest (no fake
+    "200% nearest-neighbor" pretense), looks fine on the noise-sharpening
+    project where scale is always 1.
     """
     dst.parent.mkdir(parents=True, exist_ok=True)
-    cx, cy, w, h = crop["x"], crop["y"], crop["w"], crop["h"]
+    cx_b, cy_b, w_b, h_b = crop["x"], crop["y"], crop["w"], crop["h"]
+    cx = cx_b * variant_scale
+    cy = cy_b * variant_scale
+    w  = w_b  * variant_scale
+    h  = h_b  * variant_scale
     ix = cx - w // 2
     iy = cy - h // 2
     inner = im.crop((ix, iy, ix + w, iy + h))
-    cropped = inner.resize((w * 2, h * 2), Image.Resampling.NEAREST)
+    out_w = w_b * 2
+    out_h = h_b * 2
+    resampled = inner.resize((out_w, out_h), Image.Resampling.LANCZOS)
     kwargs: dict = {"quality": JPEG_QUALITY_CROP, "optimize": True}
     if icc:
         kwargs["icc_profile"] = icc
-    cropped.save(dst, "JPEG", **kwargs)
+    resampled.save(dst, "JPEG", **kwargs)
 
 
 def save_thumbnail(im: Image.Image, dst: Path, icc: bytes | None) -> None:
@@ -488,10 +542,11 @@ def build_scenario(
     manifest: dict,
     manifest_mtime: float,
     repo_root: Path,
+    project: ProjectConfig,
     force: bool,
 ) -> PageData:
     slug = validate_slug(manifest["slug"], "manifest.slug")
-    images_out = repo_root / "noise-sharpening" / "images" / slug
+    images_out = repo_root / project.slug / "images" / slug
     # Belt-and-braces: ensure the output dir really resolves under the repo
     # root, even though `validate_slug` already restricts the character set.
     if not images_out.resolve().is_relative_to(repo_root.resolve()):
@@ -504,6 +559,26 @@ def build_scenario(
     jpegs = sorted(p for p in jpeg_dir.glob("*.jpg") if not p.name.startswith("."))
     if not jpegs:
         raise FileNotFoundError(f"no JPEGs in {jpeg_dir}")
+
+    # Pre-pass: header-only read of every JPEG's intrinsic dimensions. Cheap
+    # (Image.open with no .load() reads only the SOI/SOF markers) but tells
+    # us the baseline width before we start writing crops, which need each
+    # variant's per-source-pixel scale factor.
+    variant_dims: dict[Path, tuple[int, int]] = {}
+    for jp in jpegs:
+        with Image.open(jp) as probe:
+            variant_dims[jp] = probe.size
+    baseline_w = min(w for (w, _h) in variant_dims.values())
+    variant_scales: dict[Path, int] = {
+        jp: max(1, round(w / baseline_w)) for jp, (w, _h) in variant_dims.items()
+    }
+    if any(s != 1 for s in variant_scales.values()):
+        # Only log when this is actually an upsizing scenario — keeps the
+        # noise-sharpening build output tidy.
+        scale_summary = ", ".join(
+            f"{jp.name}={variant_scales[jp]}×" for jp in jpegs
+        )
+        print(f"      baseline_w={baseline_w}px, scales: {scale_summary}")
 
     crop = manifest["detail_crop"]
     master_stems = find_master_stems(scenario_dir)
@@ -525,6 +600,7 @@ def build_scenario(
     fallback_thumb_handled = False
 
     for jpeg_path in jpegs:
+        variant_scale = variant_scales[jpeg_path]
         # Single open per variant. Read XMP + dims, then conditionally write
         # all derivative outputs from the same in-memory image.
         with Image.open(jpeg_path) as im:
@@ -541,14 +617,12 @@ def build_scenario(
                 )
             seen_slugs.add(variant_slug)
 
-            if image_dimensions is None:
+            # `image_dimensions` reflects the BASELINE (1× / smallest) variant.
+            # The frontend uses this for `--variant-aspect` CSS reservation;
+            # all variants share the same aspect ratio (modulo upsamper
+            # rounding noise), so any baseline-scale variant's dims work.
+            if image_dimensions is None and variant_scale == 1:
                 image_dimensions = {"width": dims[0], "height": dims[1]}
-            elif (image_dimensions["width"], image_dimensions["height"]) != dims:
-                raise ValueError(
-                    f"{jpeg_path.name} is {dims[0]}x{dims[1]}, but scenario expects "
-                    f"{image_dimensions['width']}x{image_dimensions['height']} "
-                    f"(every variant in a scenario must share dimensions)"
-                )
 
             try:
                 master_filename, copy_name = resolve_critique_source(
@@ -561,30 +635,34 @@ def build_scenario(
             )
 
             out_display = images_out / f"{variant_slug}.jpg"
-            out_crop_200 = images_out / f"{variant_slug}-crop-200.jpg"
+            out_crop = images_out / f"{variant_slug}-crop.jpg"
 
             if needs_rebuild(jpeg_path, out_display, force, manifest_mtime):
                 save_display(im, out_display, icc)
 
-            if needs_rebuild(jpeg_path, out_crop_200, force, manifest_mtime):
+            if needs_rebuild(jpeg_path, out_crop, force, manifest_mtime):
                 # Validate the crop rectangle against actual dimensions before
-                # we touch the crop output. (cx, cy) is the centre of the
-                # diagnostic region in source pixels; (cw, ch) is the SOURCE
-                # region size (not the rendered output, which is 2× each axis).
-                cx, cy, cw, ch = crop["x"], crop["y"], crop["w"], crop["h"]
-                if cw < 2 or ch < 2:
+                # we touch the crop output. detail_crop is BASELINE coords;
+                # the per-variant pixel rectangle is detail_crop × variant_scale.
+                cx_b, cy_b, cw_b, ch_b = crop["x"], crop["y"], crop["w"], crop["h"]
+                if cw_b < 2 or ch_b < 2:
                     raise ValueError(
                         f"detail_crop {crop} too small (need w,h >= 2)"
                     )
+                cx = cx_b * variant_scale
+                cy = cy_b * variant_scale
+                cw = cw_b * variant_scale
+                ch = ch_b * variant_scale
                 left = cx - cw // 2
                 top = cy - ch // 2
                 if left < 0 or top < 0 or left + cw > im.width or top + ch > im.height:
                     raise ValueError(
-                        f"detail_crop center=({cx},{cy}) size={cw}x{ch} extends "
-                        f"outside {jpeg_path.name} ({im.width}x{im.height}); "
-                        f"source region would be ({left},{top})..({left + cw},{top + ch})"
+                        f"detail_crop centre=({cx_b},{cy_b}) size={cw_b}x{ch_b} "
+                        f"× scale {variant_scale} extends outside {jpeg_path.name} "
+                        f"({im.width}x{im.height}); source region would be "
+                        f"({left},{top})..({left + cw},{top + ch})"
                     )
-                save_crop_200(im, crop, out_crop_200, icc)
+                save_diagnostic_crop(im, crop, variant_scale, out_crop, icc)
 
             # If this variant is the configured hero, write its thumbnail and
             # downscaled hero JPEG now — saves extra Image.open passes after.
@@ -613,8 +691,10 @@ def build_scenario(
                 slug=variant_slug,
                 title=title,
                 caption=caption,
+                width=dims[0],
+                height=dims[1],
                 display=f"{rel_dir}/{out_display.name}",
-                crop_200=f"{rel_dir}/{out_crop_200.name}",
+                crop=f"{rel_dir}/{out_crop.name}",
                 critique=critique,
             )
         )
@@ -656,10 +736,12 @@ def build_scenario(
     )
 
 
-def write_page_data(page_data: PageData, repo_root: Path) -> None:
+def write_page_data(
+    page_data: PageData, repo_root: Path, project: ProjectConfig
+) -> None:
     out = (
         repo_root
-        / "noise-sharpening"
+        / project.slug
         / "data"
         / page_data.slug
         / "page-data.json"
@@ -671,9 +753,9 @@ def write_page_data(page_data: PageData, repo_root: Path) -> None:
 
 
 def write_scenarios_index(
-    entries: list[ScenarioIndexEntry], repo_root: Path
+    entries: list[ScenarioIndexEntry], repo_root: Path, project: ProjectConfig
 ) -> None:
-    out = repo_root / "noise-sharpening" / "data" / "scenarios.json"
+    out = repo_root / project.slug / "data" / "scenarios.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     # Tie-break on slug so order is deterministic when sort_orders collide.
     payload = [
@@ -685,6 +767,7 @@ def write_scenarios_index(
 def build(
     source_root: Path,
     repo_root: Path,
+    project: ProjectConfig,
     scenario_filter: str | None,
     force: bool,
 ) -> int:
@@ -712,7 +795,7 @@ def build(
         print(f"BUILD {manifest['slug']:30s} ({scenario_dir.name})")
         try:
             page_data = build_scenario(
-                scenario_dir, manifest, manifest_mtime, repo_root, force
+                scenario_dir, manifest, manifest_mtime, repo_root, project, force
             )
         except Exception as e:
             print(
@@ -737,7 +820,7 @@ def build(
             if i < len(sorted_scenarios) - 1
             else None
         )
-        write_page_data(page_data, repo_root)
+        write_page_data(page_data, repo_root, project)
 
     entries = [
         ScenarioIndexEntry(
@@ -750,24 +833,30 @@ def build(
         )
         for manifest, page_data in sorted_scenarios
     ]
-    write_scenarios_index(entries, repo_root)
-    print(f"\nDONE  {len(entries)} scenarios, {failures} failures")
+    write_scenarios_index(entries, repo_root, project)
+    print(f"\nDONE  {project.slug}: {len(entries)} scenarios, {failures} failures")
     return failures
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "--project",
+        required=True,
+        choices=sorted(PROJECTS.keys()),
+        help="which sub-project to build (routes output to {out}/{project}/...)",
+    )
+    parser.add_argument(
         "--source",
         type=Path,
-        default=Path.home() / "Pictures" / "MHWPC-training-noise-sharpening",
+        required=True,
         help="root folder of scenario directories",
     )
     parser.add_argument(
         "--out",
         type=Path,
         default=Path(__file__).resolve().parent.parent,
-        help="repo root (where noise-sharpening/ lives)",
+        help="repo root (where the {project}/ sub-folder lives)",
     )
     parser.add_argument(
         "--scenario", help="only rebuild a single scenario (matches manifest.slug)"
@@ -784,7 +873,8 @@ def main() -> int:
         print(f"out folder not found: {args.out}", file=sys.stderr)
         return 2
 
-    return build(args.source, args.out, args.scenario, args.force)
+    project = PROJECTS[args.project]
+    return build(args.source, args.out, project, args.scenario, args.force)
 
 
 if __name__ == "__main__":

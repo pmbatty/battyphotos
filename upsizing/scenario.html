@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" />
+    <title>Scenario — AI image upsizing — batty.photos</title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../noise-sharpening/css/styles.css" />
+    <!-- OpenSeadragon is vendored under noise-sharpening/vendor/. Both
+         projects reference the same vendor copy via ../noise-sharpening/
+         relative path; viewer.js's `prefixUrl` is set to the same path so
+         it works from either sub-project shell unchanged. -->
+    <link rel="preload" as="script" href="../noise-sharpening/vendor/openseadragon-4.1.1/openseadragon.min.js" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-header__brand" href="../">batty.photos</a>
+        <span class="site-header__nav">
+          <a href="./">AI image upsizing</a>
+        </span>
+      </div>
+    </header>
+
+    <main class="site-main scenario-main" id="scenario-root" aria-busy="true">
+      <p class="scenario__loading">Loading scenario&hellip;</p>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Photographs and analysis &copy; Peter Batty. AI image analysis powered
+        by <a href="https://github.com/pmbatty/darwain">darwain</a>, using
+        Google Gemini vision models.
+      </p>
+    </footer>
+
+    <!-- Full-screen lightbox: hosts either a single OSD viewer (single-image
+         mode) or two stacked OSD viewers with a draggable divider between
+         them (comparison mode). Markup is identical to the noise-sharpening
+         version — viewer.js targets shared element IDs. -->
+    <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Full-resolution viewer">
+      <div class="lightbox__bar">
+        <div class="lightbox__pickers" id="lightbox-pickers">
+          <select class="lightbox__pick" id="lightbox-pick-a" aria-label="Choose left image"></select>
+          <span class="lightbox__sep" id="lightbox-sep" aria-hidden="true">&#x21C4;</span>
+          <select class="lightbox__pick" id="lightbox-pick-b" aria-label="Choose right image"></select>
+        </div>
+        <div class="lightbox__controls">
+          <span class="lightbox__zoom" id="lightbox-zoom" aria-live="polite" aria-label="Current zoom">Current: &hellip;</span>
+          <button class="lightbox__btn" type="button" id="lightbox-fit" title="Fit the whole image to the viewer">Fit</button>
+          <button class="lightbox__btn" type="button" id="lightbox-100" title="Zoom to 100% — one source pixel per device pixel on the larger image (Lightroom 1:1)">100%</button>
+          <button class="lightbox__btn" type="button" id="lightbox-200" title="Zoom to 200% — each source pixel of the larger image covers a 2&times;2 block of device pixels">200%</button>
+          <button class="lightbox__close" type="button" aria-label="Close viewer">&times;</button>
+        </div>
+      </div>
+      <div class="lightbox__stage" id="lightbox-stage">
+        <div class="lightbox__layer">
+          <div class="lightbox__viewer" id="lightbox-viewer-a"></div>
+        </div>
+        <div class="lightbox__layer lightbox__layer--top" id="lightbox-layer-b">
+          <div class="lightbox__viewer" id="lightbox-viewer-b"></div>
+        </div>
+        <button
+          class="lightbox__badge lightbox__badge--left"
+          id="lightbox-badge-left"
+          type="button"
+          data-side="left"
+          hidden
+          aria-expanded="false"
+          aria-controls="lightbox-critique-left"
+        >
+          <span class="lightbox__badge-title"></span>
+          <span class="lightbox__info-icon" aria-hidden="true">i</span>
+        </button>
+        <button
+          class="lightbox__badge lightbox__badge--right"
+          id="lightbox-badge-right"
+          type="button"
+          data-side="right"
+          hidden
+          aria-expanded="false"
+          aria-controls="lightbox-critique-right"
+        >
+          <span class="lightbox__info-icon" aria-hidden="true">i</span>
+          <span class="lightbox__badge-title"></span>
+        </button>
+
+        <aside
+          class="lightbox__critique lightbox__critique--left"
+          id="lightbox-critique-left"
+          data-side="left"
+          hidden
+          role="region"
+          aria-label="Left image AI critique"
+        >
+          <div class="lightbox__critique-header">
+            <span class="lightbox__critique-stars"></span>
+            <span class="lightbox__critique-label">darwain critique</span>
+            <span class="lightbox__critique-model"></span>
+            <button class="lightbox__critique-close" type="button" aria-label="Close critique">&times;</button>
+          </div>
+          <p class="lightbox__critique-caption"></p>
+          <p class="lightbox__critique-text"></p>
+        </aside>
+        <aside
+          class="lightbox__critique lightbox__critique--right"
+          id="lightbox-critique-right"
+          data-side="right"
+          hidden
+          role="region"
+          aria-label="Right image AI critique"
+        >
+          <div class="lightbox__critique-header">
+            <span class="lightbox__critique-stars"></span>
+            <span class="lightbox__critique-label">darwain critique</span>
+            <span class="lightbox__critique-model"></span>
+            <button class="lightbox__critique-close" type="button" aria-label="Close critique">&times;</button>
+          </div>
+          <p class="lightbox__critique-caption"></p>
+          <p class="lightbox__critique-text"></p>
+        </aside>
+        <div class="lightbox__divider" id="lightbox-divider" hidden>
+          <button
+            class="lightbox__divider-handle"
+            id="lightbox-divider-handle"
+            type="button"
+            aria-label="Drag to compare. Arrow keys nudge, double-click resets."
+            role="separator"
+            aria-orientation="vertical"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="50"
+          >
+            <span aria-hidden="true">&#x21C4;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../noise-sharpening/vendor/openseadragon-4.1.1/openseadragon.min.js"></script>
+    <script type="module" src="../noise-sharpening/js/app.js"></script>
+  </body>
+</html>

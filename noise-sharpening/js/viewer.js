@@ -121,9 +121,10 @@ function heroBlock(data, heroVariant, variantW, variantH) {
 }
 
 function variantCard(img, cropW, cropH) {
-  // The JPEG file's intrinsic dimensions are (2 × source w, 2 × source h)
-  // because the build script upscales 2× to bake in the "200% zoom" look.
-  // Emit those as the img attrs so the natural-size aspect matches the
+  // The crop JPEG's intrinsic dimensions are (2 × baseline.crop.w, 2 × baseline.crop.h)
+  // regardless of the variant's source-pixel scale — the build script resamples
+  // to a constant output size so all crop cards occupy the same physical screen
+  // area. Emit those as the img attrs so the natural-size aspect matches the
   // file and CLS reservation is exact.
   const cropAttrs = cropW && cropH ? ` width="${cropW * 2}" height="${cropH * 2}"` : "";
   return `
@@ -135,8 +136,8 @@ function variantCard(img, cropW, cropH) {
         aria-label="Open ${escapeAttr(img.title)} at full resolution"
       >
         <figure class="variant__crop">
-          <img src="${img.crop_200}"${cropAttrs} alt="200% pixel detail of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
-          <figcaption>200% pixel detail (centered, nearest-neighbor upscaled)</figcaption>
+          <img src="${img.crop}"${cropAttrs} alt="Detail crop of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
+          <figcaption>Detail crop &middot; same scene region across variants</figcaption>
         </figure>
         <span class="variant__zoom-hint">Click to compare &middot; full resolution</span>
       </button>
@@ -220,7 +221,7 @@ function attachLightboxHandlers(data) {
   const pendingSwapTokens = new Set();
   let currentA = null;
   let currentB = null;
-  let lastZoomPct = null;
+  let lastZoomText = null;
   function shouldSuppressSync() {
     return swapsInFlight > 0 || insideSync;
   }
@@ -280,21 +281,76 @@ function attachLightboxHandlers(data) {
   // ---- Close, zoom presets, backdrop ------------------------------------
   closeBtn.addEventListener("click", closeLightbox);
 
-  // Photo-app-style zoom: pct=100 → 1 source pixel per device pixel
-  // (Lightroom's "1:1"). pct=200 → each source pixel covers a 2×2 block of
-  // device pixels. The /dpr term converts CSS-pixels-per-source-pixel
-  // (what OSD's imageToViewportZoom takes) to device-pixels-per-source-pixel
-  // (what photographers mean by "100%"). See gotcha #4 in
+  // The viewer of the larger image. Defines what 100%/200% mean in scale-aware
+  // mode (upsizing project) — its pixel zoom is the canonical reading; the
+  // smaller viewer follows via sync at proportionally higher pixel zoom.
+  // For same-size variants (noise-sharpening), returns viewerA arbitrarily;
+  // sync makes the choice immaterial.
+  function getReferenceViewer() {
+    if (!viewerA || !viewerB) return null;
+    const aW = (currentA && currentA.width) || 0;
+    const bW = (currentB && currentB.width) || 0;
+    return aW >= bW ? viewerA : viewerB;
+  }
+
+  function isSwapping() {
+    return swapsInFlight > 0;
+  }
+
+  // Lock the zoom toolbar while a swap is in flight. Without this, clicking
+  // 100%/200% mid-swap drives zoom on a viewer whose visible image is the
+  // PREVIOUS variant — confusing and wrong. Pickers also self-lock per side
+  // (see setPickerLocked) so the user can still swap the OTHER side.
+  function setSwapToolbarLocked(locked) {
+    fitBtn.disabled = locked;
+    zoom100Btn.disabled = locked;
+    zoom200Btn.disabled = locked;
+  }
+
+  // Photo-app-style zoom: pct=100 → 1 source pixel per device pixel on the
+  // REFERENCE (larger) viewer. The smaller viewer's pixel zoom is whatever
+  // the same VIEWPORT zoom resolves to for its pixel dimensions — typically
+  // higher (e.g. a 1× partner of a 2× reference renders at 200% pixel zoom).
+  //
+  // The /dpr term converts CSS-pixels-per-source-pixel (what OSD's
+  // imageToViewportZoom takes) to device-pixels-per-source-pixel (what
+  // photographers mean by "100%"). See gotcha #4 in
   // docs/solutions/ui-patterns/openseadragon-synced-comparison-viewer.md.
+  //
+  // Race fix #1: clamp + sync-to-partner happen inside `insideSync` so the
+  // partner doesn't react twice — once to the pre-clamp zoom, once to the
+  // post-clamp zoom. Drive the partner ONCE explicitly with the post-clamp
+  // viewport state.
   function zoomToPct(pct) {
-    if (!viewerA || !viewerA.viewport) return;
-    const vp = viewerA.viewport;
+    if (isSwapping()) return;
+    const ref = getReferenceViewer();
+    if (!ref || !ref.viewport) return;
     const dpr = window.devicePixelRatio || 1;
-    vp.zoomTo(vp.imageToViewportZoom(pct / 100 / dpr));
-    vp.applyConstraints();
+    const target = ref.viewport.imageToViewportZoom(pct / 100 / dpr);
+    insideSync = true;
+    try {
+      ref.viewport.zoomTo(target);
+      ref.viewport.applyConstraints();
+    } finally {
+      insideSync = false;
+    }
+    const other = ref === viewerA ? viewerB : viewerA;
+    if (other && other.viewport) {
+      insideSync = true;
+      try {
+        other.viewport.zoomTo(ref.viewport.getZoom(), null, true);
+        other.viewport.panTo(ref.viewport.getCenter(), true);
+      } finally {
+        insideSync = false;
+      }
+    }
+    updateZoomReadout();
   }
   fitBtn.addEventListener("click", () => {
-    // Reset to the configured defaultZoomLevel (0 → fit-to-viewport).
+    if (isSwapping()) return;
+    // Reset to the configured defaultZoomLevel (0 → fit-to-viewport). Sync
+    // propagates to the partner — both viewers fit their respective full
+    // images, which means same scene region (full image) for any pair.
     if (!viewerA || !viewerA.viewport) return;
     viewerA.viewport.goHome();
   });
@@ -399,7 +455,7 @@ function attachLightboxHandlers(data) {
 
     currentA = a;
     currentB = b;
-    lastZoomPct = null;
+    lastZoomText = null;
 
     pickA.innerHTML = buildOptions(a.slug);
     pickB.innerHTML = buildOptions(b.slug);
@@ -412,28 +468,36 @@ function attachLightboxHandlers(data) {
     lightbox.hidden = false;
     document.body.classList.add("body--lightbox-open");
 
+    // Race fix #2: bump maxZoomPixelRatio per-pair so the smaller viewer can
+    // reach the pixel zoom required to mirror the larger viewer's scene
+    // region at "200%" or beyond. With a (1×, 4×) pair clicked to 200%,
+    // the smaller side needs 800% pixel zoom (8 device px per source px) —
+    // OSD's default 4 silently clamps that, decoupling the views and
+    // making the readout lie. Default to the larger of 4 (for same-size
+    // pairs) or scaleRatio×2 (covers up to "200%" on any pair).
+    const maxPixelRatio = computeMaxPixelRatio(a, b);
+
     // Always create both viewers — they always exist, we just toggle visibility
     // of the divider / badges / clip-path based on whether A and B differ.
     viewerA = OpenSeadragon({
       element: viewerAEl,
       tileSources: { type: "image", url: a.display, buildPyramid: false },
-      prefixUrl: "vendor/openseadragon-4.1.1/images/",
+      // Path resolves to noise-sharpening/vendor/... from BOTH
+      // noise-sharpening/scenario.html (../noise-sharpening = self) and
+      // upsizing/scenario.html (sibling), so the same viewer.js works for
+      // both sub-projects without parameterization.
+      prefixUrl: "../noise-sharpening/vendor/openseadragon-4.1.1/images/",
       showNavigator: false,
       showRotationControl: false,
       showFullPageControl: false,
       autoHideControls: false,
-      maxZoomPixelRatio: 4,
+      maxZoomPixelRatio: maxPixelRatio,
       minZoomImageRatio: 0.5,
       defaultZoomLevel: 0,
       gestureSettingsMouse: { clickToZoom: false, scrollToZoom: true },
       gestureSettingsTouch: { clickToZoom: false },
       animationTime: 0.4,
     });
-    viewerA.addHandler("open", updateZoomReadout);
-    // pan + zoom cover both interactive and animated viewport changes; we
-    // intentionally don't subscribe to `animation` (every-frame) — it fires
-    // on top of pan/zoom and would multiply the work without adding signal.
-    viewerA.addHandler("zoom", updateZoomReadout);
 
     viewerB = OpenSeadragon({
       element: viewerBEl,
@@ -444,7 +508,7 @@ function attachLightboxHandlers(data) {
       showRotationControl: false,
       showFullPageControl: false,
       autoHideControls: false,
-      maxZoomPixelRatio: 4,
+      maxZoomPixelRatio: maxPixelRatio,
       minZoomImageRatio: 0.5,
       defaultZoomLevel: 0,
       gestureSettingsMouse: { clickToZoom: false, scrollToZoom: true },
@@ -453,10 +517,32 @@ function attachLightboxHandlers(data) {
       animationTime: 0,
     });
 
+    // Race fix #3: register sync handlers BEFORE the readout subscriber.
+    // OSD fires zoom-event handlers in registration order; if readout ran
+    // first, it would read the stale partner zoom (pre-sync) and flicker
+    // the wrong intermediate value during animated zooms.
     bindViewportSync(viewerA, viewerB);
+    viewerA.addHandler("open", updateZoomReadout);
+    viewerA.addHandler("zoom", updateZoomReadout);
+    // pan + zoom cover both interactive and animated viewport changes; we
+    // intentionally don't subscribe to `animation` (every-frame) — it fires
+    // on top of pan/zoom and would multiply the work without adding signal.
+    viewerB.addHandler("zoom", updateZoomReadout);
 
     setDividerX(50);
     updateMode();
+  }
+
+  // Returns the OSD `maxZoomPixelRatio` to use for a given (A, B) pair.
+  // For same-size variants, 4 (the OSD-friendly default). For different
+  // sizes, scaleRatio × 2 — enough to support the "200%" preset, where the
+  // smaller viewer needs to render at scaleRatio × 200 percent pixel zoom.
+  function computeMaxPixelRatio(a, b) {
+    const aW = (a && a.width) || 0;
+    const bW = (b && b.width) || 0;
+    if (!aW || !bW) return 4;
+    const scaleRatio = Math.max(aW, bW) / Math.min(aW, bW);
+    return Math.max(4, scaleRatio * 2);
   }
 
   function closeViewers() {
@@ -568,9 +654,18 @@ function attachLightboxHandlers(data) {
     // Disable the picker while its swap is in flight — prevents back-to-back
     // changes piling up on the same viewer. Other side's picker stays usable.
     setPickerLocked(which, true);
+    // Race fix #4: also lock the zoom toolbar. Click-100% mid-swap would
+    // drive zoom on a viewer whose visible image is the previous variant.
+    setSwapToolbarLocked(true);
 
     // Track this swap so closeViewers can cancel it cleanly. swapsInFlight
     // suppresses sync until ALL pending swaps complete.
+    //
+    // Race fix #5: `swapsInFlight++` MUST happen before `viewer.open()`.
+    // OSD's `open` event handler internally fires `goHome`-like pan/zoom
+    // events; without the counter raised first, those events would
+    // propagate through the still-active sync handler to the partner
+    // viewer (snap-to-home, then back). Don't reorder.
     const token = { cancelled: false };
     pendingSwapTokens.add(token);
     swapsInFlight++;
@@ -581,6 +676,8 @@ function attachLightboxHandlers(data) {
         swapsInFlight = Math.max(0, swapsInFlight - 1);
       }
       setPickerLocked(which, false);
+      // Re-enable toolbar only when ALL swaps have cleared.
+      if (swapsInFlight === 0) setSwapToolbarLocked(false);
     }
 
     viewer.addOnceHandler("open", () => {
@@ -588,8 +685,18 @@ function attachLightboxHandlers(data) {
         clearSwap();
         return;
       }
+      // Race fix #2: the new variant may have a different scale to its
+      // partner — recompute maxZoomPixelRatio for the new pair before any
+      // user zoom-preset action lands.
+      const maxPixelRatio = computeMaxPixelRatio(currentA, currentB);
+      if (viewerA && viewerA.viewport) viewerA.viewport.maxZoomPixelRatio = maxPixelRatio;
+      if (viewerB && viewerB.viewport) viewerB.viewport.maxZoomPixelRatio = maxPixelRatio;
+
       // Restore captured viewport. Uses insideSync so the partner viewer
       // doesn't react to A's transient zoom/pan events during the restore.
+      // Viewport coords are scene-relative (image-normalized), so the
+      // captured (zoom, center) preserves the user's scene region across
+      // a 1×↔4× swap without any per-scale math here.
       insideSync = true;
       try {
         viewer.viewport.zoomTo(zoom, null, true);
@@ -647,14 +754,29 @@ function attachLightboxHandlers(data) {
     b.addHandler("zoom", () => sync(b, a));
   }
 
-  function updateZoomReadout() {
-    if (!viewerA || !viewerA.viewport) return;
-    const vp = viewerA.viewport;
+  function pctFor(viewer) {
+    if (!viewer || !viewer.viewport) return null;
     const dpr = window.devicePixelRatio || 1;
-    const pct = Math.round(vp.viewportToImageZoom(vp.getZoom()) * dpr * 100);
-    if (Number.isFinite(pct) && pct !== lastZoomPct) {
-      zoomEl.textContent = `Current: ${pct}%`;
-      lastZoomPct = pct;
+    const z = viewer.viewport.viewportToImageZoom(viewer.viewport.getZoom());
+    const pct = Math.round(z * dpr * 100);
+    return Number.isFinite(pct) ? pct : null;
+  }
+
+  function updateZoomReadout() {
+    const pctA = pctFor(viewerA);
+    const pctB = pctFor(viewerB);
+    if (pctA === null) return;
+    // Single-image mode (A == B) or same-size variants (e.g. all of
+    // noise-sharpening) → one reading. Different sizes → two readings,
+    // ordered to match the lightbox's left/right badges (A | B).
+    const isCompare = !!(currentA && currentB && currentA.slug !== currentB.slug);
+    const sameSize = ((currentA && currentA.width) || 0) === ((currentB && currentB.width) || 0);
+    const text = (!isCompare || sameSize)
+      ? `Current: ${pctA}%`
+      : `Current: ${pctA}% | ${pctB}%`;
+    if (text !== lastZoomText) {
+      zoomEl.textContent = text;
+      lastZoomText = text;
     }
   }
 }

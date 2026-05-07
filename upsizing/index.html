@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" />
+    <title>AI image upsizing — batty.photos</title>
+    <meta
+      name="description"
+      content="Full-resolution comparison of AI image-upsampling tools (Topaz Gigapixel, Adobe Super Resolution, ON1 Resize AI, Lightroom Super Resolution) applied to the same source wildlife photograph at 2× and 4× scales."
+    />
+    <!-- Shared site CSS lives at the repo root; the project-specific styles
+         are reused from the noise-sharpening sub-project (no shared-infra
+         refactor yet — second sibling references first sibling's assets via
+         relative path, by design; revisit when a third project lands). -->
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../noise-sharpening/css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-header__brand" href="../">batty.photos</a>
+        <span class="site-header__nav">AI image upsizing</span>
+      </div>
+    </header>
+
+    <main class="site-main">
+      <h1>AI image upsizing</h1>
+      <p class="lede">
+        Comparison of AI image-upsampling tools — Lightroom Super Resolution,
+        Topaz Gigapixel (multiple models), Topaz Photo, ON1 Resize AI — applied
+        to the same source wildlife photograph at 2× and 4× scales. Each
+        scenario lets you compare any two variants side-by-side at native pixel
+        resolution to judge how much real detail each tool reconstructs.
+      </p>
+
+      <section id="gallery" class="gallery" aria-busy="true">
+        <p class="gallery__loading">Loading scenarios&hellip;</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Photographs and analysis &copy; Peter Batty. AI image analysis powered
+        by <a href="https://github.com/pmbatty/darwain">darwain</a>, using
+        Google Gemini vision models.
+      </p>
+    </footer>
+
+    <script type="module" src="../noise-sharpening/js/gallery.js"></script>
+  </body>
+</html>
