@@ -27,8 +27,8 @@
       "display": "images/bald-eagle-blurred/raw.jpg?v=1778206342",
       "crop": "images/bald-eagle-blurred/raw-crop.jpg?v=1778206342",
       "critique": {
-        "text": "Image 3 (RAW): The original RAW image suffers from significant softness and blur, likely a combination of motion blur from the dynamic subjects and slight focus inaccuracies. The fine feather details are almost completely lost, and the overall image lacks crisp edges. There is also a moderate amount of standard digital noise/luminance grain visible throughout the background and shadow areas. High-level overview: The two edited images drastically reduce this noise and attempt to recover sharpness using different AI models. Image 1 (Motion Blur setting) handles the recovery much better, providing relatively natural-looking sharpness that aligns with the movement in the frame, whereas Image 2 (Focus Blur setting) creates unnatural, crunchy artifacts. Overall ranking: Image 1 is the best result, Image 2 is second due to over-sharpening artifacts, and Image 3 is the weakest due to the severe uncorrected blur.",
-        "potential_score": 2,
+        "text": "As noted in the caption, this original RAW image is 'very blurred' and suffers from severe technical flaws that significantly detract from its overall quality. Sharpness is exceptionally poor; the entire frame, especially the interacting eagles, is extremely soft, completely lacking any fine detail or distinct edges. This appears to be a result of missed focus, subject motion blur, or a combination of both. Furthermore, there is a prominent, coarse layer of luminance noise visible across the entire image, most noticeably muddying the darker plumage of the birds and the background snow. As a whole, the image is poor in its unedited state because the action of the main subjects is obscured by the lack of clarity. The two Topaz edited versions demonstrate how aggressive AI processing can attempt to salvage such a file by tackling the heavy noise and reconstructing sharp edges, though both introduce artificial textures in the process, with the Motion Blur edit performing slightly better overall.",
+        "potential_score": 1,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -41,8 +41,8 @@
       "display": "images/bald-eagle-blurred/topaz-photo-2.jpg?v=1778206342",
       "crop": "images/bald-eagle-blurred/topaz-photo-2-crop.jpg?v=1778206342",
       "critique": {
-        "text": "Image 1 (Topaz Photo 2 - Motion Blur at 100): This edit successfully addresses the original RAW's blur by applying a motion blur correction algorithm. The sharpness is vastly improved over the RAW, bringing out distinct feather details and defining the eagles' features much more clearly. Background noise has been effectively eliminated, resulting in a smooth, clean aesthetic. Compared to Image 2, this edit looks significantly more natural, largely avoiding the harsh, crunchy artifacts of the focus blur setting. While there is still a slight 'painted' look typical of heavy AI processing upon close inspection, it is by far the strongest and most usable image in the set.",
-        "potential_score": 4,
+        "text": "This edit, utilizing Topaz Photo's Motion Blur reduction setting at 100, represents a significant rescue effort over the severely blurred original RAW. Noise has been aggressively reduced, resulting in a much cleaner, smoother background. In terms of sharpness, the improvement is dramatic; the subjects, particularly the eagle on the right, now display distinct feather details, a clear eye, and a defined beak that were completely lost in the original. However, pushing the sharpening so heavily has inevitably introduced visible processing artifacts. The textures can appear somewhat 'crunchy' or artificially generated upon close inspection, and the hard edges of the birds feel slightly unnatural against the smoothed snow. Despite these artifacts, this edit is the most successful of the set. It provides the best balance of recovering necessary subject detail while managing the artificial look, making a previously unusable image visually compelling.",
+        "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -55,8 +55,8 @@
       "display": "images/bald-eagle-blurred/topaz-photo-1.jpg?v=1778206342",
       "crop": "images/bald-eagle-blurred/topaz-photo-1-crop.jpg?v=1778206342",
       "critique": {
-        "text": "Image 2 (Topaz Photo 1 - Focus Blur at 100): This edit effectively removes the background noise present in the original RAW, yielding a similarly clean background to Image 1. However, the Focus Blur sharpening algorithm applied at 100% struggles significantly with the specific type of blur in the original image. While technically sharper than the RAW, the resulting fine details—especially in the feathers, wings, and high-contrast edges—appear brittle, over-processed, and artifact-heavy. It lacks the natural feather texture achieved in Image 1, making the aggressive AI sharpening heavily apparent and distracting.",
-        "potential_score": 3,
+        "text": "This version applies Topaz Photo's Focus Blur reduction setting at 100 to combat the original's severe softness. Like the first edit, it successfully eliminates the pervasive noise of the RAW file, yielding a clean background, and drastically increases the sharpness of the eagles. However, compared to the Motion Blur edit, the artifacts here are slightly more distracting and less natural. The textures on the feathers feel more brittle and 'painterly,' distinctly showing the heavy hand of AI intervention. The tail feathers of the left eagle, in particular, exhibit somewhat strange, blocky patterns where the software struggled to reconstruct detail. The contrast between the hyper-sharpened subjects and the smooth background makes the eagles look somewhat pasted into the scene. While it achieves the goal of making the subjects sharp, the overall aesthetic suffers slightly more from processing trade-offs than the Motion Blur version.",
+        "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }
     }

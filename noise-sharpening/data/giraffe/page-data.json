@@ -1,0 +1,78 @@
+{
+  "slug": "giraffe",
+  "title": "Giraffe at the waterhole",
+  "subtitle": "An adult giraffe drinking at sunset at Zimanga, South Africa, with the herd in the background. Captured at ISO 200 on the OM-1 — a low-noise base file that surfaces the subtle differences in how AI denoise tools treat clean detail (eye, fur patterns, water droplets) without obvious noise to mask their behaviour.",
+  "image_dimensions": {
+    "width": 3481,
+    "height": 2611
+  },
+  "detail_crop": {
+    "x": 1400,
+    "y": 480,
+    "w": 600,
+    "h": 400
+  },
+  "hero": "images/giraffe/hero.jpg?v=1778252933",
+  "hero_slug": "lightroom-denoise",
+  "editor_note": null,
+  "previous_scenario": "spider-monkey",
+  "next_scenario": null,
+  "images": [
+    {
+      "slug": "raw",
+      "title": "RAW",
+      "caption": "RAW with edits applied",
+      "width": 3481,
+      "height": 2611,
+      "display": "images/giraffe/raw.jpg?v=1778252934",
+      "crop": "images/giraffe/raw-crop.jpg?v=1778252934",
+      "critique": {
+        "text": "As the baseline RAW image with standard edits, this photo displays a noticeable amount of luminance noise, most prominently visible as grain in the smooth gradient of the sky and within the shadowed areas of the giraffes. While the main subject is reasonably sharp and the action is captured well, fine details like the hair on the giraffe's mane and the individual water droplets lack crispness, somewhat masked by the inherent noise. The other three images apply advanced noise reduction and sharpening techniques. All successfully clean up the sky to a smooth finish, but they diverge significantly in their treatment of fine detail. The edits range from a slightly softer, more natural look to a hyper-crisp, somewhat over-processed appearance. In terms of overall success and how well the edits worked, they rank as follows: the DxO standard edit is the most balanced and effective, followed closely by the Lightroom Denoise edit which is slightly softer but very natural, and finally the DxO strong edit, which pushes sharpness to the point of introducing artifacts.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "dxo-raw-6-standard",
+      "title": "DxO RAW 6 standard",
+      "caption": "Dxo RAW 6 using DeepPRIMEXD3 with default settings",
+      "width": 3481,
+      "height": 2611,
+      "display": "images/giraffe/dxo-raw-6-standard.jpg?v=1778252933",
+      "crop": "images/giraffe/dxo-raw-6-standard-crop.jpg?v=1778252933",
+      "critique": {
+        "text": "Processed with DxO DeepPRIME XD3 on standard settings, this image shows a vast improvement in noise reduction compared to the original RAW file. The sky is rendered completely smooth, eliminating the distracting background grain. Crucially, this aggressive noise reduction is paired with excellent detail retention and enhancement. The sharpness is visibly superior to both the RAW and the Lightroom edit; the scattered water droplets are crisply defined, and the fine hairs of the giraffe's mane show distinct texture without appearing artificial. It strikes a fantastic balance between a clean, noise-free file and sharp, realistic details, making it the strongest overall image in the set.",
+        "potential_score": 5,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "lightroom-denoise",
+      "title": "Lightroom Denoise",
+      "caption": "RAW with edits applied, plus Lightroom Denoise with defaults",
+      "width": 3481,
+      "height": 2611,
+      "display": "images/giraffe/lightroom-denoise.jpg?v=1778252933",
+      "crop": "images/giraffe/lightroom-denoise-crop.jpg?v=1778252933",
+      "critique": {
+        "text": "The Lightroom Denoise edit effectively tackles the noise issue present in the RAW baseline, producing a beautifully clean sky and removing the muddy grain from the shadows. When evaluating sharpness, it offers a distinct improvement over the noisy RAW file, bringing out more clarity in the main subject. However, when compared side-by-side with the DxO standard edit, this version appears slightly softer. Fine details, such as the feathers on the oxpeckers and the edges of the water splash, don't have the same crisp 'bite'. While not as tack-sharp as the DxO standard version, it maintains a very organic, photographic feel, avoiding any risk of digital artifacts, making it a highly successful and usable edit.",
+        "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "dxo-raw-6-strong",
+      "title": "DxO RAW 6 strong",
+      "caption": "Dxo RAW 6 using DeepPRIMEXD3 with strong optical sharpening",
+      "width": 3481,
+      "height": 2611,
+      "display": "images/giraffe/dxo-raw-6-strong.jpg?v=1778252934",
+      "crop": "images/giraffe/dxo-raw-6-strong-crop.jpg?v=1778252934",
+      "critique": {
+        "text": "This version employs DxO DeepPRIME XD3 but with strong optical sharpening applied. Like the other processed images, it successfully removes the noise seen in the RAW file, resulting in a pristine background. However, the approach to sharpness here is too aggressive. Compared to the RAW and the other edits, the fine details—particularly the edges of the giraffe's face, its mane, and the splashing water—look 'crunchy' and over-processed. The heavy sharpening introduces micro-contrast halos and artifacts that give the image an artificial, almost brittle quality upon closer inspection. While the main subject is undeniably sharp, the negative visual impact of these sharpening artifacts outweighs the benefits, making this edit less pleasing overall than the standard DxO or Lightroom versions.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  ]
+}

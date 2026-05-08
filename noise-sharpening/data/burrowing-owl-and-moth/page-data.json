@@ -27,7 +27,7 @@
       "display": "images/burrowing-owl-and-moth/raw.jpg?v=1778206343",
       "crop": "images/burrowing-owl-and-moth/raw-crop.jpg?v=1778206343",
       "critique": {
-        "text": "This original RAW image serves as the baseline, exhibiting a high level of luminance noise (grain) across the background that softens the overall image and obscures fine feather details on the owl. The underlying sharpness is decent but muddy due to the noise. The edited versions all attempt to smooth the background and enhance subject detail using various AI tools. Overall, DxO (Image 4) performed the best with incredible sharpness and clean backgrounds, followed closely by Lightroom (Image 5) for a natural look. Topaz (Image 1) was highly detailed but slightly artificial, while ON1 (Image 3) ranked last due to severe background artifacts. The noisy original RAW is arguably preferable to the highly artifacted ON1 edit.",
+        "text": "The original RAW image is severely compromised by heavy, coarse noise that permeates the entire frame, significantly degrading both the subject and the background. Furthermore, the main subject (the owl) is quite soft, lacking fine detail in the feathers and facial features, likely due to slight motion blur or missed focus combined with the high noise floor. The other submitted images attempt to rescue this file with varying degrees of AI processing. Overall, the DxO PureRAW edit (Image 4) is the clear winner, flawlessly balancing noise reduction with natural detail recovery. Topaz (Image 1) takes second place, offering sharp details but with some minor artifacts. Lightroom (Image 5) effectively removes noise but leaves the subject soft, ranking third. The ON1 edit (Image 3) is the least effective, resulting in an unnatural texture.",
         "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }
@@ -41,22 +41,8 @@
       "display": "images/burrowing-owl-and-moth/dxo-pureraw-6.jpg?v=1778206343",
       "crop": "images/burrowing-owl-and-moth/dxo-pureraw-6-crop.jpg?v=1778206343",
       "critique": {
-        "text": "DxO DeepPrime XD3 offers arguably the best balance of noise reduction and sharpness in the set. The background is rendered buttery smooth, completely eliminating the heavy noise of the RAW without introducing the painterly artifacts seen in ON1. The strong lens sharpness optimization has pulled an incredible amount of fine detail out of the owl's feathers and the flying insect, making it noticeably crisper than the Lightroom version while avoiding the slightly over-processed look of the Topaz edit.",
+        "text": "The DxO PureRAW 6 edit is exceptional and easily the best of the group. It completely eliminates the heavy noise of the original RAW file, leaving a perfectly smooth and natural-looking background. More impressively, the 'Strong' lens sharpness optimization successfully extracts incredible detail from the originally soft owl. The feathers, eyes, and talons are rendered crisply and naturally, entirely avoiding the over-sharpened, brittle artifacts seen in the Topaz version. It is a highly successful rescue of a very difficult, noisy, and soft original image.",
         "potential_score": 5,
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
-    {
-      "slug": "lightroom-denoise",
-      "title": "Lightroom Denoise",
-      "caption": "Lightroom AI Denoise at default settings",
-      "width": 2410,
-      "height": 1607,
-      "display": "images/burrowing-owl-and-moth/lightroom-denoise.jpg?v=1778206343",
-      "crop": "images/burrowing-owl-and-moth/lightroom-denoise-crop.jpg?v=1778206343",
-      "critique": {
-        "text": "Lightroom's AI Denoise provides a highly natural and pleasing result. It handles the background noise exceptionally well, clearing up the RAW's heavy grain and creating a smooth backdrop that rivals DxO. In terms of sharpness, it retains excellent natural detail in the owl's feathers compared to the muddy RAW, though it is softer and less aggressively sharpened than the Topaz or DxO versions. This makes it a great choice for a highly realistic, cleanly processed look without the risk of over-sharpening.",
-        "potential_score": 4,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -69,8 +55,22 @@
       "display": "images/burrowing-owl-and-moth/topaz-photo.jpg?v=1778206343",
       "crop": "images/burrowing-owl-and-moth/topaz-photo-crop.jpg?v=1778206343",
       "critique": {
-        "text": "The Topaz AI edit successfully removes the heavy grain seen in the original RAW, producing a much cleaner background. However, the default subject sharpening is quite aggressive. While the owl's face and wing feathers are exceptionally crisp, they border on looking slightly over-sharpened or 'crunchy' compared to the more natural Lightroom edit. It ranks highly for detail extraction but loses a little ground on natural rendering compared to DxO.",
+        "text": "The Topaz Photo edit significantly improves upon the original RAW by aggressively reducing noise and sharpening the subject. The background is much cleaner, though slight mottling remains. The subject sharpening effectively brings back missing detail in the owl's face and feathers, which is a major improvement. However, the sharpening effect is quite strong, resulting in a slightly 'crunchy' and over-processed look with minor artifacting along high-contrast edges. It's a strong rescue of a soft image, but it falls short of the natural rendering seen in the DxO edit.",
         "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "lightroom-denoise",
+      "title": "Lightroom Denoise",
+      "caption": "Lightroom AI Denoise at default settings",
+      "width": 2410,
+      "height": 1607,
+      "display": "images/burrowing-owl-and-moth/lightroom-denoise.jpg?v=1778206343",
+      "crop": "images/burrowing-owl-and-moth/lightroom-denoise-crop.jpg?v=1778206343",
+      "critique": {
+        "text": "The Lightroom AI Denoise version is very successful at its primary task: it completely cleans up the severe noise found in the original RAW, providing a smooth, distraction-free background without introducing strange artifacts. However, because it primarily addresses noise at default settings, the owl remains almost as soft as it was in the original file. Without the dedicated AI sharpening algorithms used by Topaz or DxO, the main subject lacks the crisp detail needed to make the image truly compelling. It is a very clean image, but the uncorrected softness holds it back.",
+        "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -83,8 +83,8 @@
       "display": "images/burrowing-owl-and-moth/on1-raw.jpg?v=1778206343",
       "crop": "images/burrowing-owl-and-moth/on1-raw-crop.jpg?v=1778206343",
       "critique": {
-        "text": "The ON1 NoNoise and TackSharp processing yielded the weakest results of the edited batch. While it managed to sharpen the owl and reduce standard grain compared to the RAW, it introduced severe, unnatural 'wormy' and painterly artifacts throughout the out-of-focus background. This glassy, smeared texture is highly distracting and makes the overall image look heavily processed and artificial compared to the smoother, much more successful noise reduction from Lightroom and DxO.",
-        "potential_score": 1,
+        "text": "The ON1 RAW edit struggles significantly with the source file. While it reduces the prominent noise of the RAW, it replaces it with a somewhat splotchy, unnatural texture in the out-of-focus background areas. The 'TackSharp' application on the owl fails to recover crisp details, instead producing a smudged, waxy, or 'plasticky' appearance that looks heavily digitally altered rather than naturally sharp. Compared to the original and the other edits, this version introduces unpleasant artifacts without successfully achieving the desired clarity.",
+        "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }
     }

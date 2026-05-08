@@ -27,22 +27,8 @@
       "display": "images/black-throated-trogon/raw.jpg?v=1778206342",
       "crop": "images/black-throated-trogon/raw-crop.jpg?v=1778206342",
       "critique": {
-        "text": "This is the original RAW image, serving as the baseline, shot at a very demanding ISO 12800. Consequently, it exhibits severe luminance and chrominance noise across the entire frame, which significantly degrades sharpness, masks fine feather detail, and creates a highly distracting, grainy background. High-level overview: All other images in this set utilize various AI noise reduction tools to salvage this file, dramatically improving both noise levels and apparent sharpness by removing the heavy grain floor. My general ranking of how well the edits worked from best to worst is: DxO PureRAW (best), Lightroom AI, Topaz Photo, and finally ON1 (weakest of the edits).",
-        "potential_score": 1,
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
-    {
-      "slug": "dxo-pureraw-6",
-      "title": "DxO PureRAW 6",
-      "caption": "DxO PureRaw 6 with default settings",
-      "width": 2475,
-      "height": 1856,
-      "display": "images/black-throated-trogon/dxo-pureraw-6.jpg?v=1778206342",
-      "crop": "images/black-throated-trogon/dxo-pureraw-6-crop.jpg?v=1778206342",
-      "critique": {
-        "text": "Processed with DxO PureRAW 6. This image represents the most successful edit of the challenging RAW file. It expertly completely removes the heavy background noise, resulting in a buttery smooth bokeh. Crucially, it manages to extract the highest level of natural sharpness and micro-contrast from the bird's feathers and the mossy branch. Compared to the noisy RAW, the transformation is staggering, and it slightly edges out the Lightroom edit by providing just a hint more crispness without introducing any unnatural artifacts.",
-        "potential_score": 5,
+        "text": "Captured at a demanding ISO 12800, this original RAW image exhibits severe luminance and color noise throughout, heavily degrading both the background and the fine details of the bird. Underneath the grain, the base sharpness of the subject is fundamentally decent, but the heavy noise obscures the micro-contrast and makes the image unusable as-is. As a baseline, it highlights the heavy lifting required by the software. Overall, the Lightroom (Image 4) and DxO (Image 5) edits performed best, seamlessly removing noise while retaining natural detail. Topaz (Image 1) over-sharpened, and ON1 (Image 3) over-smoothed, making them less successful.",
+        "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -55,8 +41,22 @@
       "display": "images/black-throated-trogon/lightroom-denoise.jpg?v=1778206342",
       "crop": "images/black-throated-trogon/lightroom-denoise-crop.jpg?v=1778206342",
       "critique": {
-        "text": "Processed with Lightroom AI Denoise. This is an excellent edit that strikes a superb balance. It completely eliminates the heavy ISO 12800 grain seen in the RAW file while maintaining a smooth, natural-looking background bokeh. The sharpness is vastly improved over the original, bringing out fine, realistic details in the bird's feathers and eye without the over-processed, plastic look seen in the Topaz version. It is highly effective and very close in quality to the DxO edit.",
-        "potential_score": 4,
+        "text": "Lightroom's AI Denoise does an excellent job balancing noise reduction with detail preservation. The background grain is almost entirely eliminated, yielding a beautifully smooth out-of-focus area. Crucially, the sharpness of the bird remains highly natural; the eye, beak, and feather textures are crisp without exhibiting the harsh, over-sharpened artifacts seen in the Topaz edit. It is vastly superior to the RAW and ON1 versions, providing a clean, realistic, and highly usable image from a very noisy source. The overall image quality is excellent.",
+        "potential_score": 5,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "dxo-pureraw-6",
+      "title": "DxO PureRAW 6",
+      "caption": "DxO PureRaw 6 with default settings",
+      "width": 2475,
+      "height": 1856,
+      "display": "images/black-throated-trogon/dxo-pureraw-6.jpg?v=1778206342",
+      "crop": "images/black-throated-trogon/dxo-pureraw-6-crop.jpg?v=1778206342",
+      "critique": {
+        "text": "Using DxO PureRaw 6, this image represents an outstanding result and arguably edges out the Lightroom edit for the best in the set. The noise reduction is flawless, rendering a perfectly clean background. Where this image truly excels is the exceptional, natural sharpness and micro-contrast recovered in the bird's feathers and the textures of the branch. It manages to pull remarkable, crisp detail out of the noisy ISO 12800 RAW without making the subject look artificial, crunchy, or plastic. The balance of noise removal and sharpness is superb.",
+        "potential_score": 5,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -69,7 +69,7 @@
       "display": "images/black-throated-trogon/topaz-photo.jpg?v=1778206343",
       "crop": "images/black-throated-trogon/topaz-photo-crop.jpg?v=1778206343",
       "critique": {
-        "text": "Processed with Topaz Photo at default settings. This image successfully removes the heavy noise present in the original RAW, but the noise reduction is arguably too aggressive. The out-of-focus background has taken on a slightly plastic, waxy appearance. While sharpness on the bird is significantly improved over the RAW, the feather details look somewhat painted or artificial compared to the Lightroom and DxO edits.",
+        "text": "Processed with Topaz Photo's default noise reduction, this image successfully eliminates the heavy background noise seen in the RAW file. However, the sharpening applied to the subject and branch is overly aggressive, resulting in a 'crunchy,' artificial appearance. The fine feather details on the bird's belly and head feel over-processed and harsh compared to the Lightroom or DxO versions. While a massive improvement in noise over the original, the trade-off in artifacting makes the overall image look less natural.",
         "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }
@@ -83,8 +83,8 @@
       "display": "images/black-throated-trogon/on1-raw-nonoise-only.jpg?v=1778206342",
       "crop": "images/black-throated-trogon/on1-raw-nonoise-only-crop.jpg?v=1778206342",
       "critique": {
-        "text": "Processed with ON1 RAW NoNoise. While this edit improves upon the severe grain of the original RAW file, it struggles compared to the other AI tools. The noise reduction is inconsistent, leaving behind patchy, mottled color artifacts in the out-of-focus green background. The sharpness of the bird is improved compared to the RAW baseline, but the resulting texture feels a bit crunchy and less naturally resolved than in the Lightroom or DxO versions.",
-        "potential_score": 2,
+        "text": "Processed with ON1 RAW NoNoise, this version successfully reduces the extreme high-ISO noise but at a significant cost to fine detail. The bird's feathers, especially the yellow breast and green head, alongside the mossy branch, have a noticeably 'smudged' or plasticky appearance. It lacks the crisp definition seen in the Lightroom or DxO edits. While the background is smooth, the loss of critical sharpness on the main subject makes the image feel too soft overall. It avoids the harsh artifacts of Topaz but swings too far in the opposite direction, sacrificing vital subject texture.",
+        "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }
     }

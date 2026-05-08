@@ -27,7 +27,7 @@
       "display": "images/spotted-owlet/raw.jpg?v=1778206346",
       "crop": "images/spotted-owlet/raw-crop.jpg?v=1778206346",
       "critique": {
-        "text": "As the original unprocessed RAW file shot at ISO 10,000, this image serves as the baseline. It exhibits heavy luminance and chrominance noise across the entire frame, which significantly obscures fine details in the owls' feathers and the tree bark. While the underlying focus appears accurate, the sharpness is completely masked by the noise. High-level overview of edits: All software successfully eliminated the base noise, but the differences lie in detail rendering. DxO (Image 1) and Lightroom (Image 7) excelled at preserving natural, fine details. Topaz provided good results depending on the sharpening applied, ranging from slightly soft (Image 5) to natural (Image 4) to slightly over-done (Image 3). ON1 (Image 2) struggled, replacing noise with unnatural painterly artifacts. Overall ranking of edits: 1st: DxO (Image 1), 2nd: Lightroom (Image 7), 3rd: Topaz Default (Image 4), 4th: Topaz Wildlife (Image 3), 5th: Topaz NR Only (Image 5), 6th: ON1 (Image 2).",
+        "text": "This is the unedited RAW file, shot at a very high ISO of 10,000. As expected, it exhibits severe luminance and color noise throughout, which severely degrades sharpness and obscures the fine details of the owls' feathers and the tree bark. The overall image is very soft, grainy, and lacks definition. This serves as the baseline for evaluating the edits. In general, all edits succeeded in removing the bulk of the noise, but they differ wildly in how they handled detail. The DxO (Image 1) and Lightroom (Image 7) edits worked exceptionally well, providing clean, sharp, and natural results. The Topaz version with only noise reduction (Image 5) is clean but too soft. The versions utilizing ON1 (Image 2) and Topaz with sharpening (Images 3 and 4) performed poorly, introducing severe unnatural artifacts—ranging from a smeared, painterly look to crunchy, over-sharpened textures.",
         "potential_score": 1,
         "model": "gemini-3.1-pro-preview"
       }
@@ -41,7 +41,7 @@
       "display": "images/spotted-owlet/lightroom-denoise.jpg?v=1778206345",
       "crop": "images/spotted-owlet/lightroom-denoise-crop.jpg?v=1778206345",
       "critique": {
-        "text": "Lightroom's AI Denoise has performed exceptionally well here relative to the noisy RAW. The noise is completely eradicated, leaving a very clean and smooth background. What makes this edit stand out is the natural preservation of detail in the feathers and bark without any harsh sharpening artifacts. It competes very closely with the DxO edit; while the DxO might have a tiny bit more micro-contrast pop, this Lightroom version looks incredibly organic and true-to-life. A top-tier result.",
+        "text": "Processed with Lightroom's AI Denoise, this image is a massive improvement over the noisy original RAW and stands out as one of the best edits in the set alongside the DxO version. It does a phenomenal job of cleaning up the high ISO noise while retaining a beautifully natural, photographic look. The details in the feathers are preserved very well without introducing any of the 'crunchy' over-sharpening artifacts seen in the Topaz versions or the 'painterly' smearing of the ON1 version. It offers a slightly softer, perhaps more organic look than the DxO edit, making it a highly successful, top-tier result.",
         "potential_score": 5,
         "model": "gemini-3.1-pro-preview"
       }
@@ -55,36 +55,8 @@
       "display": "images/spotted-owlet/dxo-pureraw-6.jpg?v=1778206345",
       "crop": "images/spotted-owlet/dxo-pureraw-6-crop.jpg?v=1778206345",
       "critique": {
-        "text": "This image demonstrates exceptional noise reduction while maintaining and enhancing fine details. The DeepPRIME XD3 processing has successfully eliminated the heavy high-ISO noise present in the original RAW file without introducing significant artifacts. The sharpness is outstanding, particularly noticeable in the fine feather details around the owls' eyes and the texture of the tree bark. It looks very natural, avoiding the over-processed look seen in some other edits. This is one of the strongest results in the set.",
+        "text": "This image, processed with DxO PureRAW's DeepPRIME XD3, offers an outstanding result. Compared to the extremely noisy original RAW, it has completely eliminated the distracting luminance and color noise while recovering an impressive amount of fine detail. The feathers around the owls' faces are sharp and distinct without looking artificial or 'crunchy', and the tree bark texture is exceptionally well-rendered. It strikes a near-perfect balance between aggressive noise reduction and detail enhancement, providing a clean, sharp, and natural-looking image that ranks at the very top of this set.",
         "potential_score": 5,
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
-    {
-      "slug": "topaz-photo-2",
-      "title": "Topaz Photo 2",
-      "caption": "Topaz Photo with default noise reduction only (strength 69, original detail 0) plus default sharpening across whole image",
-      "width": 2883,
-      "height": 2162,
-      "display": "images/spotted-owlet/topaz-photo-2.jpg?v=1778206345",
-      "crop": "images/spotted-owlet/topaz-photo-2-crop.jpg?v=1778206345",
-      "critique": {
-        "text": "This version uses default sharpening along with noise reduction and yields a very solid result. The background noise is gone, and the sharpness is much improved over the RAW file. Compared to the Wildlife sharpening setting in Image 3, this feels more balanced and natural, avoiding harsh edges. However, it still falls slightly short of the DxO processing in terms of extracting the absolute finest natural-looking details from the feathers.",
-        "potential_score": 4,
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
-    {
-      "slug": "topaz-photo-3",
-      "title": "Topaz Photo 3",
-      "caption": "Topaz Photo with default noise reduction only (strength 69, original detail 0) plus sharpening with Wildlife setting across whole image",
-      "width": 2883,
-      "height": 2162,
-      "display": "images/spotted-owlet/topaz-photo-3.jpg?v=1778206345",
-      "crop": "images/spotted-owlet/topaz-photo-3-crop.jpg?v=1778206345",
-      "critique": {
-        "text": "This edit provides excellent noise reduction, effectively cleaning up the high-ISO grain of the original RAW. The application of the Wildlife sharpening setting has definitely increased perceived sharpness and brought out detail hidden in the noise. However, compared to the DxO edit or even the default Topaz sharpening in Image 4, it feels slightly over-sharpened. The edges of the feathers are a bit harsh, creating a slightly crunchy micro-contrast that looks less natural than the top performers.",
-        "potential_score": 4,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -97,8 +69,36 @@
       "display": "images/spotted-owlet/topaz-photo.jpg?v=1778206346",
       "crop": "images/spotted-owlet/topaz-photo-crop.jpg?v=1778206346",
       "critique": {
-        "text": "This image shows the result of applying noise reduction without additional sharpening. It is remarkably cleaner than the original RAW, with the heavy ISO 10,000 grain mostly removed. Because no extra sharpening was applied, it is noticeably softer than the other Topaz edited versions (Images 3 and 4). While it looks very natural and avoids any over-processing artifacts, it lacks the pop and fine detail definition that makes the DxO or Lightroom versions stand out.",
+        "text": "This version uses Topaz Photo AI for noise reduction only, without added sharpening. It successfully eliminates the heavy grain present in the original RAW file. However, because no sharpening was applied to counteract the inherent softening effect of heavy noise reduction, the resulting image looks quite soft and slightly 'smudged', particularly in the fine details of the feathers. While it is certainly an improvement over the original in terms of cleanliness, it lacks the crispness, subject definition, and overall impact found in the highly successful Lightroom or DxO edits.",
         "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-photo-2",
+      "title": "Topaz Photo 2",
+      "caption": "Topaz Photo with default noise reduction only (strength 69, original detail 0) plus default sharpening across whole image",
+      "width": 2883,
+      "height": 2162,
+      "display": "images/spotted-owlet/topaz-photo-2.jpg?v=1778206345",
+      "crop": "images/spotted-owlet/topaz-photo-2-crop.jpg?v=1778206345",
+      "critique": {
+        "text": "Similar to the other Topaz sharpened image, this version (using default noise reduction and default sharpening) suffers from over-processing artifacts. While it effectively masks the high ISO noise from the original RAW, the sharpening has introduced a very gritty, 'crunchy' texture across the entire frame. The edges of the feathers and the bark are too stark, making the image feel brittle and lacking in smooth, natural tonal transitions. The tradeoff of introducing these artifacts for apparent sharpness is not justified when compared to cleaner edits.",
+        "potential_score": 2,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-photo-3",
+      "title": "Topaz Photo 3",
+      "caption": "Topaz Photo with default noise reduction only (strength 69, original detail 0) plus sharpening with Wildlife setting across whole image",
+      "width": 2883,
+      "height": 2162,
+      "display": "images/spotted-owlet/topaz-photo-3.jpg?v=1778206345",
+      "crop": "images/spotted-owlet/topaz-photo-3-crop.jpg?v=1778206345",
+      "critique": {
+        "text": "Using Topaz Photo AI with default noise reduction and the 'Wildlife' sharpening setting has resulted in a heavily over-sharpened image. While it successfully removes the severe noise of the baseline RAW, the aggressive sharpening algorithm has created noticeable, distracting artifacts. The feathers, particularly on the owls' chests, look wiry, brittle, and unnatural, with 'worm-like' patterns emerging from the over-enhancement of micro-contrast. Compared to the natural look of the Lightroom or DxO edits, this version looks harsh and overly processed.",
+        "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -111,7 +111,7 @@
       "display": "images/spotted-owlet/on1-raw.jpg?v=1778206346",
       "crop": "images/spotted-owlet/on1-raw-crop.jpg?v=1778206346",
       "critique": {
-        "text": "While the NoNoise feature has successfully removed the base noise from the original RAW, the combined TackSharp processing has resulted in a heavily over-processed image. The details, especially the owls' feathers, look unnatural, smeared, and almost painterly or plasticky. It lacks the fine, crisp resolution of individual feather structures seen in the DxO or Lightroom edits, trading noise for bizarre artifacts. This is the weakest edit in the set.",
+        "text": "Processed with ON1's NoNoise and TackSharp, this image struggles significantly compared to the better performers in the set. While the heavy noise of the original RAW is gone, the processing has introduced a severe 'painterly' or watercolor effect. Fine details in the feathers have been smeared into clumpy brushstrokes rather than distinct strands, and the texture of the wood looks unnatural and smoothed over. The aggressive processing has destroyed the photographic realism, resulting in an over-processed, synthetic look.",
         "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }

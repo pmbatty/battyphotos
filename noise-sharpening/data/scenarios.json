@@ -62,5 +62,13 @@
     "thumbnail": "images/spider-monkey/thumbnail.jpg?v=1778247461",
     "variant_count": 9,
     "sort_order": 8
+  },
+  {
+    "slug": "giraffe",
+    "title": "Giraffe at the waterhole",
+    "subtitle": "An adult giraffe drinking at sunset at Zimanga, South Africa, with the herd in the background. Captured at ISO 200 on the OM-1 — a low-noise base file that surfaces the subtle differences in how AI denoise tools treat clean detail (eye, fur patterns, water droplets) without obvious noise to mask their behaviour.",
+    "thumbnail": "images/giraffe/thumbnail.jpg?v=1778252933",
+    "variant_count": 4,
+    "sort_order": 9
   }
 ]
