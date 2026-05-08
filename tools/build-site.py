@@ -757,6 +757,42 @@ def build_scenario(
     )
 
 
+def load_existing_page_data(
+    repo_root: Path, project: ProjectConfig, slug: str
+) -> PageData | None:
+    """Read a previously-built page-data.json from disk.
+
+    Used when `--scenario X` filters the build to one scenario: the OTHER
+    scenarios still need to participate in sort order, the prev/next chain,
+    and the gallery index. Without this, a filtered build wipes scenarios.json
+    and breaks the prev/next links of any scenario that was sorted next to
+    the rebuilt one.
+
+    Returns None when no existing build is on disk (e.g., the user passed
+    `--scenario X` for a brand-new scenario but there's no other state yet).
+    """
+    path = repo_root / project.slug / "data" / slug / "page-data.json"
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text())
+    except (json.JSONDecodeError, OSError):
+        return None
+    return PageData(
+        slug=data["slug"],
+        title=data.get("title", ""),
+        subtitle=data.get("subtitle", ""),
+        image_dimensions=data.get("image_dimensions", {}),
+        detail_crop=data.get("detail_crop", {}),
+        hero=data.get("hero"),
+        hero_slug=data.get("hero_slug"),
+        editor_note=data.get("editor_note"),
+        previous_scenario=data.get("previous_scenario"),
+        next_scenario=data.get("next_scenario"),
+        images=data.get("images", []),
+    )
+
+
 def write_page_data(
     page_data: PageData, repo_root: Path, project: ProjectConfig
 ) -> None:
@@ -810,17 +846,29 @@ def build(
             )
             failures += 1
             continue
-        if scenario_filter and manifest.get("slug") != scenario_filter:
+        slug = manifest.get("slug", scenario_dir.name)
+        # `--scenario X` filters which scenario gets rebuilt from source.
+        # Other scenarios are NOT skipped from the index / sort chain — we
+        # load their previously-built page-data.json and keep them in
+        # `scenarios`. Without this, a filtered build wipes scenarios.json
+        # and breaks prev/next on neighbouring scenarios.
+        if scenario_filter and slug != scenario_filter:
+            existing = load_existing_page_data(repo_root, project, slug)
+            if existing is None:
+                print(f"SKIP  {slug}: filtered out, no existing build to keep")
+                continue
+            print(f"KEEP  {slug:30s} ({scenario_dir.name})")
+            scenarios.append((manifest, existing))
             continue
         manifest_mtime = manifest_path.stat().st_mtime
-        print(f"BUILD {manifest['slug']:30s} ({scenario_dir.name})")
+        print(f"BUILD {slug:30s} ({scenario_dir.name})")
         try:
             page_data = build_scenario(
                 scenario_dir, manifest, manifest_mtime, repo_root, project, force
             )
         except Exception as e:
             print(
-                f"FAIL  {manifest.get('slug', scenario_dir.name)}: {e}",
+                f"FAIL  {slug}: {e}",
                 file=sys.stderr,
             )
             failures += 1
