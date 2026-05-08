@@ -1,0 +1,148 @@
+{
+  "slug": "spider-monkey",
+  "title": "Spider Monkey — ISO 25,600",
+  "subtitle": "Spider Monkey eating in the canopy at the Osa Peninsula, Costa Rica, captured at ISO 25,600 — pushing the OM-1 sensor well into territory where AI noise reduction earns its keep. Dark fur, fine eye detail, and the faint green twig the monkey is feeding on all stress the sharpening / NR balance.",
+  "image_dimensions": {
+    "width": 5184,
+    "height": 3888
+  },
+  "detail_crop": {
+    "x": 2640,
+    "y": 2210,
+    "w": 600,
+    "h": 400
+  },
+  "hero": "images/spider-monkey/hero.jpg?v=1778247464",
+  "hero_slug": "dxo-raw-6-standard",
+  "editor_note": null,
+  "previous_scenario": "burrowing-owl-and-moth",
+  "next_scenario": null,
+  "images": [
+    {
+      "slug": "raw",
+      "title": "RAW",
+      "caption": "Original RAW image at ISO 25600 and 1/200s",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/raw.jpg?v=1778247463",
+      "crop": "images/spider-monkey/raw-crop.jpg?v=1778247463",
+      "critique": {
+        "text": "Image 4 is the original RAW capture shot at a very demanding ISO 25600 and 1/200s. As expected, it suffers from extreme luminance and chroma noise that completely degrades the image quality. Furthermore, the subject is noticeably soft, likely due to a combination of the noise obscuring detail, possible slight motion blur at 1/200s, or missing critical focus. High-level overview of the edits: All other images attempt to rescue this deeply flawed file using various AI tools. The general ranking of effectiveness is: DxO (Images 6 & 7) performed the best, offering the most natural balance of rescued detail and noise reduction. Topaz with standard sharpening (Image 2) comes in second, offering great sharpness but a slightly more digital look. Lightroom AI (Images 8 & 9) successfully removed noise but failed to correct the inherent softness, ranking third. Finally, ON1 (Image 5) and Topaz Autopilot (Image 3) rank last, as they introduced severe, unnatural painterly artifacts that destroyed the photographic quality of the image. Overall, the original RAW is unusable without heavy processing.",
+        "potential_score": 1,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "lightroom-denoise",
+      "title": "Lightroom Denoise",
+      "caption": "Lightroom AI denoise at default settings (50)",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/lightroom-denoise.jpg?v=1778247463",
+      "crop": "images/spider-monkey/lightroom-denoise-crop.jpg?v=1778247463",
+      "critique": {
+        "text": "Image 8 uses Lightroom AI denoise at the default setting of 50. The software does a very good job of mitigating the severe ISO 25600 noise, yielding a clean background and smooth color transitions. However, Lightroom's approach does not appear to apply the aggressive structural sharpening seen in Topaz or DxO. As a result, the inherent softness of the original RAW file is very apparent here. The monkey's face and fur lack definition and texture. While it is a safe, natural-looking edit free of weird AI artifacts, the overall image remains too soft to be considered excellent.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "lightroom-denoise-40",
+      "title": "Lightroom Denoise (40)",
+      "caption": "Lightroom AI denoise at setting of 40",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/lightroom-denoise-40.jpg?v=1778247464",
+      "crop": "images/spider-monkey/lightroom-denoise-40-crop.jpg?v=1778247464",
+      "critique": {
+        "text": "Image 9 uses Lightroom AI denoise at a slightly reduced setting of 40. The results are incredibly similar to Image 8. By reducing the denoise amount slightly, a minuscule amount of fine grain is left behind, which arguably gives the illusion of slightly more texture than Image 8, but the difference is marginal. It successfully eliminates the distracting color noise of the original RAW, but it still suffers from the underlying optical softness of the capture. It remains a clean but ultimately soft and somewhat flat image.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "on1-raw",
+      "title": "ON1 RAW",
+      "caption": "ON1 RAW with NoNoise and TackSharp",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/on1-raw.jpg?v=1778247461",
+      "crop": "images/spider-monkey/on1-raw-crop.jpg?v=1778247461",
+      "critique": {
+        "text": "Image 5 uses ON1 RAW with NoNoise and TackSharp. While it succeeds in removing the heavy noise of the original RAW, the resulting image quality is poor. The software has applied a very aggressive smoothing effect that destroys fine detail, replacing the fur with waxy, smeared, watercolor-like clumps. The 'TackSharp' feature seems to have only hardened the edges of these smeared artifacts rather than recovering actual texture. Compared to the other edits, this provides one of the least natural renderings of the subject.",
+        "potential_score": 2,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-photo-raw-denoise-only",
+      "title": "Topaz Photo RAW Denoise only",
+      "caption": "Topaz Photo RAW Denoise only at recommended settings (RAW Strong)",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/topaz-photo-raw-denoise-only.jpg?v=1778247465",
+      "crop": "images/spider-monkey/topaz-photo-raw-denoise-only-crop.jpg?v=1778247465",
+      "critique": {
+        "text": "Image 1 uses Topaz Photo RAW Denoise only. Compared to the original RAW, the extreme ISO 25600 noise has been successfully eliminated, which is a massive improvement. However, without additional sharpening, the noise reduction process has left the monkey's fur looking somewhat clumpy, soft, and plasticky. The underlying softness of the original capture is exposed here without any structural enhancement to compensate. Overall, it is much cleaner than the RAW but lacks the fine textural detail needed for a compelling wildlife portrait.",
+        "potential_score": 3,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-photo-raw-denoise-standard-sharpening",
+      "title": "Topaz Photo RAW Denoise + Standard Sharpening",
+      "caption": "Topaz Photo RAW Denoise + Standard Subject Sharpening",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/topaz-photo-raw-denoise-standard-sharpening.jpg?v=1778247462",
+      "crop": "images/spider-monkey/topaz-photo-raw-denoise-standard-sharpening-crop.jpg?v=1778247462",
+      "critique": {
+        "text": "Image 2 utilizes Topaz Photo RAW Denoise combined with Standard Subject Sharpening. This is a significant improvement over both the original RAW and Image 1. The noise is completely removed, and the sharpening algorithm has done an admirable job of recreating texture in the monkey's fur and face. While there is a slightly digital or 'crunchy' feel to the sharpest hairs upon close inspection, the overall image pops beautifully. The trade-off of introducing minor artificial edge contrast is well justified here, as the subject is much more engaging and lifelike.",
+        "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-photo-3",
+      "title": "Topaz Photo 3",
+      "caption": "Topaz Photo with Autopilot - RAW Denoise Strong plus Face Recovery - and Wildlife subject sharpening",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/topaz-photo-3.jpg?v=1778247462",
+      "crop": "images/spider-monkey/topaz-photo-3-crop.jpg?v=1778247462",
+      "critique": {
+        "text": "Image 3 relies on Topaz Autopilot with RAW Denoise Strong, Face Recovery, and Wildlife sharpening. This combination proves to be far too aggressive. While the noise is gone, the 'Face Recovery' feature has severely misinterpreted the monkey's non-human facial features, resulting in a painted, uncanny, and highly artificial appearance, particularly around the eyes and snout. The fur also suffers from an over-processed, wiry look. Compared to the original RAW, it rescues the file from noise but ruins it with severe AI-generated artifacts. The trade-off here is definitely not justified.",
+        "potential_score": 2,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "dxo-raw-6-standard",
+      "title": "DxO RAW 6 standard",
+      "caption": "Dxo RAW 6 using DeepPRIMEXD3 with default settings",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/dxo-raw-6-standard.jpg?v=1778247464",
+      "crop": "images/spider-monkey/dxo-raw-6-standard-crop.jpg?v=1778247464",
+      "critique": {
+        "text": "Image 7 utilizes DxO RAW 6 DeepPRIME XD3 at default settings. Similar to Image 6, the noise reduction is exceptional, providing a clean, artifact-free background. Because it uses default rather than 'strong' sharpening, the monkey's fur is slightly softer and less defined than in Image 6. However, it feels very natural and completely avoids the plasticky or over-processed look of the Topaz and ON1 edits. While it doesn't pop quite as much as Image 6, it is a highly usable, clean, and photographic result that vastly improves upon the unusable original RAW.",
+        "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "dxo-raw-6-strong",
+      "title": "DxO RAW 6 strong",
+      "caption": "Dxo RAW 6 using DeepPRIMEXD3 with strong optical sharpening",
+      "width": 5184,
+      "height": 3888,
+      "display": "images/spider-monkey/dxo-raw-6-strong.jpg?v=1778247464",
+      "crop": "images/spider-monkey/dxo-raw-6-strong-crop.jpg?v=1778247464",
+      "critique": {
+        "text": "Image 6 processes the file using DxO RAW 6 DeepPRIME XD3 with strong optical sharpening. This is arguably the most successful rescue of the original RAW. The extreme noise is virtually gone, and the strong optical sharpening has extracted a remarkable amount of fine detail in the fur and face without crossing over into the uncanny, painted look seen in Image 3 or 5. The texture feels organic and photographic. There is a very slight introduction of artifacts in the out-of-focus background, but given how soft and noisy the original file was, the overall image quality and subject sharpness achieved here make it an excellent trade-off.",
+        "potential_score": 5,
+        "model": "gemini-3.1-pro-preview"
+      }
+    }
+  ]
+}
