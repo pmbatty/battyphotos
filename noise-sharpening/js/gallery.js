@@ -8,7 +8,8 @@ const galleryEl = document.getElementById("gallery");
 async function render() {
   let scenarios;
   try {
-    const res = await fetch("data/scenarios.json");
+    // `cache: 'no-cache'` forces a conditional request — see app.js for why.
+    const res = await fetch("data/scenarios.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     scenarios = await res.json();
   } catch (err) {

@@ -3,7 +3,7 @@
     "slug": "spotted-owlet",
     "title": "Spotted Owlet — ISO 10,000",
     "subtitle": "Two Spotted Owlets at the Bandhavgarh tiger reserve, shot at ISO 10,000 on an OM-1 micro four-thirds sensor. Fine feather detail and dark plumage stress noise reduction and sharpening simultaneously.",
-    "thumbnail": "images/spotted-owlet/thumbnail.jpg",
+    "thumbnail": "images/spotted-owlet/thumbnail.jpg?v=1778206345",
     "variant_count": 7,
     "sort_order": 1
   },
@@ -11,7 +11,7 @@
     "slug": "hummingbird-1",
     "title": "Hummingbird — Costa Rica",
     "subtitle": "A hummingbird feeding at a flower in Costa Rica, shot on the OM-1. Iridescent feathers, fine eye detail, and motion-blurred wing tips give noise-reduction and sharpening tools several distinct regions to handle differently.",
-    "thumbnail": "images/hummingbird-1/thumbnail.jpg",
+    "thumbnail": "images/hummingbird-1/thumbnail.jpg?v=1778206343",
     "variant_count": 7,
     "sort_order": 2
   },
@@ -19,7 +19,7 @@
     "slug": "stellers-sea-eagle",
     "title": "Steller's Sea Eagle — ISO 800",
     "subtitle": "Steller's Sea Eagle photographed off Rausu, Hokkaido, at 1/1600s and ISO 800. Dark plumage against bright water and snow surfaces stresses noise reduction in distinct ways — uniform low-noise backgrounds vs. fine feather detail.",
-    "thumbnail": "images/stellers-sea-eagle/thumbnail.jpg",
+    "thumbnail": "images/stellers-sea-eagle/thumbnail.jpg?v=1778206346",
     "variant_count": 7,
     "sort_order": 3
   },
@@ -27,7 +27,7 @@
     "slug": "bald-eagle-blurred",
     "title": "Bald Eagle — motion blurred",
     "subtitle": "Two bald eagles in mid-air confrontation. The original RAW is significantly motion-blurred from the eagle's wing motion combined with shutter speed. Tests Topaz Photo's two subject-sharpening modes — Focus Blur vs Motion Blur — for how well each recovers apparent sharpness on the bald eagle's head and wings.",
-    "thumbnail": "images/bald-eagle-blurred/thumbnail.jpg",
+    "thumbnail": "images/bald-eagle-blurred/thumbnail.jpg?v=1778206342",
     "variant_count": 3,
     "sort_order": 4
   },
@@ -35,7 +35,7 @@
     "slug": "black-throated-trogon",
     "title": "Black-throated Trogon — ISO 12,800",
     "subtitle": "A black-throated trogon perched in rainforest in Costa Rica's Osa Peninsula, shot at ISO 12,800. Iridescent green plumage, a deep black throat, vivid yellow chest, and finely barred tail feathers give noise-reduction tools a demanding mix of saturated colour, fine detail, and graded tones to handle at very high ISO.",
-    "thumbnail": "images/black-throated-trogon/thumbnail.jpg",
+    "thumbnail": "images/black-throated-trogon/thumbnail.jpg?v=1778206343",
     "variant_count": 5,
     "sort_order": 5
   },
@@ -43,7 +43,7 @@
     "slug": "northern-harrier",
     "title": "Northern Harrier — hunting in snow",
     "subtitle": "A northern harrier in low flight over snow at Barr Lake, Colorado, talons reaching forward to grasp some brush. Bright, almost featureless snow surfaces alongside finely barred wing and tail feathers give noise-reduction tools a wide tonal range to handle.",
-    "thumbnail": "images/northern-harrier/thumbnail.jpg",
+    "thumbnail": "images/northern-harrier/thumbnail.jpg?v=1778206345",
     "variant_count": 5,
     "sort_order": 6
   },
@@ -51,7 +51,7 @@
     "slug": "burrowing-owl-and-moth",
     "title": "Burrowing Owl with moth",
     "subtitle": "A burrowing owl in low flight at Rocky Mountain Arsenal, Colorado, locked onto a moth in mid-air. Soft, uniform grass behind the bird sits alongside finely-detailed feather and face structure — giving noise-reduction tools both a smooth gradient region and a high-detail region to handle.",
-    "thumbnail": "images/burrowing-owl-and-moth/thumbnail.jpg",
+    "thumbnail": "images/burrowing-owl-and-moth/thumbnail.jpg?v=1778206343",
     "variant_count": 5,
     "sort_order": 7
   }

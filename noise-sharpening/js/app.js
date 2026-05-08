@@ -17,7 +17,15 @@ async function boot() {
 
   let pageData;
   try {
-    const res = await fetch(`data/${encodeURIComponent(slug)}/page-data.json`);
+    // `cache: 'no-cache'` forces a conditional request (If-None-Match) on
+    // every load, so a fresh build is reflected without a hard refresh.
+    // Server returns 304 Not Modified when unchanged — cheap. Without this,
+    // GitHub Pages' default Cache-Control: max-age=600 hides crop/manifest
+    // changes for ~10 minutes.
+    const res = await fetch(
+      `data/${encodeURIComponent(slug)}/page-data.json`,
+      { cache: "no-cache" },
+    );
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     pageData = await res.json();
   } catch (err) {

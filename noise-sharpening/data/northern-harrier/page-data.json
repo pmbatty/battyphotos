@@ -12,7 +12,7 @@
     "w": 600,
     "h": 400
   },
-  "hero": "images/northern-harrier/hero.jpg",
+  "hero": "images/northern-harrier/hero.jpg?v=1778206345",
   "hero_slug": "topaz-photo",
   "editor_note": "I disagree with darwain on this one — Lightroom Denoise looks too soft to me (more like a 3 than a 5), and Topaz Photo is the strongest of the set in my view.",
   "previous_scenario": "black-throated-trogon",
@@ -24,8 +24,8 @@
       "caption": "Original RAW image, which is quite soft.",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/raw.jpg",
-      "crop": "images/northern-harrier/raw-crop.jpg",
+      "display": "images/northern-harrier/raw.jpg?v=1778206344",
+      "crop": "images/northern-harrier/raw-crop.jpg?v=1778206344",
       "critique": {
         "text": "As the baseline RAW image, this photo captures a dynamic wildlife moment but struggles significantly with technical quality. True to the provided caption, the image is quite soft overall. There is a distinct lack of crisp detail in the bird's feathers, talons, and face, likely resulting from a slight miss in focus, inadequate shutter speed for the action, or atmospheric distortion. Additionally, a moderate layer of fine, uncorrected luminance noise is visible throughout the frame, becoming especially apparent against the uniform, bright background of the snow. Because no other edited images were provided in this specific submission to compare against, a general ranking of editing techniques cannot be formulated. However, for any subsequent edits to be successful, they would require targeted noise reduction to clean up the snow while applying aggressive sharpening or AI detail recovery to restore necessary definition to the bird.",
         "potential_score": 2,
@@ -38,8 +38,8 @@
       "caption": "Lightroom AI Denoise at default settings",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/lightroom-denoise.jpg",
-      "crop": "images/northern-harrier/lightroom-denoise-crop.jpg",
+      "display": "images/northern-harrier/lightroom-denoise.jpg?v=1778206345",
+      "crop": "images/northern-harrier/lightroom-denoise-crop.jpg?v=1778206345",
       "critique": {
         "text": "Evaluating Lightroom AI Denoise: This image strikes the best overall balance in the entire set. The noise in the snow is completely removed, resulting in a perfectly clean background. At the same time, the sharpness of the bird is significantly improved over the baseline without crossing into the unnatural, 'crunchy' territory seen in the Topaz or DxO edits. It ranks as the most successful edit overall, yielding a brilliantly clean and naturally sharp photograph.",
         "potential_score": 5,
@@ -52,8 +52,8 @@
       "caption": "Topaz Photo with default noise reduction ans subject sharpening using lens blur at setting of 50",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/topaz-photo.jpg",
-      "crop": "images/northern-harrier/topaz-photo-crop.jpg",
+      "display": "images/northern-harrier/topaz-photo.jpg?v=1778206345",
+      "crop": "images/northern-harrier/topaz-photo-crop.jpg?v=1778206345",
       "critique": {
         "text": "Evaluating Topaz Photo AI: The noise reduction is aggressive and successful, rendering the snow completely smooth and free of grain. The subject sharpening (lens blur setting 50) has made the bird significantly sharper than the baseline, bringing out excellent feather detail. However, this comes at the cost of a slightly brittle, over-sharpened look with minor edge artifacts around the wings. It ranks highly for detail extraction but loses a bit on naturalness compared to the Lightroom edit.",
         "potential_score": 4,
@@ -66,8 +66,8 @@
       "caption": "Dxo using DxO DeepPrime wD3 with Lens Sharpness Optimization increased to 200",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/dxo-pureraw-6.jpg",
-      "crop": "images/northern-harrier/dxo-pureraw-6-crop.jpg",
+      "display": "images/northern-harrier/dxo-pureraw-6.jpg?v=1778206345",
+      "crop": "images/northern-harrier/dxo-pureraw-6-crop.jpg?v=1778206345",
       "critique": {
         "text": "Evaluating DxO PureRAW 6 (DeepPrime XD3): The noise reduction here is exceptionally clean, completely eliminating the baseline grain in the snow just like Lightroom. The Lens Sharpness Optimization at 200 has aggressively extracted detail from the bird and the brush, making the feathers pop immensely. While it extracts the highest amount of pure detail of the entire group, it borders on looking slightly hyper-realistic or over-processed compared to Lightroom. It ranks incredibly well for detail extraction, but second overall due to that slight unnaturalness.",
         "potential_score": 4,
@@ -80,8 +80,8 @@
       "caption": "ON1 RAW with NoNoise and TackSharp",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/on1-raw.jpg",
-      "crop": "images/northern-harrier/on1-raw-crop.jpg",
+      "display": "images/northern-harrier/on1-raw.jpg?v=1778206344",
+      "crop": "images/northern-harrier/on1-raw-crop.jpg?v=1778206344",
       "critique": {
         "text": "Evaluating the ON1 PSD file: Visually, this is nearly identical to Image 2, exhibiting the same baseline characteristics. There is still visible fine grain in the snow, and the bird remains noticeably softer compared to the more aggressive AI-enhanced versions in this set. While it avoids the artificial, over-processed look of the Topaz or DxO edits, the NoNoise and TackSharp processing applied here is the least effective of the group at improving the original RAW's noise and sharpness.",
         "potential_score": 3,

@@ -138,6 +138,18 @@ class ScenarioIndexEntry:
     sort_order: int
 
 
+def cache_bust(rel_path: str, abs_path: Path) -> str:
+    """Append a mtime-based cache-buster query string to a relative URL.
+
+    Stable across builds when the file hasn't been rewritten — browsers keep
+    serving the cached image. Changes when the build re-saves the file —
+    browsers see a new URL and fetch fresh bytes. Without this, GitHub Pages'
+    default `Cache-Control: max-age=600` makes iterations on detail_crop
+    coordinates invisible for ~10 minutes without a hard refresh.
+    """
+    return f"{rel_path}?v={int(abs_path.stat().st_mtime)}"
+
+
 def slugify(value: str) -> str:
     """Lowercase, ascii-normalize, dash-separate. Raises if the result is empty."""
     normalised = (
@@ -699,8 +711,8 @@ def build_scenario(
                 caption=caption,
                 width=dims[0],
                 height=dims[1],
-                display=f"{rel_dir}/{out_display.name}",
-                crop=f"{rel_dir}/{out_crop.name}",
+                display=cache_bust(f"{rel_dir}/{out_display.name}", out_display),
+                crop=cache_bust(f"{rel_dir}/{out_crop.name}", out_crop),
                 critique=critique,
             )
         )
@@ -729,13 +741,16 @@ def build_scenario(
         manifest.get("variant_sort", "manual"),
     )
 
+    hero_url = (
+        cache_bust(f"images/{slug}/hero.jpg", out_hero) if hero_jpeg_path else None
+    )
     return PageData(
         slug=slug,
         title=manifest["title"],
         subtitle=manifest.get("subtitle", ""),
         image_dimensions=image_dimensions or {},
         detail_crop=crop,
-        hero=f"images/{slug}/hero.jpg" if hero_jpeg_path else None,
+        hero=hero_url,
         hero_slug=hero_variant_slug,
         editor_note=manifest.get("editor_note") or None,
         images=[asdict(v) for v in variants],
@@ -828,17 +843,21 @@ def build(
         )
         write_page_data(page_data, repo_root, project)
 
-    entries = [
-        ScenarioIndexEntry(
-            slug=page_data.slug,
-            title=page_data.title,
-            subtitle=page_data.subtitle,
-            thumbnail=f"images/{page_data.slug}/thumbnail.jpg",
-            variant_count=len(page_data.images),
-            sort_order=manifest.get("sort_order", 0),
+    entries = []
+    for manifest, page_data in sorted_scenarios:
+        thumb_rel = f"images/{page_data.slug}/thumbnail.jpg"
+        thumb_abs = repo_root / project.slug / thumb_rel
+        thumb_url = cache_bust(thumb_rel, thumb_abs) if thumb_abs.exists() else thumb_rel
+        entries.append(
+            ScenarioIndexEntry(
+                slug=page_data.slug,
+                title=page_data.title,
+                subtitle=page_data.subtitle,
+                thumbnail=thumb_url,
+                variant_count=len(page_data.images),
+                sort_order=manifest.get("sort_order", 0),
+            )
         )
-        for manifest, page_data in sorted_scenarios
-    ]
     write_scenarios_index(entries, repo_root, project)
     print(f"\nDONE  {project.slug}: {len(entries)} scenarios, {failures} failures")
     return failures
