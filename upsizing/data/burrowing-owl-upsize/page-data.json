@@ -2,6 +2,7 @@
   "slug": "burrowing-owl-upsize",
   "title": "Burrowing Owl — AI upsizing",
   "subtitle": "A small Burrowing Owl capture (1954 × 1466) run through five 2× upsamplers and three 4× variants. Compare any pair side-by-side at native pixel resolution to see how much real detail each tool reconstructs vs. how much is plausible-looking confabulation.",
+  "project_title": "AI image upsizing",
   "image_dimensions": {
     "width": 1954,
     "height": 1466

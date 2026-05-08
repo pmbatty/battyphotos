@@ -2,6 +2,7 @@
   "slug": "giraffe",
   "title": "Giraffe at the waterhole",
   "subtitle": "An adult giraffe drinking at sunset at Zimanga, South Africa, with the herd in the background. Captured at ISO 200 on the OM-1 — a low-noise base file that surfaces the subtle differences in how AI denoise tools treat clean detail (eye, fur patterns, water droplets) without obvious noise to mask their behaviour.",
+  "project_title": "Noise reduction & sharpening",
   "image_dimensions": {
     "width": 3481,
     "height": 2611

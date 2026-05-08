@@ -66,7 +66,7 @@ export function renderBrowseMode(root, data) {
 
   root.innerHTML = `
     <nav class="scenario__breadcrumb">
-      <a href="./">Noise reduction &amp; sharpening</a>
+      <a href="./">${escapeHtml(data.project_title || "")}</a>
       <span aria-hidden="true">/</span>
       <span>${escapeHtml(data.title)}</span>
     </nav>

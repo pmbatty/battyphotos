@@ -118,6 +118,7 @@ class PageData:
     slug: str
     title: str
     subtitle: str
+    project_title: str
     image_dimensions: dict
     detail_crop: dict
     hero: str | None = None
@@ -755,6 +756,7 @@ def build_scenario(
         slug=slug,
         title=manifest["title"],
         subtitle=manifest.get("subtitle", ""),
+        project_title=project.display_title,
         image_dimensions=image_dimensions or {},
         detail_crop=crop,
         hero=hero_url,
@@ -789,6 +791,7 @@ def load_existing_page_data(
         slug=data["slug"],
         title=data.get("title", ""),
         subtitle=data.get("subtitle", ""),
+        project_title=data.get("project_title", ""),
         image_dimensions=data.get("image_dimensions", {}),
         detail_crop=data.get("detail_crop", {}),
         hero=data.get("hero"),

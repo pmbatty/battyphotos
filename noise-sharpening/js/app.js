@@ -33,7 +33,13 @@ async function boot() {
     return;
   }
 
-  document.title = `${pageData.title} — Noise reduction & sharpening — batty.photos`;
+  // project_title comes from build-site.py's ProjectConfig.display_title.
+  // The shared scenario.html shells live in noise-sharpening/ but app.js +
+  // viewer.js are loaded from both projects, so the project name has to
+  // come from data, not be hardcoded.
+  document.title = pageData.project_title
+    ? `${pageData.title} — ${pageData.project_title} — batty.photos`
+    : `${pageData.title} — batty.photos`;
   renderBrowseMode(root, pageData);
 }
 
