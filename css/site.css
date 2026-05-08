@@ -109,7 +109,6 @@ a:hover {
 .lede {
   font-size: 1.1rem;
   color: var(--color-muted);
-  max-width: 36rem;
 }
 
 /* ================ Umbrella project list ================ */
