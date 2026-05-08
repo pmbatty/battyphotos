@@ -136,8 +136,8 @@ function variantCard(img, cropW, cropH) {
         aria-label="Open ${escapeAttr(img.title)} at full resolution"
       >
         <figure class="variant__crop">
-          <img src="${img.crop}"${cropAttrs} alt="Detail crop of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
-          <figcaption>Detail crop &middot; same scene region across variants</figcaption>
+          <img src="${img.crop}"${cropAttrs} alt="200% pixel-zoom detail of ${escapeAttr(img.title)}" loading="lazy" decoding="async" />
+          <figcaption>200% pixel zoom (centred on the same scene point)</figcaption>
         </figure>
         <span class="variant__zoom-hint">Click to compare &middot; full resolution</span>
       </button>

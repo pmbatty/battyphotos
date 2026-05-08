@@ -368,35 +368,42 @@ def save_diagnostic_crop(
     dst: Path,
     icc: bytes | None,
 ) -> None:
-    """Render the per-variant detail crop and save it.
+    """Render the per-variant detail crop at 200% pixel zoom (variant native).
 
     INVARIANT: `crop` is in baseline (1×) source coordinates always.
-      - x, y    centre of the diagnostic region
-      - w, h    size of the region
+      - x, y    centre of the diagnostic region (scene coordinates × 1)
+      - w, h    size of the cropped region in baseline source pixels
 
-    The per-variant pixel rectangle is centred at (x×scale, y×scale) and sized
-    (w×scale)×(h×scale). All variants resample to a constant output size
-    (2w × 2h) so every variant's crop card occupies the same physical screen
-    area; the *content* of those pixels differs (true AI output for a 2×
-    variant, downsampled output for a 4× variant, Lanczos-upscaled source for
-    a 1× variant). The lightbox is where users see actual native-pixel detail.
+    For every variant, the crop is centred at (x × scale, y × scale) — same
+    SCENE point, scaled to the variant's pixel space — and sized exactly
+    (w × h) variant pixels (NO × scale on the dimensions). Then nearest-
+    neighbour upscaled 2× to (2w × 2h) for the output JPEG.
 
-    Single Lanczos resampler for every scale — visually honest (no fake
-    "200% nearest-neighbor" pretense), looks fine on the noise-sharpening
-    project where scale is always 1.
+    Effect across variants of the same scenario:
+      - 1× variant: shows w × h of baseline source pixels (the whole crop
+        region) at 200% pixel zoom. Original behaviour.
+      - 2× variant: shows w × h of the 2× variant's pixels — same screen
+        area as the 1× card, but covering 1/4 the scene area, displaying
+        the upsampler's actual pixels at 200% zoom.
+      - 4× variant: same screen area, 1/16 the scene area, 4× variant's
+        actual pixels at 200% zoom.
+
+    Trade-off: cards no longer share a scene region. The lightbox is where
+    cross-variant scene-region comparison happens; the diagnostic card is
+    "look at this tool's output for this spot at native scale".
+
+    Nearest-neighbour resampling matches Lightroom / Photoshop's "200% zoom"
+    rendering (each source pixel = 2×2 device pixels block, no smoothing) —
+    visceral pixel grid, no resampling artefacts confused with AI output.
     """
     dst.parent.mkdir(parents=True, exist_ok=True)
     cx_b, cy_b, w_b, h_b = crop["x"], crop["y"], crop["w"], crop["h"]
     cx = cx_b * variant_scale
     cy = cy_b * variant_scale
-    w  = w_b  * variant_scale
-    h  = h_b  * variant_scale
-    ix = cx - w // 2
-    iy = cy - h // 2
-    inner = im.crop((ix, iy, ix + w, iy + h))
-    out_w = w_b * 2
-    out_h = h_b * 2
-    resampled = inner.resize((out_w, out_h), Image.Resampling.LANCZOS)
+    ix = cx - w_b // 2
+    iy = cy - h_b // 2
+    inner = im.crop((ix, iy, ix + w_b, iy + h_b))
+    resampled = inner.resize((w_b * 2, h_b * 2), Image.Resampling.NEAREST)
     kwargs: dict = {"quality": JPEG_QUALITY_CROP, "optimize": True}
     if icc:
         kwargs["icc_profile"] = icc
@@ -642,8 +649,9 @@ def build_scenario(
 
             if needs_rebuild(jpeg_path, out_crop, force, manifest_mtime):
                 # Validate the crop rectangle against actual dimensions before
-                # we touch the crop output. detail_crop is BASELINE coords;
-                # the per-variant pixel rectangle is detail_crop × variant_scale.
+                # we touch the crop output. detail_crop centre is scaled to
+                # variant pixel space; size stays (w_b × h_b) variant pixels
+                # (200%-zoom-of-variant semantics — see save_diagnostic_crop).
                 cx_b, cy_b, cw_b, ch_b = crop["x"], crop["y"], crop["w"], crop["h"]
                 if cw_b < 2 or ch_b < 2:
                     raise ValueError(
@@ -651,16 +659,14 @@ def build_scenario(
                     )
                 cx = cx_b * variant_scale
                 cy = cy_b * variant_scale
-                cw = cw_b * variant_scale
-                ch = ch_b * variant_scale
-                left = cx - cw // 2
-                top = cy - ch // 2
-                if left < 0 or top < 0 or left + cw > im.width or top + ch > im.height:
+                left = cx - cw_b // 2
+                top = cy - ch_b // 2
+                if left < 0 or top < 0 or left + cw_b > im.width or top + ch_b > im.height:
                     raise ValueError(
-                        f"detail_crop centre=({cx_b},{cy_b}) size={cw_b}x{ch_b} "
-                        f"× scale {variant_scale} extends outside {jpeg_path.name} "
-                        f"({im.width}x{im.height}); source region would be "
-                        f"({left},{top})..({left + cw},{top + ch})"
+                        f"detail_crop centre=({cx_b},{cy_b}) × scale {variant_scale} "
+                        f"= ({cx},{cy}) with size={cw_b}x{ch_b} extends outside "
+                        f"{jpeg_path.name} ({im.width}x{im.height}); region would be "
+                        f"({left},{top})..({left + cw_b},{top + ch_b})"
                     )
                 save_diagnostic_crop(im, crop, variant_scale, out_crop, icc)
 
