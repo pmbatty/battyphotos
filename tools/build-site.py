@@ -55,6 +55,7 @@ from pathlib import Path
 
 from defusedxml import ElementTree as ET
 from PIL import Image
+from PIL.ExifTags import IFD, TAGS
 
 XMP_NS = {
     "x": "adobe:ns:meta/",
@@ -124,6 +125,7 @@ class PageData:
     hero: str | None = None
     hero_slug: str | None = None
     editor_note: str | None = None
+    exif_summary: str | None = None
     previous_scenario: str | None = None
     next_scenario: str | None = None
     images: list = field(default_factory=list)
@@ -137,6 +139,88 @@ class ScenarioIndexEntry:
     thumbnail: str
     variant_count: int
     sort_order: int
+
+
+def _format_focal(fl) -> str:
+    """11.0 → '11', 10.5 → '10.5'."""
+    f = float(fl)
+    return f"{int(f)}" if f == int(f) else f"{f:g}"
+
+
+def _format_shutter(et) -> str:
+    """0.001 → '1/1000s'; 0.5 → '0.5s'; 2.0 → '2s'."""
+    t = float(et)
+    if t <= 0:
+        return ""
+    if t >= 1:
+        return f"{t:g}s"
+    return f"1/{round(1 / t)}s"
+
+
+def _format_aperture(fn) -> str:
+    """2.0 → '2', 2.8 → '2.8'."""
+    f = float(fn)
+    return f"{int(f)}" if f == int(f) else f"{f:g}"
+
+
+def read_exif_summary(jpeg_path: Path) -> str | None:
+    """Build a darwain-style compact EXIF caption like:
+
+      'OM-1 with LEICA DG 10-25/F1.7 at 11mm (22mm equivalent), 1/1000s at f/2, ISO 200'
+
+    Reads the main EXIF IFD (Make/Model) plus the Exif sub-IFD (LensModel,
+    FocalLength, FocalLengthIn35mmFilm, ExposureTime, FNumber, ISO).
+    Lightroom-exported JPEGs already store LensModel pre-formatted, so no
+    manual parsing of long lens names is needed. Returns None if Model is
+    absent (no point trying to caption a file without basic camera info).
+    """
+    try:
+        with Image.open(jpeg_path) as im:
+            exif = im.getexif()
+            sub = exif.get_ifd(IFD.Exif)
+    except Exception as e:
+        print(f"  WARN  EXIF read failed for {jpeg_path.name}: {e}", file=sys.stderr)
+        return None
+
+    def by_name(name: str, source=exif):
+        for tid, val in source.items():
+            if TAGS.get(tid) == name:
+                return val
+        return None
+
+    model = by_name("Model")
+    if not model:
+        return None
+
+    lens = by_name("LensModel", sub)
+    fl = by_name("FocalLength", sub)
+    fl_35 = by_name("FocalLengthIn35mmFilm", sub)
+    et = by_name("ExposureTime", sub)
+    fn = by_name("FNumber", sub)
+    iso = by_name("ISOSpeedRatings", sub) or by_name("PhotographicSensitivity", sub)
+
+    section1 = str(model).strip()
+    if lens:
+        section1 += f" with {str(lens).strip()}"
+    if fl is not None:
+        fl_str = f"{_format_focal(fl)}mm"
+        if fl_35:
+            fl_str += f" ({fl_35}mm equivalent)"
+        section1 += f" at {fl_str}"
+
+    sections = [section1]
+    expo = []
+    if et is not None:
+        s = _format_shutter(et)
+        if s:
+            expo.append(s)
+    if fn is not None:
+        expo.append(f"f/{_format_aperture(fn)}")
+    if expo:
+        sections.append(" at ".join(expo))
+    if iso:
+        sections.append(f"ISO {iso}")
+    return ", ".join(sections)
 
 
 def cache_bust(rel_path: str, abs_path: Path) -> str:
@@ -752,6 +836,10 @@ def build_scenario(
     hero_url = (
         cache_bust(f"images/{slug}/hero.jpg", out_hero) if hero_jpeg_path else None
     )
+    # EXIF is shared across variants (same RAW source, processed differently),
+    # so read it once from the first JPEG. Lightroom-exported JPEGs preserve
+    # the camera/lens metadata cleanly through the export.
+    exif_summary = read_exif_summary(jpegs[0])
     return PageData(
         slug=slug,
         title=manifest["title"],
@@ -762,6 +850,7 @@ def build_scenario(
         hero=hero_url,
         hero_slug=hero_variant_slug,
         editor_note=manifest.get("editor_note") or None,
+        exif_summary=exif_summary,
         images=[asdict(v) for v in variants],
     )
 
@@ -797,6 +886,7 @@ def load_existing_page_data(
         hero=data.get("hero"),
         hero_slug=data.get("hero_slug"),
         editor_note=data.get("editor_note"),
+        exif_summary=data.get("exif_summary"),
         previous_scenario=data.get("previous_scenario"),
         next_scenario=data.get("next_scenario"),
         images=data.get("images", []),

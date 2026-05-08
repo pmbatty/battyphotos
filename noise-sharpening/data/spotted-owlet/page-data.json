@@ -13,9 +13,10 @@
     "w": 600,
     "h": 400
   },
-  "hero": "images/spotted-owlet/hero.jpg?v=1778206345",
+  "hero": "images/spotted-owlet/hero.jpg?v=1778255945",
   "hero_slug": "lightroom-denoise",
   "editor_note": null,
+  "exif_summary": "OM-1MarkII with OLYMPUS M.150-400mm F4.5 at 400mm (801mm equivalent), 1/100s at f/4.5, ISO 10000",
   "previous_scenario": null,
   "next_scenario": "hummingbird-1",
   "images": [
@@ -25,8 +26,8 @@
       "caption": "Original RAW with no editing, shot at ISO 10,000.",
       "width": 2883,
       "height": 2162,
-      "display": "images/spotted-owlet/raw.jpg?v=1778206346",
-      "crop": "images/spotted-owlet/raw-crop.jpg?v=1778206346",
+      "display": "images/spotted-owlet/raw.jpg?v=1778255946",
+      "crop": "images/spotted-owlet/raw-crop.jpg?v=1778255946",
       "critique": {
         "text": "This is the unedited RAW file, shot at a very high ISO of 10,000. As expected, it exhibits severe luminance and color noise throughout, which severely degrades sharpness and obscures the fine details of the owls' feathers and the tree bark. The overall image is very soft, grainy, and lacks definition. This serves as the baseline for evaluating the edits. In general, all edits succeeded in removing the bulk of the noise, but they differ wildly in how they handled detail. The DxO (Image 1) and Lightroom (Image 7) edits worked exceptionally well, providing clean, sharp, and natural results. The Topaz version with only noise reduction (Image 5) is clean but too soft. The versions utilizing ON1 (Image 2) and Topaz with sharpening (Images 3 and 4) performed poorly, introducing severe unnatural artifacts—ranging from a smeared, painterly look to crunchy, over-sharpened textures.",
         "potential_score": 1,
@@ -39,8 +40,8 @@
       "caption": "Lightroom's new AI Denoise with default setting of 50",
       "width": 2883,
       "height": 2162,
-      "display": "images/spotted-owlet/lightroom-denoise.jpg?v=1778206345",
-      "crop": "images/spotted-owlet/lightroom-denoise-crop.jpg?v=1778206345",
+      "display": "images/spotted-owlet/lightroom-denoise.jpg?v=1778255945",
+      "crop": "images/spotted-owlet/lightroom-denoise-crop.jpg?v=1778255945",
       "critique": {
         "text": "Processed with Lightroom's AI Denoise, this image is a massive improvement over the noisy original RAW and stands out as one of the best edits in the set alongside the DxO version. It does a phenomenal job of cleaning up the high ISO noise while retaining a beautifully natural, photographic look. The details in the feathers are preserved very well without introducing any of the 'crunchy' over-sharpening artifacts seen in the Topaz versions or the 'painterly' smearing of the ON1 version. It offers a slightly softer, perhaps more organic look than the DxO edit, making it a highly successful, top-tier result.",
         "potential_score": 5,
@@ -53,8 +54,8 @@
       "caption": "DxO PureRAW with DeepPRIME XD3",
       "width": 2883,
       "height": 2162,
-      "display": "images/spotted-owlet/dxo-pureraw-6.jpg?v=1778206345",
-      "crop": "images/spotted-owlet/dxo-pureraw-6-crop.jpg?v=1778206345",
+      "display": "images/spotted-owlet/dxo-pureraw-6.jpg?v=1778255945",
+      "crop": "images/spotted-owlet/dxo-pureraw-6-crop.jpg?v=1778255945",
       "critique": {
         "text": "This image, processed with DxO PureRAW's DeepPRIME XD3, offers an outstanding result. Compared to the extremely noisy original RAW, it has completely eliminated the distracting luminance and color noise while recovering an impressive amount of fine detail. The feathers around the owls' faces are sharp and distinct without looking artificial or 'crunchy', and the tree bark texture is exceptionally well-rendered. It strikes a near-perfect balance between aggressive noise reduction and detail enhancement, providing a clean, sharp, and natural-looking image that ranks at the very top of this set.",
         "potential_score": 5,
@@ -67,8 +68,8 @@
       "caption": "Topaz Photo with default noise reduction only (strength 53, original detail 0)",
       "width": 2883,
       "height": 2162,
-      "display": "images/spotted-owlet/topaz-photo.jpg?v=1778206346",
-      "crop": "images/spotted-owlet/topaz-photo-crop.jpg?v=1778206346",
+      "display": "images/spotted-owlet/topaz-photo.jpg?v=1778255946",
+      "crop": "images/spotted-owlet/topaz-photo-crop.jpg?v=1778255946",
       "critique": {
         "text": "This version uses Topaz Photo AI for noise reduction only, without added sharpening. It successfully eliminates the heavy grain present in the original RAW file. However, because no sharpening was applied to counteract the inherent softening effect of heavy noise reduction, the resulting image looks quite soft and slightly 'smudged', particularly in the fine details of the feathers. While it is certainly an improvement over the original in terms of cleanliness, it lacks the crispness, subject definition, and overall impact found in the highly successful Lightroom or DxO edits.",
         "potential_score": 3,
@@ -81,8 +82,8 @@
       "caption": "Topaz Photo with default noise reduction only (strength 69, original detail 0) plus default sharpening across whole image",
       "width": 2883,
       "height": 2162,
-      "display": "images/spotted-owlet/topaz-photo-2.jpg?v=1778206345",
-      "crop": "images/spotted-owlet/topaz-photo-2-crop.jpg?v=1778206345",
+      "display": "images/spotted-owlet/topaz-photo-2.jpg?v=1778255945",
+      "crop": "images/spotted-owlet/topaz-photo-2-crop.jpg?v=1778255945",
       "critique": {
         "text": "Similar to the other Topaz sharpened image, this version (using default noise reduction and default sharpening) suffers from over-processing artifacts. While it effectively masks the high ISO noise from the original RAW, the sharpening has introduced a very gritty, 'crunchy' texture across the entire frame. The edges of the feathers and the bark are too stark, making the image feel brittle and lacking in smooth, natural tonal transitions. The tradeoff of introducing these artifacts for apparent sharpness is not justified when compared to cleaner edits.",
         "potential_score": 2,
@@ -95,8 +96,8 @@
       "caption": "Topaz Photo with default noise reduction only (strength 69, original detail 0) plus sharpening with Wildlife setting across whole image",
       "width": 2883,
       "height": 2162,
-      "display": "images/spotted-owlet/topaz-photo-3.jpg?v=1778206345",
-      "crop": "images/spotted-owlet/topaz-photo-3-crop.jpg?v=1778206345",
+      "display": "images/spotted-owlet/topaz-photo-3.jpg?v=1778255946",
+      "crop": "images/spotted-owlet/topaz-photo-3-crop.jpg?v=1778255946",
       "critique": {
         "text": "Using Topaz Photo AI with default noise reduction and the 'Wildlife' sharpening setting has resulted in a heavily over-sharpened image. While it successfully removes the severe noise of the baseline RAW, the aggressive sharpening algorithm has created noticeable, distracting artifacts. The feathers, particularly on the owls' chests, look wiry, brittle, and unnatural, with 'worm-like' patterns emerging from the over-enhancement of micro-contrast. Compared to the natural look of the Lightroom or DxO edits, this version looks harsh and overly processed.",
         "potential_score": 2,
@@ -109,8 +110,8 @@
       "caption": "Processed in ON1 RAW using NoNoise and TackSharp combined",
       "width": 2883,
       "height": 2162,
-      "display": "images/spotted-owlet/on1-raw.jpg?v=1778206346",
-      "crop": "images/spotted-owlet/on1-raw-crop.jpg?v=1778206346",
+      "display": "images/spotted-owlet/on1-raw.jpg?v=1778255946",
+      "crop": "images/spotted-owlet/on1-raw-crop.jpg?v=1778255946",
       "critique": {
         "text": "Processed with ON1's NoNoise and TackSharp, this image struggles significantly compared to the better performers in the set. While the heavy noise of the original RAW is gone, the processing has introduced a severe 'painterly' or watercolor effect. Fine details in the feathers have been smeared into clumpy brushstrokes rather than distinct strands, and the texture of the wood looks unnatural and smoothed over. The aggressive processing has destroyed the photographic realism, resulting in an over-processed, synthetic look.",
         "potential_score": 2,

@@ -13,9 +13,10 @@
     "w": 600,
     "h": 400
   },
-  "hero": "images/black-throated-trogon/hero.jpg?v=1778206343",
+  "hero": "images/black-throated-trogon/hero.jpg?v=1778255938",
   "hero_slug": "dxo-pureraw-6",
   "editor_note": null,
+  "exif_summary": "OM-1MarkII with OLYMPUS M.150-400mm F4.5 at 150mm, 1/1250s at f/4.5, ISO 12800",
   "previous_scenario": "bald-eagle-blurred",
   "next_scenario": "northern-harrier",
   "images": [
@@ -25,8 +26,8 @@
       "caption": "RAW image captured at ISO 12800",
       "width": 2475,
       "height": 1856,
-      "display": "images/black-throated-trogon/raw.jpg?v=1778206342",
-      "crop": "images/black-throated-trogon/raw-crop.jpg?v=1778206342",
+      "display": "images/black-throated-trogon/raw.jpg?v=1778255938",
+      "crop": "images/black-throated-trogon/raw-crop.jpg?v=1778255938",
       "critique": {
         "text": "Captured at a demanding ISO 12800, this original RAW image exhibits severe luminance and color noise throughout, heavily degrading both the background and the fine details of the bird. Underneath the grain, the base sharpness of the subject is fundamentally decent, but the heavy noise obscures the micro-contrast and makes the image unusable as-is. As a baseline, it highlights the heavy lifting required by the software. Overall, the Lightroom (Image 4) and DxO (Image 5) edits performed best, seamlessly removing noise while retaining natural detail. Topaz (Image 1) over-sharpened, and ON1 (Image 3) over-smoothed, making them less successful.",
         "potential_score": 2,
@@ -39,8 +40,8 @@
       "caption": "Lightroom AI Denoise at default settings",
       "width": 2475,
       "height": 1856,
-      "display": "images/black-throated-trogon/lightroom-denoise.jpg?v=1778206342",
-      "crop": "images/black-throated-trogon/lightroom-denoise-crop.jpg?v=1778206342",
+      "display": "images/black-throated-trogon/lightroom-denoise.jpg?v=1778255938",
+      "crop": "images/black-throated-trogon/lightroom-denoise-crop.jpg?v=1778255938",
       "critique": {
         "text": "Lightroom's AI Denoise does an excellent job balancing noise reduction with detail preservation. The background grain is almost entirely eliminated, yielding a beautifully smooth out-of-focus area. Crucially, the sharpness of the bird remains highly natural; the eye, beak, and feather textures are crisp without exhibiting the harsh, over-sharpened artifacts seen in the Topaz edit. It is vastly superior to the RAW and ON1 versions, providing a clean, realistic, and highly usable image from a very noisy source. The overall image quality is excellent.",
         "potential_score": 5,
@@ -53,8 +54,8 @@
       "caption": "DxO PureRaw 6 with default settings",
       "width": 2475,
       "height": 1856,
-      "display": "images/black-throated-trogon/dxo-pureraw-6.jpg?v=1778206342",
-      "crop": "images/black-throated-trogon/dxo-pureraw-6-crop.jpg?v=1778206342",
+      "display": "images/black-throated-trogon/dxo-pureraw-6.jpg?v=1778255938",
+      "crop": "images/black-throated-trogon/dxo-pureraw-6-crop.jpg?v=1778255938",
       "critique": {
         "text": "Using DxO PureRaw 6, this image represents an outstanding result and arguably edges out the Lightroom edit for the best in the set. The noise reduction is flawless, rendering a perfectly clean background. Where this image truly excels is the exceptional, natural sharpness and micro-contrast recovered in the bird's feathers and the textures of the branch. It manages to pull remarkable, crisp detail out of the noisy ISO 12800 RAW without making the subject look artificial, crunchy, or plastic. The balance of noise removal and sharpness is superb.",
         "potential_score": 5,
@@ -67,8 +68,8 @@
       "caption": "Topaz Photos with default noise reduction running against raw image",
       "width": 2475,
       "height": 1856,
-      "display": "images/black-throated-trogon/topaz-photo.jpg?v=1778206343",
-      "crop": "images/black-throated-trogon/topaz-photo-crop.jpg?v=1778206343",
+      "display": "images/black-throated-trogon/topaz-photo.jpg?v=1778255938",
+      "crop": "images/black-throated-trogon/topaz-photo-crop.jpg?v=1778255938",
       "critique": {
         "text": "Processed with Topaz Photo's default noise reduction, this image successfully eliminates the heavy background noise seen in the RAW file. However, the sharpening applied to the subject and branch is overly aggressive, resulting in a 'crunchy,' artificial appearance. The fine feather details on the bird's belly and head feel over-processed and harsh compared to the Lightroom or DxO versions. While a massive improvement in noise over the original, the trade-off in artifacting makes the overall image look less natural.",
         "potential_score": 3,
@@ -81,8 +82,8 @@
       "caption": "ON1 RAW NoNoise only",
       "width": 2475,
       "height": 1856,
-      "display": "images/black-throated-trogon/on1-raw-nonoise-only.jpg?v=1778206342",
-      "crop": "images/black-throated-trogon/on1-raw-nonoise-only-crop.jpg?v=1778206342",
+      "display": "images/black-throated-trogon/on1-raw-nonoise-only.jpg?v=1778255938",
+      "crop": "images/black-throated-trogon/on1-raw-nonoise-only-crop.jpg?v=1778255938",
       "critique": {
         "text": "Processed with ON1 RAW NoNoise, this version successfully reduces the extreme high-ISO noise but at a significant cost to fine detail. The bird's feathers, especially the yellow breast and green head, alongside the mossy branch, have a noticeably 'smudged' or plasticky appearance. It lacks the crisp definition seen in the Lightroom or DxO edits. While the background is smooth, the loss of critical sharpness on the main subject makes the image feel too soft overall. It avoids the harsh artifacts of Topaz but swings too far in the opposite direction, sacrificing vital subject texture.",
         "potential_score": 3,

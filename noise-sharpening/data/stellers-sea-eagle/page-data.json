@@ -13,9 +13,10 @@
     "w": 600,
     "h": 400
   },
-  "hero": "images/stellers-sea-eagle/hero.jpg?v=1778206346",
+  "hero": "images/stellers-sea-eagle/hero.jpg?v=1778255946",
   "hero_slug": "lightroom-denoise",
   "editor_note": null,
+  "exif_summary": "DC-G9 with LEICA DG 100-400/F4.0-6.3 at 180mm (374mm equivalent), 1/1600s at f/4.8, ISO 800",
   "previous_scenario": "hummingbird-1",
   "next_scenario": "bald-eagle-blurred",
   "images": [
@@ -25,8 +26,8 @@
       "caption": "Original RAW with no editing, shot at 1/1600s and ISO 800.",
       "width": 3326,
       "height": 2217,
-      "display": "images/stellers-sea-eagle/raw.jpg?v=1778206347",
-      "crop": "images/stellers-sea-eagle/raw-crop.jpg?v=1778206347",
+      "display": "images/stellers-sea-eagle/raw.jpg?v=1778255947",
+      "crop": "images/stellers-sea-eagle/raw-crop.jpg?v=1778255947",
       "critique": {
         "text": "As the original, unedited RAW image, this establishes the baseline. Shot at ISO 800, there is noticeable luminance noise (grain) visible throughout, particularly in the darker feathers and the background water. The sharpness is acceptable but slightly soft, especially around critical areas like the eye and beak. Overarchingly, all the edited versions successfully reduce the background noise, but they differ significantly in how they handle subject sharpness. The AI-driven tools (Lightroom, DxO) tend to produce the most natural-looking results, while others (Topaz, ON1 TackSharp) push sharpening to the point of introducing slight artifacts. A general ranking of the edits from best to worst would be: Lightroom Denoise & DxO PureRAW (tied for most natural/crisp), Topaz Photo, Topaz Wildlife, ON1 NoNoise only, and finally ON1 with TackSharp due to noticeable artifacts.",
         "potential_score": 3,
@@ -39,8 +40,8 @@
       "caption": "Lightroom AI Denoise at default settings",
       "width": 3326,
       "height": 2217,
-      "display": "images/stellers-sea-eagle/lightroom-denoise.jpg?v=1778206346",
-      "crop": "images/stellers-sea-eagle/lightroom-denoise-crop.jpg?v=1778206346",
+      "display": "images/stellers-sea-eagle/lightroom-denoise.jpg?v=1778255946",
+      "crop": "images/stellers-sea-eagle/lightroom-denoise-crop.jpg?v=1778255946",
       "critique": {
         "text": "Lightroom's AI Denoise provides an exceptional balance. It completely removes the distracting luminance noise present in the original RAW while preserving the natural texture of the background waves. More importantly, it retains excellent, natural-looking detail in the eagle's feathers without introducing the 'crunchy' artifacts seen in the Topaz edits or the halos in the ON1 TackSharp version. The subject is perfectly sharp, making this a highly successful and natural-looking overall image.",
         "potential_score": 5,
@@ -53,8 +54,8 @@
       "caption": "DxO PureRaw 6 with default settings",
       "width": 3326,
       "height": 2217,
-      "display": "images/stellers-sea-eagle/dxo-pureraw-6.jpg?v=1778206346",
-      "crop": "images/stellers-sea-eagle/dxo-pureraw-6-crop.jpg?v=1778206346",
+      "display": "images/stellers-sea-eagle/dxo-pureraw-6.jpg?v=1778255946",
+      "crop": "images/stellers-sea-eagle/dxo-pureraw-6-crop.jpg?v=1778255946",
       "critique": {
         "text": "DxO's DeepPRIME technology delivers outstanding results here. It virtually eliminates the noise seen in the RAW while applying proprietary optical corrections and sharpening. The resulting subject is beautifully crisp with fantastic feather detail that rivals the Topaz edits but looks significantly more natural and organic, lacking any unnatural 'crunch'. Along with the Lightroom edit, this represents the best balance of noise reduction and natural sharpness, making for an excellent overall image.",
         "potential_score": 5,
@@ -67,8 +68,8 @@
       "caption": "Topaz Photo with sharpening on subject and noise reduction on all, with default settings",
       "width": 3326,
       "height": 2217,
-      "display": "images/stellers-sea-eagle/topaz-photo.jpg?v=1778206346",
-      "crop": "images/stellers-sea-eagle/topaz-photo-crop.jpg?v=1778206346",
+      "display": "images/stellers-sea-eagle/topaz-photo.jpg?v=1778255947",
+      "crop": "images/stellers-sea-eagle/topaz-photo-crop.jpg?v=1778255947",
       "critique": {
         "text": "This standard Topaz Photo edit is very similar to the Wildlife edit. It effectively removes the baseline noise seen in the RAW and applies strong sharpening to the subject. It feels marginally less aggressive than the Wildlife setting, making the feathers look slightly more natural, but it still exhibits some of the characteristic 'crispness' that differentiates it from the softer, more organic look of the Lightroom Denoise version. It's a strong improvement over the RAW but trails slightly behind the class leaders in natural feel.",
         "potential_score": 4,
@@ -81,8 +82,8 @@
       "caption": "Topaz Photo with sharpening on subject using wildlife setting, and noise reduction on all, with default settings.",
       "width": 3326,
       "height": 2217,
-      "display": "images/stellers-sea-eagle/topaz-wildlife.jpg?v=1778206346",
-      "crop": "images/stellers-sea-eagle/topaz-wildlife-crop.jpg?v=1778206346",
+      "display": "images/stellers-sea-eagle/topaz-wildlife.jpg?v=1778255946",
+      "crop": "images/stellers-sea-eagle/topaz-wildlife-crop.jpg?v=1778255946",
       "critique": {
         "text": "Using Topaz's Wildlife setting results in a dramatic change from the RAW. The noise is completely eliminated, and the sharpening on the eagle is aggressive. The eye, beak, and feathers pop with significant contrast. However, when compared to the Lightroom or DxO edits, this aggressive sharpening feels slightly artificial or 'crunchy', introducing minor artifacts along edges and in fine details. It's a visually striking image as a whole, but the trade-off for that extreme sharpness is a slight loss of natural rendering.",
         "potential_score": 4,
@@ -95,8 +96,8 @@
       "caption": "ON1 RAW with NoNoise only at default setting",
       "width": 3326,
       "height": 2217,
-      "display": "images/stellers-sea-eagle/on1-raw-nonoise-only.jpg?v=1778206347",
-      "crop": "images/stellers-sea-eagle/on1-raw-nonoise-only-crop.jpg?v=1778206347",
+      "display": "images/stellers-sea-eagle/on1-raw-nonoise-only.jpg?v=1778255947",
+      "crop": "images/stellers-sea-eagle/on1-raw-nonoise-only-crop.jpg?v=1778255947",
       "critique": {
         "text": "This edit applies ON1's NoNoise without additional sharpening. Compared to the RAW, it successfully smooths out the background water and removes grain from the feathers. However, because no sharpening is applied to counteract the softening effect of noise reduction, the main subject actually appears slightly softer and less distinct than in the original RAW. While the noise is gone, the overall image suffers slightly from this lack of crispness compared to the more balanced edits.",
         "potential_score": 3,
@@ -109,8 +110,8 @@
       "caption": "ON1 RAW with NoNoise and TackSharp at default settings",
       "width": 3326,
       "height": 2217,
-      "display": "images/stellers-sea-eagle/on1-raw.jpg?v=1778206346",
-      "crop": "images/stellers-sea-eagle/on1-raw-crop.jpg?v=1778206346",
+      "display": "images/stellers-sea-eagle/on1-raw.jpg?v=1778255946",
+      "crop": "images/stellers-sea-eagle/on1-raw-crop.jpg?v=1778255946",
       "critique": {
         "text": "This edit combines ON1's noise reduction with its TackSharp tool. While it successfully reduces the baseline noise compared to the RAW, the sharpening application is problematic. It feels heavy-handed, introducing noticeable halos around high-contrast edges (like the white wing feathers against the background) and creating an overall harsh, slightly over-processed look. Compared to the clean results from Lightroom or DxO, the artifacts introduced here detract significantly from the overall image quality.",
         "potential_score": 2,

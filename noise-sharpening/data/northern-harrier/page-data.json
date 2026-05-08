@@ -13,9 +13,10 @@
     "w": 600,
     "h": 400
   },
-  "hero": "images/northern-harrier/hero.jpg?v=1778206345",
+  "hero": "images/northern-harrier/hero.jpg?v=1778255941",
   "hero_slug": "topaz-photo",
   "editor_note": "I disagree with darwain on this one — Lightroom Denoise looks too soft to me (more like a 3 than a 5), and Topaz Photo is the strongest of the set in my view.",
+  "exif_summary": "OM-1 with M.150-400mm F4.5 TC + MC-14 at 700mm, 1/2000s at f/8, ISO 500",
   "previous_scenario": "black-throated-trogon",
   "next_scenario": "burrowing-owl-and-moth",
   "images": [
@@ -25,8 +26,8 @@
       "caption": "Original RAW image, which is quite soft.",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/raw.jpg?v=1778206344",
-      "crop": "images/northern-harrier/raw-crop.jpg?v=1778206344",
+      "display": "images/northern-harrier/raw.jpg?v=1778255941",
+      "crop": "images/northern-harrier/raw-crop.jpg?v=1778255941",
       "critique": {
         "text": "Image 2 (Original RAW): This image serves as the baseline for comparison. It suffers from noticeable luminance and color noise, which is particularly visible across the white expanse of the snow. More critically, the main subject (the hawk) is quite soft, lacking crisp detail in the feathers, face, and talons, likely due to slight motion blur or slightly missed focus. While the timing and composition of the capture are excellent, the technical flaws in sharpness and noise significantly detract from the overall quality, necessitating the edits seen in the other images.",
         "potential_score": 2,
@@ -39,8 +40,8 @@
       "caption": "Lightroom AI Denoise at default settings",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/lightroom-denoise.jpg?v=1778206345",
-      "crop": "images/northern-harrier/lightroom-denoise-crop.jpg?v=1778206345",
+      "display": "images/northern-harrier/lightroom-denoise.jpg?v=1778255941",
+      "crop": "images/northern-harrier/lightroom-denoise-crop.jpg?v=1778255941",
       "critique": {
         "text": "Image 4 (Lightroom Denoise): This edit strikes the most natural balance of the group. The AI Denoise has effectively cleaned up the snow, leaving a smooth but realistic texture without feeling overly sterile. The sharpness of the hawk is noticeably improved over the RAW; the eye is discernible, and the feathers have good definition. While it doesn't quite reach the extreme, biting crispness of the Topaz or DxO versions, it largely avoids their artificial, over-processed artifacts, making it a highly successful and natural-looking edit.",
         "potential_score": 4,
@@ -53,8 +54,8 @@
       "caption": "Topaz Photo with default noise reduction ans subject sharpening using lens blur at setting of 50",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/topaz-photo.jpg?v=1778206345",
-      "crop": "images/northern-harrier/topaz-photo-crop.jpg?v=1778206345",
+      "display": "images/northern-harrier/topaz-photo.jpg?v=1778255941",
+      "crop": "images/northern-harrier/topaz-photo-crop.jpg?v=1778255941",
       "critique": {
         "text": "Image 1 (Topaz Photo): This edit completely eliminates the noise seen in the original RAW, rendering the snow exceptionally smooth. The lens blur sharpening at a setting of 50 has done a remarkable job of recovering detail in the originally soft subject, bringing out definition in the hawk's eye and wing feathers. However, this aggressive recovery introduces a slightly artificial, 'plastic' look to the bird and makes the edges feel a bit unnatural compared to standard sharpening. Overall, it is a massive improvement over the baseline and effectively rescues the soft subject.",
         "potential_score": 4,
@@ -67,8 +68,8 @@
       "caption": "Dxo using DxO DeepPrime wD3 with Lens Sharpness Optimization increased to 200",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/dxo-pureraw-6.jpg?v=1778206345",
-      "crop": "images/northern-harrier/dxo-pureraw-6-crop.jpg?v=1778206345",
+      "display": "images/northern-harrier/dxo-pureraw-6.jpg?v=1778255941",
+      "crop": "images/northern-harrier/dxo-pureraw-6-crop.jpg?v=1778255941",
       "critique": {
         "text": "Image 5 (DxO PureRAW 6): The DeepPRIME XD3 noise reduction is incredibly effective here, rendering the snow completely clean and artifact-free. Pushing the Lens Sharpness Optimization to 200 has resulted in staggering detail recovery on the hawk and the foreground twigs, making the subject dramatically sharper than the baseline RAW. The trade-off is that the image looks a bit 'crunchy' and over-sharpened, with very high micro-contrast on the edges of the wings and the brush that borders on looking unnaturally etched. Still, it is a highly impressive technical rescue of a soft photo.",
         "potential_score": 4,
@@ -81,8 +82,8 @@
       "caption": "ON1 RAW with NoNoise and TackSharp",
       "width": 2831,
       "height": 1887,
-      "display": "images/northern-harrier/on1-raw.jpg?v=1778206344",
-      "crop": "images/northern-harrier/on1-raw-crop.jpg?v=1778206344",
+      "display": "images/northern-harrier/on1-raw.jpg?v=1778255941",
+      "crop": "images/northern-harrier/on1-raw-crop.jpg?v=1778255941",
       "critique": {
         "text": "Image 3 (ON1 RAW): This is arguably the weakest of the edited versions. While the NoNoise application reduces the grain compared to the RAW, it leaves behind a slightly blotchy, uneven texture in the snow. The TackSharp feature has certainly improved the sharpness of the hawk relative to the original, but the fine details in the feathers have taken on a somewhat smudged, watercolor-like appearance. It lacks the clean crispness of the Topaz, Lightroom, and DxO edits, resulting in a less realistic final image.",
         "potential_score": 3,

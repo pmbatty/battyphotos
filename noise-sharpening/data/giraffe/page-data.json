@@ -13,9 +13,10 @@
     "w": 600,
     "h": 400
   },
-  "hero": "images/giraffe/hero.jpg?v=1778254713",
+  "hero": "images/giraffe/hero.jpg?v=1778255939",
   "hero_slug": "lightroom-denoise",
   "editor_note": "DxO's Optics Module applies lens-specific geometric correction by default — un-distorting the wide-angle frame and auto-cropping the curved edges that would otherwise be left behind. At an 11 mm focal length on micro four-thirds the correction is significant, so the DxO variants are slightly tighter and straighter than the RAW / Topaz / Lightroom outputs, and the same pixel coordinate maps to slightly different scene content. Pixel positions don't line up exactly across variants — that's the lens correction, not the AI denoise. Topaz and ON1 don't apply lens corrections by default; Lightroom and the RAW share the same lens profile here.",
+  "exif_summary": "OM-1 with LEICA DG 10-25/F1.7 at 11mm (22mm equivalent), 1/1000s at f/2, ISO 200",
   "previous_scenario": "spider-monkey",
   "next_scenario": null,
   "images": [
@@ -25,8 +26,8 @@
       "caption": "RAW with edits applied",
       "width": 3481,
       "height": 2611,
-      "display": "images/giraffe/raw.jpg?v=1778254712",
-      "crop": "images/giraffe/raw-crop.jpg?v=1778254712",
+      "display": "images/giraffe/raw.jpg?v=1778255939",
+      "crop": "images/giraffe/raw-crop.jpg?v=1778255939",
       "critique": {
         "text": "This is the original RAW image, serving as our baseline. It exhibits visible luminance noise throughout the sky gradients and within the shadows of the giraffe's coat. The overall sharpness is acceptable but relatively soft; fine details on the giraffe lack crispness, and the splashing water shows noticeable motion blur. Overview of edits: All edited images successfully eliminate the sky noise but vary significantly in their approach to sharpness and detail retention. Lightroom (Image 4) is the most conservative, yielding a clean but soft image. DxO Standard (Image 3) offers a superb natural balance of detail and noise reduction. DxO Strong (Image 5) pushes sharpening slightly too far into harshness. Topaz (Image 1) uniquely and successfully targets the motion blur for a dramatic effect. General Ranking: 1st place goes to Topaz (Image 1) for the best overall impact and beautifully frozen action. 2nd place is DxO Standard (Image 3) for the cleanest, most natural overall enhancement. 3rd place is Lightroom (Image 4) for a safe, noise-free but softer look. 4th place is DxO Strong (Image 5) due to mildly over-sharpened artifacts. 5th place is this original, unedited RAW.",
         "potential_score": 3,
@@ -39,8 +40,8 @@
       "caption": "Topaz Photo with RAW Denoise and shaprening with motion blur to make the water droplets sharper",
       "width": 3481,
       "height": 2611,
-      "display": "images/giraffe/topaz-photo.jpg?v=1778254713",
-      "crop": "images/giraffe/topaz-photo-crop.jpg?v=1778254713",
+      "display": "images/giraffe/topaz-photo.jpg?v=1778255940",
+      "crop": "images/giraffe/topaz-photo-crop.jpg?v=1778255940",
       "critique": {
         "text": "Processed with Topaz Photo emphasizing motion blur reduction, this image excels at freezing the dynamic action. The water droplets splashing from the giraffe's mouth are notably sharper than in any other version, significantly boosting the overall visual impact. Noise in the sky is cleanly removed. While this aggressive sharpening creates a striking main subject, it introduces slight processing artifacts, rendering the fine hairs and background trees with a marginally artificial, 'crunchy' texture compared to the Lightroom or DxO Standard edits. However, as per the evaluation criteria, the trade-off is well justified here, as the remarkably sharp subject and frozen water make this a highly compelling image as a whole.",
         "potential_score": 5,
@@ -53,8 +54,8 @@
       "caption": "Dxo RAW 6 using DeepPRIMEXD3 with default settings",
       "width": 3481,
       "height": 2611,
-      "display": "images/giraffe/dxo-raw-6-standard.jpg?v=1778254713",
-      "crop": "images/giraffe/dxo-raw-6-standard-crop.jpg?v=1778254713",
+      "display": "images/giraffe/dxo-raw-6-standard.jpg?v=1778255939",
+      "crop": "images/giraffe/dxo-raw-6-standard-crop.jpg?v=1778255939",
       "critique": {
         "text": "Utilizing DxO RAW 6 with DeepPRIME XD3 at default settings, this image strikes an outstanding balance. The noise reduction is excellent, leaving a beautifully smooth sky without destroying fine detail. Sharpness is vastly improved over the original RAW and the Lightroom edit; the intricate patterns on the giraffe's coat and the clinging oxpeckers are rendered with crisp, highly realistic detail. While the water droplets retain slightly more natural motion blur than the aggressively targeted Topaz version, they are very well-defined. This edit successfully avoids the over-sharpened artifacts seen in the 'Strong' DxO version, resulting in an exceptionally clean, natural, and high-quality image.",
         "potential_score": 5,
@@ -67,8 +68,8 @@
       "caption": "RAW with edits applied, plus Lightroom Denoise with defaults",
       "width": 3481,
       "height": 2611,
-      "display": "images/giraffe/lightroom-denoise.jpg?v=1778254712",
-      "crop": "images/giraffe/lightroom-denoise-crop.jpg?v=1778254712",
+      "display": "images/giraffe/lightroom-denoise.jpg?v=1778255939",
+      "crop": "images/giraffe/lightroom-denoise-crop.jpg?v=1778255939",
       "critique": {
         "text": "This version utilizes Lightroom's Denoise feature at default settings. It does an excellent job of removing the distracting noise from the sky and shadow areas, providing a much cleaner canvas than the original RAW. However, in terms of sharpness, it is the softest among the processed images. It preserves the natural motion blur of the water droplets and doesn't extract the same level of micro-contrast and fine detail from the giraffe's fur as the Topaz or DxO edits. It is a very safe and natural-looking edit, but for an image where capturing the dynamic, frozen action of the water adds so much narrative value, it feels slightly lacking in punch compared to the others.",
         "potential_score": 4,
@@ -81,8 +82,8 @@
       "caption": "Dxo RAW 6 using DeepPRIMEXD3 with strong optical sharpening",
       "width": 3481,
       "height": 2611,
-      "display": "images/giraffe/dxo-raw-6-strong.jpg?v=1778254713",
-      "crop": "images/giraffe/dxo-raw-6-strong-crop.jpg?v=1778254713",
+      "display": "images/giraffe/dxo-raw-6-strong.jpg?v=1778255939",
+      "crop": "images/giraffe/dxo-raw-6-strong-crop.jpg?v=1778255939",
       "critique": {
         "text": "Processed with DxO RAW 6 DeepPRIME XD3 using strong optical sharpening, this version pushes the micro-contrast heavily. The noise reduction remains flawless, but the aggressive sharpening creates a hyper-realistic, slightly overcooked look. The edges of the giraffe, the oxpeckers, and the fine hairs appear overly crisp, bordering on harsh. Furthermore, the out-of-focus background trees take on a slightly unnatural, wiry appearance that distracts from the depth of field. While the water droplets are very well-defined and sharp, the overall 'crunchy' aesthetic makes this version less appealing and natural as a whole compared to the standard DxO edit or the motion-targeted Topaz edit.",
         "potential_score": 4,

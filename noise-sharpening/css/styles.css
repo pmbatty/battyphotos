@@ -455,13 +455,38 @@
 }
 
 .lightbox__pickers {
-  flex: 1 1 auto;
+  /* `flex: 0 1 auto` (was 1 1) — pickers take their natural width on the
+     left so the EXIF strip can grow into the middle of the bar. Pickers
+     can still shrink when controls + exif crowd them on narrow widths. */
+  flex: 0 1 auto;
   align-self: center;
   min-width: 0;
   display: flex;
   align-items: center;
   gap: 0.4rem;
   flex-wrap: nowrap;
+}
+
+.lightbox__exif {
+  /* Sits between the pickers and the zoom controls, fills the middle.
+     Single-line; the JS sets the same string in title= for hover-reveal
+     when text-overflow ellipsis kicks in on narrow viewports. Hidden
+     entirely below the breakpoint where there's no room for it. */
+  flex: 1 1 auto;
+  align-self: center;
+  min-width: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 900px) {
+  .lightbox__exif { display: none; }
 }
 
 .lightbox__pick {

@@ -201,6 +201,20 @@ function attachLightboxHandlers(data) {
   const critiqueRight = document.getElementById("lightbox-critique-right");
   const pickA = document.getElementById("lightbox-pick-a");
   const pickB = document.getElementById("lightbox-pick-b");
+  const exifEl = document.getElementById("lightbox-exif");
+
+  // EXIF is shared across variants (same RAW source, different processing),
+  // so set it once when the lightbox handlers are wired and leave it.
+  // The build script's read_exif_summary populates this from the source JPEGs.
+  if (exifEl) {
+    if (data.exif_summary) {
+      exifEl.textContent = data.exif_summary;
+      exifEl.title = data.exif_summary;  // hover-reveal full text when truncated
+      exifEl.hidden = false;
+    } else {
+      exifEl.hidden = true;
+    }
+  }
 
   const sides = {
     left: { badge: badgeLeft, panel: critiqueLeft },
