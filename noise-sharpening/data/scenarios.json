@@ -11,8 +11,8 @@
     "slug": "hummingbird-1",
     "title": "Hummingbird — Costa Rica",
     "subtitle": "A hummingbird feeding at a flower in Costa Rica, shot on the OM-1. Iridescent feathers, fine eye detail, and motion-blurred wing tips give noise-reduction and sharpening tools several distinct regions to handle differently.",
-    "thumbnail": "images/hummingbird-1/thumbnail.jpg?v=1778255940",
-    "variant_count": 7,
+    "thumbnail": "images/hummingbird-1/thumbnail.jpg?v=1778273619",
+    "variant_count": 8,
     "sort_order": 2
   },
   {
@@ -59,7 +59,7 @@
     "slug": "spider-monkey",
     "title": "Spider Monkey — ISO 25,600",
     "subtitle": "Spider Monkey eating in the canopy at the Osa Peninsula, Costa Rica, captured at ISO 25,600 — pushing the OM-1 sensor well into territory where AI noise reduction earns its keep. Dark fur, fine eye detail, and the faint green twig the monkey is feeding on all stress the sharpening / NR balance.",
-    "thumbnail": "images/spider-monkey/thumbnail.jpg?v=1778255944",
+    "thumbnail": "images/spider-monkey/thumbnail.jpg?v=1778273620",
     "variant_count": 9,
     "sort_order": 8
   },
@@ -67,7 +67,7 @@
     "slug": "giraffe",
     "title": "Giraffe at the waterhole",
     "subtitle": "An adult giraffe drinking at sunset at Zimanga, South Africa, with the herd in the background. Captured at ISO 200 on the OM-1 — a low-noise base file that surfaces the subtle differences in how AI denoise tools treat clean detail (eye, fur patterns, water droplets) without obvious noise to mask their behaviour.",
-    "thumbnail": "images/giraffe/thumbnail.jpg?v=1778255939",
+    "thumbnail": "images/giraffe/thumbnail.jpg?v=1778273618",
     "variant_count": 5,
     "sort_order": 9
   }

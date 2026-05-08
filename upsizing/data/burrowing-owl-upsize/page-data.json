@@ -13,8 +13,8 @@
     "w": 600,
     "h": 400
   },
-  "hero": "images/burrowing-owl-upsize/hero.jpg?v=1778255949",
-  "hero_slug": "topaz-gigapixel-4x-high-fidelity",
+  "hero": "images/burrowing-owl-upsize/hero.jpg?v=1778273624",
+  "hero_slug": "topaz-gigapixel-2x-high-fidelity",
   "editor_note": null,
   "exif_summary": "OM-1MarkII with OM 150-400mm F4.5 TC at 500mm (1002mm equivalent), 1/1000s at f/5.6, ISO 640",
   "previous_scenario": null,
@@ -26,8 +26,8 @@
       "caption": "Original RAW image, cropped toby 1466 pixels",
       "width": 1954,
       "height": 1466,
-      "display": "images/burrowing-owl-upsize/raw.jpg?v=1778255950",
-      "crop": "images/burrowing-owl-upsize/raw-crop.jpg?v=1778255950",
+      "display": "images/burrowing-owl-upsize/raw.jpg?v=1778273626",
+      "crop": "images/burrowing-owl-upsize/raw-crop.jpg?v=1778273626",
       "critique": {
         "text": "The original RAW file is heavily cropped, showing visible noise and a lack of fine resolution as expected. Summary of upscaling tests: The tests reveal that Topaz's 'High Fidelity' models generally outperform their 'Standard' counterparts and ON1's Resize AI in extracting realistic detail. However, AI models (especially Topaz Photo AI) are highly prone to over-sharpening artifacts at default settings. The most successful results (Images 3 and 6) utilized the High Fidelity model either at lower magnifications (2x) or with manually reduced sharpness to maintain a natural, photographic appearance, whereas tools like Lightroom Super Resolution simply magnified the existing noise without adding new detail.",
         "potential_score": 3,
@@ -40,8 +40,8 @@
       "caption": "Topaz Gigapixel 2x with High Fidelity model, recommended settings",
       "width": 3908,
       "height": 2932,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-2x-high-fidelity.jpg?v=1778255947",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-2x-high-fidelity-crop.jpg?v=1778255947",
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-2x-high-fidelity.jpg?v=1778273624",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-2x-high-fidelity-crop.jpg?v=1778273624",
       "critique": {
         "text": "Using Topaz Gigapixel 2x with the High Fidelity model, this is arguably the strongest overall rendition in the set. The 2x High Fidelity model perfectly balances detail extraction with a natural appearance. The eye is tack sharp, and the feathers look distinct and realistic without the artificial crunchiness seen in the other default-setting AI models.",
         "potential_score": 5,
@@ -54,8 +54,8 @@
       "caption": "Topaz Gigapixel 4x with high fidelty model, sharpness setting reduced from 78 to 39",
       "width": 7816,
       "height": 5864,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelty-reduced-sharpness.jpg?v=1778255950",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelty-reduced-sharpness-crop.jpg?v=1778255950",
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelty-reduced-sharpness.jpg?v=1778273626",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelty-reduced-sharpness-crop.jpg?v=1778273626",
       "critique": {
         "text": "Upscaled using Topaz Gigapixel 4x with the High Fidelity model and manually reduced sharpness (39), this image strikes an excellent balance. The 4x upscale brings out impressive detail in the owl's eye and feathers without falling into the trap of over-sharpening. Dialing back the sharpness was a wise choice here, resulting in a clean, relatively natural-looking heavy enlargement.",
         "potential_score": 4,
@@ -68,8 +68,8 @@
       "caption": "Lightroom super resolution, 2x original",
       "width": 3909,
       "height": 2932,
-      "display": "images/burrowing-owl-upsize/lightroom-super-resolution.jpg?v=1778255947",
-      "crop": "images/burrowing-owl-upsize/lightroom-super-resolution-crop.jpg?v=1778255947",
+      "display": "images/burrowing-owl-upsize/lightroom-super-resolution.jpg?v=1778273624",
+      "crop": "images/burrowing-owl-upsize/lightroom-super-resolution-crop.jpg?v=1778273624",
       "critique": {
         "text": "Using Lightroom Super Resolution (2x), this approach maintains the exact noise profile and characteristics of the original RAW file, simply making it larger. While it strictly avoids AI-generated 'hallucinations' or plastic textures, it remains quite soft and noisy compared to the AI-driven tools. It is a conservative approach best suited for purists, but it lacks the clarity of the better Topaz outputs.",
         "potential_score": 3,
@@ -82,8 +82,8 @@
       "caption": "ON1 Resize AI 2x High Quality, no sharpening",
       "width": 3908,
       "height": 2932,
-      "display": "images/burrowing-owl-upsize/on1-resize-ai-2x-high-quality.jpg?v=1778255950",
-      "crop": "images/burrowing-owl-upsize/on1-resize-ai-2x-high-quality-crop.jpg?v=1778255950",
+      "display": "images/burrowing-owl-upsize/on1-resize-ai-2x-high-quality.jpg?v=1778273626",
+      "crop": "images/burrowing-owl-upsize/on1-resize-ai-2x-high-quality-crop.jpg?v=1778273626",
       "critique": {
         "text": "Upscaled using Topaz Gigapixel 2x with the Standard model, this version is noticeably hazier and softer than the High Fidelity version (Image 6). It lacks the micro-contrast needed to make the feathers and foreground foliage pop, resulting in a somewhat flat image that doesn't fully utilize the potential of AI upscaling.",
         "potential_score": 3,
@@ -96,8 +96,8 @@
       "caption": "Topaz Gigapixel 4x with high fidelity model, recommended settings",
       "width": 7816,
       "height": 5864,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelity.jpg?v=1778255949",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelity-crop.jpg?v=1778255949",
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelity.jpg?v=1778273625",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelity-crop.jpg?v=1778273625",
       "critique": {
         "text": "Using Topaz Gigapixel 4x High Fidelity with default/recommended settings, this image is extremely sharp and punchy. However, the default sharpness introduces a bit too much 'crunch' into the fine feather details and beak compared to the reduced sharpness version (Image 3). It borders on looking over-processed and slightly artificial, though the detail recovery is undeniable.",
         "potential_score": 3,
@@ -110,8 +110,8 @@
       "caption": "Upscaled using Topaz Photo 2x, with recommended Low Resolution model and default settings",
       "width": 3908,
       "height": 2932,
-      "display": "images/burrowing-owl-upsize/topaz-photo-2x-low-resolution.jpg?v=1778255950",
-      "crop": "images/burrowing-owl-upsize/topaz-photo-2x-low-resolution-crop.jpg?v=1778255950",
+      "display": "images/burrowing-owl-upsize/topaz-photo-2x-low-resolution.jpg?v=1778273626",
+      "crop": "images/burrowing-owl-upsize/topaz-photo-2x-low-resolution-crop.jpg?v=1778273626",
       "critique": {
         "text": "Processed using Topaz Photo AI 2x with the Low Resolution model, this image suffers from severe over-sharpening and aggressive AI artifacting. The feathers have taken on an unnatural, 'crunchy', almost painterly texture, and the foreground foliage looks heavily artificial. It is far too aggressive and completely loses the natural photographic quality.",
         "potential_score": 2,
@@ -124,8 +124,8 @@
       "caption": "Topaz Gigapixel 4x with standard model, recommended settings",
       "width": 7816,
       "height": 5864,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-standard.jpg?v=1778255948",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-standard-crop.jpg?v=1778255948",
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-standard.jpg?v=1778273625",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-standard-crop.jpg?v=1778273625",
       "critique": {
         "text": "Upscaled using Topaz Gigapixel 4x with the Standard model, this result is distinctly softer than the High Fidelity models. The feather groupings blend together, lacking the crisp definition seen in Images 3 and 4. While it avoids the heavy artifacts of Image 2, it fails to provide the true 'super resolution' detail generation expected from this software.",
         "potential_score": 2,
@@ -138,8 +138,8 @@
       "caption": "Topaz Gigapixel 2x with standard model, recommended settings",
       "width": 3908,
       "height": 2932,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-2x-standard.jpg?v=1778255950",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-2x-standard-crop.jpg?v=1778255950",
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-2x-standard.jpg?v=1778273626",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-2x-standard-crop.jpg?v=1778273626",
       "critique": null
     }
   ]

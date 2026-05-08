@@ -13,8 +13,8 @@
     "w": 600,
     "h": 400
   },
-  "hero": "images/hummingbird-1/hero.jpg?v=1778255940",
-  "hero_slug": "lightrom-denoise",
+  "hero": "images/hummingbird-1/hero.jpg?v=1778273619",
+  "hero_slug": "dxo-raw-6-standard",
   "editor_note": null,
   "exif_summary": "OM-1MarkII with OM 150-400mm F4.5 TC at 445mm (891mm equivalent), 1/2000s at f/5.6, ISO 12800",
   "previous_scenario": "spotted-owlet",
@@ -26,11 +26,25 @@
       "caption": "Original undited RAW",
       "width": 4155,
       "height": 2770,
-      "display": "images/hummingbird-1/raw.jpg?v=1778255941",
-      "crop": "images/hummingbird-1/raw-crop.jpg?v=1778255941",
+      "display": "images/hummingbird-1/raw.jpg?v=1778273620",
+      "crop": "images/hummingbird-1/raw-crop.jpg?v=1778273620",
       "critique": {
         "text": "As the original unedited RAW, this image exhibits a significant amount of heavy luminance and color noise, especially visible in the smooth green background. This high noise floor masks the fine details of the hummingbird and the flower, resulting in an overall soft appearance. All the edited images successfully eliminate this background noise to varying degrees while attempting to recover subject detail. Generally, DxO provided the most natural and sharpest results, closely followed by Lightroom's very clean output. The Topaz edits varied based on the sharpening model, with 'Wildlife' performing best, while 'Motion Blur' looked slightly artificial. ON1 provided good sharpness but slightly different contrast, and the Topaz unsharpened version remained too soft.",
         "potential_score": 2,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "dxo-raw-6-standard",
+      "title": "DxO RAW 6 standard",
+      "caption": "Dxo RAW 6 using DeepPRIMEXD3 with default settings",
+      "width": 4155,
+      "height": 2770,
+      "display": "images/hummingbird-1/dxo-raw-6-standard.jpg?v=1778273619",
+      "crop": "images/hummingbird-1/dxo-raw-6-standard-crop.jpg?v=1778273619",
+      "critique": {
+        "text": "DxO DeepPRIME XD3 delivers exceptional results when compared to the original RAW. The heavy noise is entirely eradicated, leaving a pristine background. Furthermore, it manages to extract incredible, natural-looking sharpness and detail from the subject that was completely hidden in the RAW, without introducing the artificial, over-processed look seen in some other tools. It stands out as the best overall edit in this set.",
+        "potential_score": 5,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -40,8 +54,8 @@
       "caption": "Edited with the new Lightroom AI denoise - default settings",
       "width": 4155,
       "height": 2770,
-      "display": "images/hummingbird-1/lightrom-denoise.jpg?v=1778255940",
-      "crop": "images/hummingbird-1/lightrom-denoise-crop.jpg?v=1778255940",
+      "display": "images/hummingbird-1/lightrom-denoise.jpg?v=1778273619",
+      "crop": "images/hummingbird-1/lightrom-denoise-crop.jpg?v=1778273619",
       "critique": {
         "text": "Lightroom's AI denoise performs excellently in completely smoothing out the noisy background of the original RAW. The details retained and enhanced in the subject are very good and appear highly natural. While perhaps just a fraction less critically sharp than the DxO version, it perfectly avoids any unnatural sharpening artifacts, making it a highly successful, reliable, and aesthetically pleasing enhancement over the original file.",
         "potential_score": 4,
@@ -54,8 +68,8 @@
       "caption": "Edit with Topaz Photo, noise reduction (all) followed by sharpen - default (subject)",
       "width": 4155,
       "height": 2770,
-      "display": "images/hummingbird-1/topaz-1.jpg?v=1778255941",
-      "crop": "images/hummingbird-1/topaz-1-crop.jpg?v=1778255941",
+      "display": "images/hummingbird-1/topaz-1.jpg?v=1778273620",
+      "crop": "images/hummingbird-1/topaz-1-crop.jpg?v=1778273620",
       "critique": {
         "text": "This default Topaz edit provides a massive improvement over the noisy RAW. The noise is completely removed from the background, and the sharpening is effective at revealing the hummingbird's details. However, the sharpening feels slightly less refined than the 'Wildlife' setting or the DxO edit, placing it somewhere in the middle of the pack regarding natural-looking detail recovery.",
         "potential_score": 4,
@@ -68,8 +82,8 @@
       "caption": "Edit with Topaz Photo, noise reduction (all) followed by sharpen - wildlife (subject)",
       "width": 4155,
       "height": 2770,
-      "display": "images/hummingbird-1/topaz-3.jpg?v=1778255940",
-      "crop": "images/hummingbird-1/topaz-3-crop.jpg?v=1778255940",
+      "display": "images/hummingbird-1/topaz-3.jpg?v=1778273619",
+      "crop": "images/hummingbird-1/topaz-3-crop.jpg?v=1778273619",
       "critique": {
         "text": "Compared to the RAW, the noise reduction here is highly effective, yielding a clean background. Applying Topaz's 'wildlife' sharpening model has worked well to pull out the details obscured by noise in the original. The feathers are sharp and well-defined, and it manages to avoid some of the overly crunchy artifacts seen in other settings, resulting in a pleasing and well-balanced image.",
         "potential_score": 4,
@@ -82,8 +96,8 @@
       "caption": "ON1 using NoNoise AI and TackSharp AI",
       "width": 4155,
       "height": 2770,
-      "display": "images/hummingbird-1/on1-1.jpg?v=1778255940",
-      "crop": "images/hummingbird-1/on1-1-crop.jpg?v=1778255940",
+      "display": "images/hummingbird-1/on1-1.jpg?v=1778273619",
+      "crop": "images/hummingbird-1/on1-1-crop.jpg?v=1778273619",
       "critique": {
         "text": "Compared to the noisy RAW, ON1's NoNoise AI effectively smooths the background. The TackSharp AI does a commendable job of bringing out details in the hummingbird's feathers and the flower that were obscured by noise in the original. However, it introduces a slight amount of artificial contrast or 'crunchiness' compared to the top-performing results like DxO, though it remains a massive improvement over the unedited file.",
         "potential_score": 4,
@@ -96,8 +110,8 @@
       "caption": "Edit with Topaz Photo, noise reduction (all) followed by sharpen - motion blur (subject)",
       "width": 4155,
       "height": 2770,
-      "display": "images/hummingbird-1/topaz-2.jpg?v=1778255940",
-      "crop": "images/hummingbird-1/topaz-2-crop.jpg?v=1778255940",
+      "display": "images/hummingbird-1/topaz-2.jpg?v=1778273619",
+      "crop": "images/hummingbird-1/topaz-2-crop.jpg?v=1778273619",
       "critique": {
         "text": "While this image shares the clean, noise-free background of the other edits, the 'motion blur' sharpening model struggles compared to the alternatives. It seems to have over-processed the details that were soft in the RAW, making the stationary feathers appear somewhat brittle or artificially textured. It lacks the natural rendering found in the DxO, Lightroom, or even the Topaz Wildlife versions.",
         "potential_score": 3,
@@ -110,8 +124,8 @@
       "caption": "Topaz Photo with noise reduction only, no sharpening",
       "width": 4155,
       "height": 2770,
-      "display": "images/hummingbird-1/topaz-4.jpg?v=1778255940",
-      "crop": "images/hummingbird-1/topaz-4-crop.jpg?v=1778255940",
+      "display": "images/hummingbird-1/topaz-4.jpg?v=1778273619",
+      "crop": "images/hummingbird-1/topaz-4-crop.jpg?v=1778273619",
       "critique": {
         "text": "This edit successfully eliminates the heavy noise present in the original RAW file, resulting in a beautifully smooth background. However, by only applying noise reduction without any subsequent sharpening, the inherent softness of the original capture remains prominent. The hummingbird and flower lack the necessary crispness to make the subject pop, making it less successful overall than the sharpened versions.",
         "potential_score": 3,
