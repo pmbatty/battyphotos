@@ -27,7 +27,7 @@
       "display": "images/northern-harrier/raw.jpg?v=1778206344",
       "crop": "images/northern-harrier/raw-crop.jpg?v=1778206344",
       "critique": {
-        "text": "As the baseline RAW image, this photo captures a dynamic wildlife moment but struggles significantly with technical quality. True to the provided caption, the image is quite soft overall. There is a distinct lack of crisp detail in the bird's feathers, talons, and face, likely resulting from a slight miss in focus, inadequate shutter speed for the action, or atmospheric distortion. Additionally, a moderate layer of fine, uncorrected luminance noise is visible throughout the frame, becoming especially apparent against the uniform, bright background of the snow. Because no other edited images were provided in this specific submission to compare against, a general ranking of editing techniques cannot be formulated. However, for any subsequent edits to be successful, they would require targeted noise reduction to clean up the snow while applying aggressive sharpening or AI detail recovery to restore necessary definition to the bird.",
+        "text": "Image 2 (Original RAW): This image serves as the baseline for comparison. It suffers from noticeable luminance and color noise, which is particularly visible across the white expanse of the snow. More critically, the main subject (the hawk) is quite soft, lacking crisp detail in the feathers, face, and talons, likely due to slight motion blur or slightly missed focus. While the timing and composition of the capture are excellent, the technical flaws in sharpness and noise significantly detract from the overall quality, necessitating the edits seen in the other images.",
         "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }
@@ -41,8 +41,8 @@
       "display": "images/northern-harrier/lightroom-denoise.jpg?v=1778206345",
       "crop": "images/northern-harrier/lightroom-denoise-crop.jpg?v=1778206345",
       "critique": {
-        "text": "Evaluating Lightroom AI Denoise: This image strikes the best overall balance in the entire set. The noise in the snow is completely removed, resulting in a perfectly clean background. At the same time, the sharpness of the bird is significantly improved over the baseline without crossing into the unnatural, 'crunchy' territory seen in the Topaz or DxO edits. It ranks as the most successful edit overall, yielding a brilliantly clean and naturally sharp photograph.",
-        "potential_score": 5,
+        "text": "Image 4 (Lightroom Denoise): This edit strikes the most natural balance of the group. The AI Denoise has effectively cleaned up the snow, leaving a smooth but realistic texture without feeling overly sterile. The sharpness of the hawk is noticeably improved over the RAW; the eye is discernible, and the feathers have good definition. While it doesn't quite reach the extreme, biting crispness of the Topaz or DxO versions, it largely avoids their artificial, over-processed artifacts, making it a highly successful and natural-looking edit.",
+        "potential_score": 4,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -55,7 +55,7 @@
       "display": "images/northern-harrier/topaz-photo.jpg?v=1778206345",
       "crop": "images/northern-harrier/topaz-photo-crop.jpg?v=1778206345",
       "critique": {
-        "text": "Evaluating Topaz Photo AI: The noise reduction is aggressive and successful, rendering the snow completely smooth and free of grain. The subject sharpening (lens blur setting 50) has made the bird significantly sharper than the baseline, bringing out excellent feather detail. However, this comes at the cost of a slightly brittle, over-sharpened look with minor edge artifacts around the wings. It ranks highly for detail extraction but loses a bit on naturalness compared to the Lightroom edit.",
+        "text": "Image 1 (Topaz Photo): This edit completely eliminates the noise seen in the original RAW, rendering the snow exceptionally smooth. The lens blur sharpening at a setting of 50 has done a remarkable job of recovering detail in the originally soft subject, bringing out definition in the hawk's eye and wing feathers. However, this aggressive recovery introduces a slightly artificial, 'plastic' look to the bird and makes the edges feel a bit unnatural compared to standard sharpening. Overall, it is a massive improvement over the baseline and effectively rescues the soft subject.",
         "potential_score": 4,
         "model": "gemini-3.1-pro-preview"
       }
@@ -69,7 +69,7 @@
       "display": "images/northern-harrier/dxo-pureraw-6.jpg?v=1778206345",
       "crop": "images/northern-harrier/dxo-pureraw-6-crop.jpg?v=1778206345",
       "critique": {
-        "text": "Evaluating DxO PureRAW 6 (DeepPrime XD3): The noise reduction here is exceptionally clean, completely eliminating the baseline grain in the snow just like Lightroom. The Lens Sharpness Optimization at 200 has aggressively extracted detail from the bird and the brush, making the feathers pop immensely. While it extracts the highest amount of pure detail of the entire group, it borders on looking slightly hyper-realistic or over-processed compared to Lightroom. It ranks incredibly well for detail extraction, but second overall due to that slight unnaturalness.",
+        "text": "Image 5 (DxO PureRAW 6): The DeepPRIME XD3 noise reduction is incredibly effective here, rendering the snow completely clean and artifact-free. Pushing the Lens Sharpness Optimization to 200 has resulted in staggering detail recovery on the hawk and the foreground twigs, making the subject dramatically sharper than the baseline RAW. The trade-off is that the image looks a bit 'crunchy' and over-sharpened, with very high micro-contrast on the edges of the wings and the brush that borders on looking unnaturally etched. Still, it is a highly impressive technical rescue of a soft photo.",
         "potential_score": 4,
         "model": "gemini-3.1-pro-preview"
       }
@@ -83,7 +83,7 @@
       "display": "images/northern-harrier/on1-raw.jpg?v=1778206344",
       "crop": "images/northern-harrier/on1-raw-crop.jpg?v=1778206344",
       "critique": {
-        "text": "Evaluating the ON1 PSD file: Visually, this is nearly identical to Image 2, exhibiting the same baseline characteristics. There is still visible fine grain in the snow, and the bird remains noticeably softer compared to the more aggressive AI-enhanced versions in this set. While it avoids the artificial, over-processed look of the Topaz or DxO edits, the NoNoise and TackSharp processing applied here is the least effective of the group at improving the original RAW's noise and sharpness.",
+        "text": "Image 3 (ON1 RAW): This is arguably the weakest of the edited versions. While the NoNoise application reduces the grain compared to the RAW, it leaves behind a slightly blotchy, uneven texture in the snow. The TackSharp feature has certainly improved the sharpness of the hawk relative to the original, but the fine details in the feathers have taken on a somewhat smudged, watercolor-like appearance. It lacks the clean crispness of the Topaz, Lightroom, and DxO edits, resulting in a less realistic final image.",
         "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }

@@ -470,13 +470,13 @@ VALID_VARIANT_SORTS = ("manual", "rating_desc", "rating_desc_baseline_first")
 def order_variants(
     variants: list[Variant],
     image_order: list[str] | None,
-    variant_sort: str = "manual",
+    variant_sort: str | None = None,
 ) -> list[Variant]:
     """Order variants for a scenario.
 
     Modes:
-      - "manual" (default): use `image_order` as a list of titles in display
-        order; titles missing or extra produce WARNs and are appended at end.
+      - "manual": use `image_order` as a list of titles in display order;
+        titles missing or extra produce WARNs and are appended at end.
         Without `image_order`, falls back to alphabetical-by-title.
       - "rating_desc": sort by darwain potential_score descending. Variants
         with no critique drop to the end. Ties break on image_order position
@@ -484,7 +484,14 @@ def order_variants(
       - "rating_desc_baseline_first": pin the first entry of `image_order`
         (the "before" baseline, e.g. RAW) at the top regardless of its
         score, then sort the remaining variants by rating_desc rules.
+
+    Default (variant_sort is None): rating_desc_baseline_first when
+    image_order is present (the typical scenario shape — RAW followed by
+    AI-processed variants ranked by quality), manual otherwise. Set
+    variant_sort explicitly in the manifest to override.
     """
+    if variant_sort is None:
+        variant_sort = "rating_desc_baseline_first" if image_order else "manual"
     if variant_sort not in VALID_VARIANT_SORTS:
         raise ValueError(
             f"unknown variant_sort {variant_sort!r}; "
@@ -738,7 +745,7 @@ def build_scenario(
     variants = order_variants(
         variants,
         manifest.get("image_order"),
-        manifest.get("variant_sort", "manual"),
+        manifest.get("variant_sort"),  # None → smart default per order_variants
     )
 
     hero_url = (

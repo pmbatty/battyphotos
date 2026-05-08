@@ -33,6 +33,34 @@
       }
     },
     {
+      "slug": "topaz-gigapixel-2x-high-fidelity",
+      "title": "Topaz Gigapixel 2x High Fidelity",
+      "caption": "Topaz Gigapixel 2x with High Fidelity model, recommended settings",
+      "width": 3908,
+      "height": 2932,
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-2x-high-fidelity.jpg?v=1778206339",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-2x-high-fidelity-crop.jpg?v=1778206339",
+      "critique": {
+        "text": "Using Topaz Gigapixel 2x with the High Fidelity model, this is arguably the strongest overall rendition in the set. The 2x High Fidelity model perfectly balances detail extraction with a natural appearance. The eye is tack sharp, and the feathers look distinct and realistic without the artificial crunchiness seen in the other default-setting AI models.",
+        "potential_score": 5,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "topaz-gigapixel-4x-high-fidelty-reduced-sharpness",
+      "title": "Topaz Gigapixel 4x high fidelty reduced sharpness",
+      "caption": "Topaz Gigapixel 4x with high fidelty model, sharpness setting reduced from 78 to 39",
+      "width": 7816,
+      "height": 5864,
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelty-reduced-sharpness.jpg?v=1778206341",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelty-reduced-sharpness-crop.jpg?v=1778206341",
+      "critique": {
+        "text": "Upscaled using Topaz Gigapixel 4x with the High Fidelity model and manually reduced sharpness (39), this image strikes an excellent balance. The 4x upscale brings out impressive detail in the owl's eye and feathers without falling into the trap of over-sharpening. Dialing back the sharpness was a wise choice here, resulting in a clean, relatively natural-looking heavy enlargement.",
+        "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
       "slug": "lightroom-super-resolution",
       "title": "Lightroom super resolution",
       "caption": "Lightroom super resolution, 2x original",
@@ -61,26 +89,16 @@
       }
     },
     {
-      "slug": "topaz-gigapixel-2x-standard",
-      "title": "Topaz Gigapixel 2x standard",
-      "caption": "Topaz Gigapixel 2x with standard model, recommended settings",
-      "width": 3908,
-      "height": 2932,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-2x-standard.jpg?v=1778206341",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-2x-standard-crop.jpg?v=1778206341",
-      "critique": null
-    },
-    {
-      "slug": "topaz-gigapixel-2x-high-fidelity",
-      "title": "Topaz Gigapixel 2x High Fidelity",
-      "caption": "Topaz Gigapixel 2x with High Fidelity model, recommended settings",
-      "width": 3908,
-      "height": 2932,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-2x-high-fidelity.jpg?v=1778206339",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-2x-high-fidelity-crop.jpg?v=1778206339",
+      "slug": "topaz-gigapixel-4x-high-fidelity",
+      "title": "Topaz Gigapixel 4x high fidelity",
+      "caption": "Topaz Gigapixel 4x with high fidelity model, recommended settings",
+      "width": 7816,
+      "height": 5864,
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelity.jpg?v=1778206340",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelity-crop.jpg?v=1778206340",
       "critique": {
-        "text": "Using Topaz Gigapixel 2x with the High Fidelity model, this is arguably the strongest overall rendition in the set. The 2x High Fidelity model perfectly balances detail extraction with a natural appearance. The eye is tack sharp, and the feathers look distinct and realistic without the artificial crunchiness seen in the other default-setting AI models.",
-        "potential_score": 5,
+        "text": "Using Topaz Gigapixel 4x High Fidelity with default/recommended settings, this image is extremely sharp and punchy. However, the default sharpness introduces a bit too much 'crunch' into the fine feather details and beak compared to the reduced sharpness version (Image 3). It borders on looking over-processed and slightly artificial, though the detail recovery is undeniable.",
+        "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -113,32 +131,14 @@
       }
     },
     {
-      "slug": "topaz-gigapixel-4x-high-fidelity",
-      "title": "Topaz Gigapixel 4x high fidelity",
-      "caption": "Topaz Gigapixel 4x with high fidelity model, recommended settings",
-      "width": 7816,
-      "height": 5864,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelity.jpg?v=1778206340",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelity-crop.jpg?v=1778206340",
-      "critique": {
-        "text": "Using Topaz Gigapixel 4x High Fidelity with default/recommended settings, this image is extremely sharp and punchy. However, the default sharpness introduces a bit too much 'crunch' into the fine feather details and beak compared to the reduced sharpness version (Image 3). It borders on looking over-processed and slightly artificial, though the detail recovery is undeniable.",
-        "potential_score": 3,
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
-    {
-      "slug": "topaz-gigapixel-4x-high-fidelty-reduced-sharpness",
-      "title": "Topaz Gigapixel 4x high fidelty reduced sharpness",
-      "caption": "Topaz Gigapixel 4x with high fidelty model, sharpness setting reduced from 78 to 39",
-      "width": 7816,
-      "height": 5864,
-      "display": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelty-reduced-sharpness.jpg?v=1778206341",
-      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-4x-high-fidelty-reduced-sharpness-crop.jpg?v=1778206341",
-      "critique": {
-        "text": "Upscaled using Topaz Gigapixel 4x with the High Fidelity model and manually reduced sharpness (39), this image strikes an excellent balance. The 4x upscale brings out impressive detail in the owl's eye and feathers without falling into the trap of over-sharpening. Dialing back the sharpness was a wise choice here, resulting in a clean, relatively natural-looking heavy enlargement.",
-        "potential_score": 4,
-        "model": "gemini-3.1-pro-preview"
-      }
+      "slug": "topaz-gigapixel-2x-standard",
+      "title": "Topaz Gigapixel 2x standard",
+      "caption": "Topaz Gigapixel 2x with standard model, recommended settings",
+      "width": 3908,
+      "height": 2932,
+      "display": "images/burrowing-owl-upsize/topaz-gigapixel-2x-standard.jpg?v=1778206341",
+      "crop": "images/burrowing-owl-upsize/topaz-gigapixel-2x-standard-crop.jpg?v=1778206341",
+      "critique": null
     }
   ]
 }
