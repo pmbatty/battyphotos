@@ -29,7 +29,7 @@
       "display": "images/wire-tailed-swallow/raw.jpg?v=1778351302",
       "crop": "images/wire-tailed-swallow/raw-crop.jpg?v=1778351302",
       "critique": {
-        "text": "As the original RAW file, this image serves as the baseline for comparison. It exhibits a very high level of luminance and chrominance noise throughout, most noticeably in the smooth out-of-focus background. This noise significantly degrades the overall perceived sharpness and obscures fine details on both birds. While the perched bird is in focus, the feather texture is muddied by the grain. The flying bird shows expected motion blur in the wings, but the body lacks crispness due to the noise. The other images in this set demonstrate various processing techniques that dramatically improve upon this original by cleaning up the background noise and enhancing subject detail. In terms of ranking how well the edits worked, the DxO DeepPRIME version (Image 3) is the most successful, providing incredible detail while remaining natural. This is followed closely by the well-balanced Adobe Denoise edit (Image 1), and finally the .tif edit (Image 4), which appears slightly over-sharpened compared to the others.",
+        "text": "This is the original RAW image serving as the baseline. It exhibits a significant amount of luminance and color noise in the smooth background, likely from a high ISO setting. Both subjects—the perched swallow and the swallow in flight—are relatively soft, lacking crisp feather detail, and the flying bird has expected motion blur on its wings. Overall, the edits significantly improved the image by rescuing detail and reducing noise. In ranking how well the edits worked: Image 3 (DxO) is the most successful, providing excellent, natural-looking sharpness and clean noise reduction. Image 1 (Topaz Photo) is a solid second, offering great noise reduction but looking slightly more synthetic. Image 4 (Topaz Sharpen AI) is the least successful due to heavy over-sharpening artifacts and poor background rendering.",
         "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }
@@ -43,7 +43,7 @@
       "display": "images/wire-tailed-swallow/dxo-pureraw-6.jpg?v=1778351302",
       "crop": "images/wire-tailed-swallow/dxo-pureraw-6-crop.jpg?v=1778351302",
       "critique": {
-        "text": "Processed specifically with DxO DeepPRIME XD3, this image shows exceptional noise reduction and detail extraction. The background is immaculately clean, matching the other processed versions. Where this version truly excels is in the sharpness and clarity of the subjects. The fine feather details on the perched bird's white breast and the textures on the flying bird are remarkably crisp and well-defined, surpassing both the original RAW and the other edits. It achieves this high level of sharpness while maintaining a very natural organic look, successfully avoiding the artificial or 'crunchy' artifacts that can sometimes accompany aggressive AI sharpening. This represents the best balance of technical perfection and natural rendering in the set.",
+        "text": "Processed with DxO DeepPrime XD3, this image strikes the best balance of the set. The noise reduction is highly effective, removing the heavy grain of the RAW file while maintaining a slightly more natural background texture than Image 1. The 'Hard' Lens Sharpness Optimization (set to 200) has done an outstanding job extracting fine details in the perched bird's feathers and the flying bird's face without introducing the severe synthetic artifacts seen in the Topaz edits. The transition from the sharply rendered body to the motion-blurred wings of the flying bird feels authentic. This is the strongest overall image.",
         "potential_score": 5,
         "model": "gemini-3.1-pro-preview"
       }
@@ -57,7 +57,7 @@
       "display": "images/wire-tailed-swallow/topaz-photo.jpg?v=1778351302",
       "crop": "images/wire-tailed-swallow/topaz-photo-crop.jpg?v=1778351302",
       "critique": {
-        "text": "This image appears to have been processed with high-quality noise reduction, likely Adobe's AI Denoise given the .dng extension. The improvement over the original RAW is substantial. The heavy grain in the background is completely removed, resulting in a smooth, pleasing bokeh. Sharpness on the perched bird is good, retaining natural-looking feather detail without appearing overly processed. The flying bird is also significantly cleaner, allowing the focus on its body to stand out more clearly. Overall, it's a very strong edit that successfully balances noise reduction with natural detail retention.",
+        "text": "This edit applies Topaz Photo's noise reduction and custom sharpening. Compared to the RAW, the background noise has been completely eradicated, resulting in a very smooth, buttery backdrop. The sharpness of both birds is vastly improved; the perched bird shows good feather detail, and the flying bird's head is brought into focus while retaining the natural motion blur on the wing tips. However, the aggressive processing leaves the feathers looking slightly 'plastic' or synthetic upon close inspection, a common trade-off with heavy AI noise reduction. It is a massive improvement over the RAW but feels slightly less organic than the DxO version.",
         "potential_score": 4,
         "model": "gemini-3.1-pro-preview"
       }
@@ -71,8 +71,8 @@
       "display": "images/wire-tailed-swallow/topaz-sharpen-ai.jpg?v=1778351302",
       "crop": "images/wire-tailed-swallow/topaz-sharpen-ai-crop.jpg?v=1778351302",
       "critique": {
-        "text": "This image, likely processed with another AI noise reduction and sharpening tool to produce a .tif, effectively eliminates the heavy noise seen in the original RAW, yielding a perfectly clean background. However, the approach to sharpening appears slightly overly aggressive compared to the other edits. The fine details on the perched bird have taken on a somewhat artificial, 'crunchy', or almost painterly quality, losing some of the natural softness expected in feathers. The edges of the flying bird also look slightly harsh. While it is a massive improvement over the noisy RAW, the slightly over-processed look makes it less successful than the more naturally balanced DxO or Adobe edits.",
-        "potential_score": 3,
+        "text": "Using the discontinued Topaz Sharpen AI, this image suffers from severe over-processing. While it aggressively attempts to correct the softness and motion blur, it introduces heavy, crunchy sharpening artifacts across both birds, making the feathers look unnatural, jagged, and harsh. Furthermore, noticeable edge halos are visible around the flying bird. The noise reduction is also inferior to the other edits; instead of a smooth out-of-focus area, the background looks mottled and blotchy. Compared to the RAW, it achieves higher perceived sharpness but at an unacceptable cost to overall image quality.",
+        "potential_score": 2,
         "model": "gemini-3.1-pro-preview"
       }
     }
