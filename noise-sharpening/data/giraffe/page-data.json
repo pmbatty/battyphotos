@@ -18,7 +18,7 @@
   "editor_note": "DxO's Optics Module applies lens-specific geometric correction by default — un-distorting the wide-angle frame and auto-cropping the curved edges that would otherwise be left behind. At an 11 mm focal length on micro four-thirds the correction is significant, so the DxO variants are slightly tighter and straighter than the RAW / Topaz / Lightroom outputs, and the same pixel coordinate maps to slightly different scene content. Pixel positions don't line up exactly across variants — that's the lens correction, not the AI denoise. Topaz and ON1 don't apply lens corrections by default; Lightroom and the RAW share the same lens profile here.",
   "exif_summary": "OM-1 with LEICA DG 10-25/F1.7 at 11mm (22mm equivalent), 1/1000s at f/2, ISO 200",
   "previous_scenario": "spider-monkey",
-  "next_scenario": null,
+  "next_scenario": "wire-tailed-swallow",
   "images": [
     {
       "slug": "raw",
