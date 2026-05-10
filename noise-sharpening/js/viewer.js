@@ -94,12 +94,23 @@ export function renderBrowseMode(root, data) {
 }
 
 function heroBlock(data, heroVariant, variantW, variantH) {
-  // Hero is optional. When the manifest's hero_image isn't found among
-  // variants the build script emits page-data without one, and we render
-  // the page without it.
-  if (!data.hero || !heroVariant) return "";
+  // Hero is optional — page renders without it when neither hero_image
+  // nor hero_image_file resolved.
+  if (!data.hero) return "";
   const sizeAttrs = variantW && variantH ? ` width="${variantW}" height="${variantH}"` : "";
-  const altText = heroVariant.caption || heroVariant.title || data.title;
+  const altText = (heroVariant && (heroVariant.caption || heroVariant.title)) || data.title;
+  const img = `<img
+          src="${escapeAttr(data.hero)}"${sizeAttrs}
+          alt="${escapeAttr(altText)}"
+          fetchpriority="high"
+          decoding="async"
+        />`;
+  if (!heroVariant) {
+    // hero_image_file in the manifest — display-only hero, typically the
+    // full uncropped scene above a set of cropped comparison variants.
+    // No click handler: the variant cards below provide the lightbox flow.
+    return `<figure class="scenario__hero scenario__hero--display">${img}</figure>`;
+  }
   return `
     <figure class="scenario__hero">
       <button
@@ -108,12 +119,7 @@ function heroBlock(data, heroVariant, variantW, variantH) {
         data-slug="${escapeAttr(heroVariant.slug)}"
         aria-label="Open ${escapeAttr(heroVariant.title)} at full resolution"
       >
-        <img
-          src="${escapeAttr(data.hero)}"${sizeAttrs}
-          alt="${escapeAttr(altText)}"
-          fetchpriority="high"
-          decoding="async"
-        />
+        ${img}
         <span class="scenario__hero-hint">${escapeHtml(heroVariant.title)} &middot; click to compare</span>
       </button>
     </figure>

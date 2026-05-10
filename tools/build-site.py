@@ -827,6 +827,39 @@ def build_scenario(
             file=sys.stderr,
         )
 
+    # Optional `hero_image_file` override: a JPEG outside `jpeg/` (typically
+    # in the scenario folder root) used as the page hero, NOT included as a
+    # variant in the comparison list. Useful when variants are cropped down
+    # to a sample region (e.g. an upsizing scenario where 2×/4× full frames
+    # are too large for darwain) and you want the hero to show the full
+    # scene for context. Takes precedence over hero_image when both set.
+    hero_file_rel = manifest.get("hero_image_file")
+    if hero_file_rel:
+        if hero_jpeg_path is not None:
+            print(
+                f"  WARN  both hero_image_file and hero_image are set; "
+                f"hero_image_file ({hero_file_rel!r}) takes precedence",
+                file=sys.stderr,
+            )
+        hero_file_abs = scenario_dir / hero_file_rel
+        if not hero_file_abs.exists():
+            print(
+                f"  WARN  hero_image_file {hero_file_rel!r} not found in "
+                f"{scenario_dir}; rendering without hero",
+                file=sys.stderr,
+            )
+            hero_jpeg_path = None
+            hero_variant_slug = None
+        else:
+            with Image.open(hero_file_abs) as im:
+                icc = im.info.get("icc_profile")
+                if needs_rebuild(hero_file_abs, out_thumbnail, force, manifest_mtime):
+                    save_thumbnail(im, out_thumbnail, icc)
+                if needs_rebuild(hero_file_abs, out_hero, force, manifest_mtime):
+                    save_hero(im, out_hero, icc)
+            hero_jpeg_path = hero_file_abs
+            hero_variant_slug = None  # display-only hero, not a variant
+
     variants = order_variants(
         variants,
         manifest.get("image_order"),

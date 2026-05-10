@@ -225,6 +225,24 @@
   opacity: 1;
 }
 
+/* Display-only hero (manifest's hero_image_file) — no button wrapper, no
+   click-to-lightbox. Mirrors the .scenario__hero-btn frame but without
+   the hover affordances. The image's intrinsic aspect-ratio is used
+   here (rather than the variant aspect) since the source is typically
+   the full uncropped scene with its own dimensions. */
+.scenario__hero--display {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000;
+}
+
+.scenario__hero--display img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 /* =========================================================================
  * Variants list
  * ========================================================================= */
