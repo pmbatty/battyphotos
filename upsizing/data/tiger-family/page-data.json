@@ -8,12 +8,12 @@
     "height": 1285
   },
   "detail_crop": {
-    "x": 1500,
-    "y": 450,
+    "x": 1628,
+    "y": 461,
     "w": 600,
     "h": 400
   },
-  "hero": "images/tiger-family/hero.jpg?v=1778410524",
+  "hero": "images/tiger-family/hero.jpg?v=1778412646",
   "hero_slug": null,
   "editor_note": "All of the AI upsampling ran on the full 5184 px source image (shown above for context). For AI analysis and on-page display we worked with a 1928 px crop around the adult tiger taken from each 1× / 2× / 4× output — the full-resolution 4× upsamples were too large for darwain's evaluation pipeline and impractical to display at native scale.",
   "exif_summary": "OM-1 with OM 40-150mm F2.8 at 75mm (150mm equivalent), 1/640s at f/4.5, ISO 1250",
@@ -26,8 +26,8 @@
       "caption": "Processed with DxO RAW and basic tone and color adjustments, cropped to a sample of the original image.",
       "width": 1928,
       "height": 1285,
-      "display": "images/tiger-family/original-1x-image-cropped-sample.jpg?v=1778410524",
-      "crop": "images/tiger-family/original-1x-image-cropped-sample-crop.jpg?v=1778410524",
+      "display": "images/tiger-family/original-1x-image-cropped-sample.jpg?v=1778412646",
+      "crop": "images/tiger-family/original-1x-image-cropped-sample-crop.jpg?v=1778412646",
       "critique": {
         "text": "This is the original cropped image serving as the baseline. It has good color and contrast but naturally lacks the resolution of the upscaled versions. Summary Comparison: Overall, Topaz Gigapixel yielded the sharpest and most detailed results at both 2x and 4x, though the 4x begins to look slightly synthetic. Lightroom Super Resolution provided a solid, natural-looking 2x upscale, while ON1 Resize produced the softest results, struggling to synthesize fine detail compared to its peers.",
         "potential_score": 3,
@@ -40,8 +40,8 @@
       "caption": "Upscaled with Gigapixel v1.1.3. 5184x3456 => 10368x6912 (2x) Model: High Fidelity V2, denoise: 0.58, sharpen: 0.39, decompression: 0.01",
       "width": 3855,
       "height": 2570,
-      "display": "images/tiger-family/topaz-gigapixel-2x.jpg?v=1778410524",
-      "crop": "images/tiger-family/topaz-gigapixel-2x-crop.jpg?v=1778410524",
+      "display": "images/tiger-family/topaz-gigapixel-2x.jpg?v=1778412645",
+      "crop": "images/tiger-family/topaz-gigapixel-2x-crop.jpg?v=1778412645",
       "critique": {
         "text": "Upscaled 2x using Topaz Gigapixel. This appears to be the strongest upscale of the set. The 2x magnification allows the AI to enhance details like the fur and stripes very convincingly without introducing noticeable artificial textures. It strikes an excellent balance between crisp sharpness and a natural photographic look, superior to the others at this magnification.",
         "potential_score": 5,
@@ -54,8 +54,8 @@
       "caption": "Lightroom Super Resolution 2x, applied to high quality jpeg of the cropped sample",
       "width": 3855,
       "height": 2570,
-      "display": "images/tiger-family/lightroom-super-resolution-2x.jpg?v=1778410522",
-      "crop": "images/tiger-family/lightroom-super-resolution-2x-crop.jpg?v=1778410522",
+      "display": "images/tiger-family/lightroom-super-resolution-2x.jpg?v=1778412644",
+      "crop": "images/tiger-family/lightroom-super-resolution-2x-crop.jpg?v=1778412644",
       "critique": {
         "text": "Upscaled 2x using Lightroom Super Resolution. This produces a clean, natural-looking image. It successfully avoids the over-sharpened look that can sometimes occur with AI upscalers, maintaining the photographic integrity of the original. However, it doesn't extract or synthesize as much fine detail in the fur as Topaz Gigapixel 2x does, placing it in the middle of the pack for sharpness.",
         "potential_score": 4,
@@ -68,8 +68,8 @@
       "caption": "Upsized 4x using Topal GigaPixel High Fidelity",
       "width": 7710,
       "height": 5140,
-      "display": "images/tiger-family/topaz-gigapixel-4x.jpg?v=1778410523",
-      "crop": "images/tiger-family/topaz-gigapixel-4x-crop.jpg?v=1778410523",
+      "display": "images/tiger-family/topaz-gigapixel-4x.jpg?v=1778412644",
+      "crop": "images/tiger-family/topaz-gigapixel-4x-crop.jpg?v=1778412644",
       "critique": {
         "text": "Upsized 4x using Topaz Gigapixel. The detail recovery here is very impressive for such a significant upscale. The fine hairs on the tigers and the whiskers are rendered quite sharply. There is a slight synthetic quality to some of the textures, particularly in the background foliage and soil, but it outperforms the ON1 4x significantly in terms of apparent resolution.",
         "potential_score": 4,
@@ -82,8 +82,8 @@
       "caption": "Upsized with ON1 Resize 2x, best quality. Used Sharpening for screen with default options.",
       "width": 3855,
       "height": 2570,
-      "display": "images/tiger-family/on1-resize-2x.jpg?v=1778410524",
-      "crop": "images/tiger-family/on1-resize-2x-crop.jpg?v=1778410524",
+      "display": "images/tiger-family/on1-resize-2x.jpg?v=1778412646",
+      "crop": "images/tiger-family/on1-resize-2x-crop.jpg?v=1778412646",
       "critique": {
         "text": "Upsized 2x with ON1 Resize. This yields a more natural result than its 4x counterpart, avoiding some of the excessive softness. However, when compared to the Topaz Gigapixel 2x or Lightroom Super Resolution, it still lacks crispness in the high-frequency details. It's a usable image but falls short of the sharpness achieved by the other tools.",
         "potential_score": 3,
@@ -96,8 +96,8 @@
       "caption": "Upsized with ON1 Resize 4x, best quality. Used Sharpening for screen with default options.",
       "width": 7710,
       "height": 5140,
-      "display": "images/tiger-family/on1-resize-4x.jpg?v=1778410524",
-      "crop": "images/tiger-family/on1-resize-4x-crop.jpg?v=1778410524",
+      "display": "images/tiger-family/on1-resize-4x.jpg?v=1778412645",
+      "crop": "images/tiger-family/on1-resize-4x-crop.jpg?v=1778412645",
       "critique": {
         "text": "Upsized 4x using ON1 Resize. Compared to the Topaz 4x upscale, this result is noticeably softer. The software struggles to reconstruct fine details like the individual hairs in the tiger's fur or the texture of the tree bark, resulting in a slightly muddy appearance. While sharpening was applied, it doesn't recover the underlying lost resolution effectively.",
         "potential_score": 2,
