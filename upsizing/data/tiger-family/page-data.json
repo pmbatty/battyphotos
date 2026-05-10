@@ -29,8 +29,8 @@
       "display": "images/tiger-family/original-1x-image-cropped-sample.jpg?v=1778412646",
       "crop": "images/tiger-family/original-1x-image-cropped-sample-crop.jpg?v=1778412646",
       "critique": {
-        "text": "This is the original cropped image serving as the baseline. It has good color and contrast but naturally lacks the resolution of the upscaled versions. Summary Comparison: Overall, Topaz Gigapixel yielded the sharpest and most detailed results at both 2x and 4x, though the 4x begins to look slightly synthetic. Lightroom Super Resolution provided a solid, natural-looking 2x upscale, while ON1 Resize produced the softest results, struggling to synthesize fine detail compared to its peers.",
-        "potential_score": 3,
+        "text": "The original cropped sample shows good base detail and natural rendering, serving as a solid starting point. Comparing the upscaling methods overall: Topaz Gigapixel clearly outperforms the others by successfully generating realistic fine details (like fur and leaf textures), making the image look truly higher resolution. ON1 Resize tends to produce a somewhat 'painted' effect, losing finer textures while sharpening edges. Lightroom's Super Resolution yields a softer result, lacking the crispness of the Topaz output but avoiding the artificial look of ON1.",
+        "potential_score": 4,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -43,22 +43,8 @@
       "display": "images/tiger-family/topaz-gigapixel-2x.jpg?v=1778412645",
       "crop": "images/tiger-family/topaz-gigapixel-2x-crop.jpg?v=1778412645",
       "critique": {
-        "text": "Upscaled 2x using Topaz Gigapixel. This appears to be the strongest upscale of the set. The 2x magnification allows the AI to enhance details like the fur and stripes very convincingly without introducing noticeable artificial textures. It strikes an excellent balance between crisp sharpness and a natural photographic look, superior to the others at this magnification.",
+        "text": "This is arguably the best result among the upscaled versions. The 2x upscale with Topaz Gigapixel High Fidelity model produces excellent, crisp details that look highly natural. The fur texture is beautifully preserved and enhanced, and the background elements remain distinct without looking over-processed. It hits the sweet spot of increasing resolution while maintaining photographic integrity.",
         "potential_score": 5,
-        "model": "gemini-3.1-pro-preview"
-      }
-    },
-    {
-      "slug": "lightroom-super-resolution-2x",
-      "title": "Lightroom Super Resolution 2x",
-      "caption": "Lightroom Super Resolution 2x, applied to high quality jpeg of the cropped sample",
-      "width": 3855,
-      "height": 2570,
-      "display": "images/tiger-family/lightroom-super-resolution-2x.jpg?v=1778412644",
-      "crop": "images/tiger-family/lightroom-super-resolution-2x-crop.jpg?v=1778412644",
-      "critique": {
-        "text": "Upscaled 2x using Lightroom Super Resolution. This produces a clean, natural-looking image. It successfully avoids the over-sharpened look that can sometimes occur with AI upscalers, maintaining the photographic integrity of the original. However, it doesn't extract or synthesize as much fine detail in the fur as Topaz Gigapixel 2x does, placing it in the middle of the pack for sharpness.",
-        "potential_score": 4,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -71,8 +57,22 @@
       "display": "images/tiger-family/topaz-gigapixel-4x.jpg?v=1778412644",
       "crop": "images/tiger-family/topaz-gigapixel-4x-crop.jpg?v=1778412644",
       "critique": {
-        "text": "Upsized 4x using Topaz Gigapixel. The detail recovery here is very impressive for such a significant upscale. The fine hairs on the tigers and the whiskers are rendered quite sharply. There is a slight synthetic quality to some of the textures, particularly in the background foliage and soil, but it outperforms the ON1 4x significantly in terms of apparent resolution.",
+        "text": "Topaz Gigapixel has done a remarkable job at 4x upscaling. It has managed to generate convincing fine detail in the tiger's fur, the bark of the trees, and the surrounding foliage. While a very close inspection might reveal slight artifacts typical of AI upscaling, the overall impression is much crisper and more realistic than the ON1 attempts, maintaining a good balance between sharpness and natural texture.",
         "potential_score": 4,
+        "model": "gemini-3.1-pro-preview"
+      }
+    },
+    {
+      "slug": "lightroom-super-resolution-2x",
+      "title": "Lightroom Super Resolution 2x",
+      "caption": "Lightroom Super Resolution 2x, applied to high quality jpeg of the cropped sample",
+      "width": 3855,
+      "height": 2570,
+      "display": "images/tiger-family/lightroom-super-resolution-2x.jpg?v=1778412644",
+      "crop": "images/tiger-family/lightroom-super-resolution-2x-crop.jpg?v=1778412644",
+      "critique": {
+        "text": "Upscaling a JPEG with Lightroom Super Resolution has yielded a relatively soft result. It avoids the painterly artifacts of ON1 but fails to introduce the crisp, convincing fine details seen in the Topaz Gigapixel versions. It essentially looks like a slightly softer version of the original, not fully capitalizing on the potential of AI upscaling, likely hindered by starting from a compressed JPEG rather than the RAW file.",
+        "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }
     },
@@ -85,7 +85,7 @@
       "display": "images/tiger-family/on1-resize-2x.jpg?v=1778412646",
       "crop": "images/tiger-family/on1-resize-2x-crop.jpg?v=1778412646",
       "critique": {
-        "text": "Upsized 2x with ON1 Resize. This yields a more natural result than its 4x counterpart, avoiding some of the excessive softness. However, when compared to the Topaz Gigapixel 2x or Lightroom Super Resolution, it still lacks crispness in the high-frequency details. It's a usable image but falls short of the sharpness achieved by the other tools.",
+        "text": "Similar characteristics to the 4x version, but slightly less pronounced due to the smaller scaling factor. It still exhibits a slightly unnatural, processed look with somewhat flattened textures in the fur compared to the more successful upscaling methods. The sharpening for screen has made the edges contrasty but hasn't fully preserved the organic feel of the original.",
         "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }
@@ -99,8 +99,8 @@
       "display": "images/tiger-family/on1-resize-4x.jpg?v=1778412645",
       "crop": "images/tiger-family/on1-resize-4x-crop.jpg?v=1778412645",
       "critique": {
-        "text": "Upsized 4x using ON1 Resize. Compared to the Topaz 4x upscale, this result is noticeably softer. The software struggles to reconstruct fine details like the individual hairs in the tiger's fur or the texture of the tree bark, resulting in a slightly muddy appearance. While sharpening was applied, it doesn't recover the underlying lost resolution effectively.",
-        "potential_score": 2,
+        "text": "The 4x upscaling by ON1 Resize has resulted in a slightly artificial, almost painterly look. While the edges of the tiger stripes are relatively sharp, the finer details like individual hairs in the fur and the textures of the leaves and ground appear somewhat smudged or lost. The applied sharpening seems to have emphasized larger structures rather than recovering micro-contrast.",
+        "potential_score": 3,
         "model": "gemini-3.1-pro-preview"
       }
     }
