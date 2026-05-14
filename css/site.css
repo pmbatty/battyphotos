@@ -111,6 +111,62 @@ a:hover {
   color: var(--color-muted);
 }
 
+/* ================ Presentation block (umbrella page) ================ */
+
+.presentation {
+  margin-top: var(--gap-xl);
+  margin-bottom: var(--gap-xl);
+}
+
+.presentation__title {
+  margin-top: 0;
+}
+
+.presentation__intro {
+  color: var(--color-muted);
+}
+
+.presentation__video {
+  /* 53.6% padding-top reproduces Vimeo's "padding:53.6% 0 0 0" wrapper —
+     a slightly-wider-than-16:9 aspect (1.866:1) that matches the recorded
+     video's actual dimensions. iframe absolute-positioned to fill. */
+  position: relative;
+  padding-top: 53.6%;
+  margin: var(--gap-md) 0;
+  background: #000;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.presentation__video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.presentation__downloads {
+  margin-top: var(--gap-md);
+  margin-bottom: 0;
+}
+
+.presentation__download-link {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-weight: 600;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.presentation__download-link:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--color-card-shadow);
+}
+
 /* ================ Umbrella project list ================ */
 
 .project-list {
