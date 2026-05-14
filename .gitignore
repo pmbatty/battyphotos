@@ -7,3 +7,6 @@ venv/
 .idea/
 .vscode/
 node_modules/
+
+# Microsoft Office lockfiles (created while a doc is open)
+~$*

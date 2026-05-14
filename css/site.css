@@ -150,6 +150,9 @@ a:hover {
 .presentation__downloads {
   margin-top: var(--gap-md);
   margin-bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
 }
 
 .presentation__download-link {
